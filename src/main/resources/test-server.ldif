@@ -1,0 +1,148 @@
+dn: ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: groups
+
+dn: ou=subgroups,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: subgroups
+
+dn: ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+dn: ou=space cadets,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: space cadets
+
+dn: ou=\"quoted people\",dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: "quoted people"
+
+dn: ou=otherpeople,dc=springframework,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: otherpeople
+
+dn: uid=ben,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Ben Alex
+sn: Alex
+uid: ben
+userPassword: {SHA}nFCebWjxfaLbHHG1Qk5UU4trbvQ=
+
+dn: uid=bob,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Bob Hamilton
+sn: Hamilton
+uid: bob
+userPassword: bobspassword
+
+dn: uid=kip,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Tony Kip
+sn: Kipkoech
+uid: kip
+userPassword: kipspassword
+
+dn: uid=joe,ou=otherpeople,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Joe Smeth
+sn: Smeth
+uid: joe
+userPassword: password
+
+dn: cn=mouse\, jerry,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Mouse, Jerry
+sn: Mouse
+uid: jerry
+userPassword: jerryspassword
+
+dn: uid=liz,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Liz Ndungu
+sn: Ndungu
+uid: liz
+userPassword: lizspassword
+
+dn: uid=motari,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Joshua Motari
+sn: Motari
+uid: motari
+userPassword: motarispassword
+
+dn: cn=developers,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: developers
+ou: developer
+uniqueMember: uid=ben,ou=people,dc=springframework,dc=org
+uniqueMember: uid=kip,ou=people,dc=springframework,dc=org
+uniqueMember: uid=bob,ou=people,dc=springframework,dc=org
+
+dn: cn=managers,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: managers
+ou: manager
+uniqueMember: uid=ben,ou=people,dc=springframework,dc=org
+uniqueMember: uid=kip,ou=people,dc=springframework,dc=org
+uniqueMember: cn=mouse\, jerry,ou=people,dc=springframework,dc=org
+
+dn: cn=submanagers,ou=subgroups,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: submanagers
+ou: submanager
+uniqueMember: uid=ben,ou=people,dc=springframework,dc=org
+uniqueMember: uid=kip,ou=people,dc=springframework,dc=org
+
+dn: cn=underwriters,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: underwriters
+ou: underwriter
+uniqueMember: uid=liz,ou=people,dc=springframework,dc=org
+
+
+dn: cn=uw_managers,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: uw_managers
+ou: uw_manager
+uniqueMember: uid=liz,ou=groups,dc=springframework,dc=org
+
+dn: cn=claimAnalysts,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: claimAnalysts
+ou: claimAnalyst
+uniqueMember: uid=motari,ou=people,dc=springframework,dc=org
+uniqueMember: uid=liz,ou=people,dc=springframework,dc=org

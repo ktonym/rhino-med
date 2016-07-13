@@ -1,0 +1,8 @@
+zuul:
+  routes:
+    activiti:
+      path: /activiti/**
+      url: http://localhost:5555
+#    uw:
+#      path: /uw/**
+#      url: http://localhost:2222

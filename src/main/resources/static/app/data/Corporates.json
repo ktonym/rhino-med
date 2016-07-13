@@ -1,0 +1,9 @@
+{
+    "data" : [
+        {"idCorporate":"1","name":"Jabu Investment Limited", "abbreviation":"JIL", "email":"info@jabu.co.ke", "tel":"0725766814", "postalAddress":"P.O. Box 78, Nairobi", "joined":"20160101"},
+        {"idCorporate":"2", "name":"Kenya Broadcasting Corporation", "abbreviation":"KBC", "email":"info@kbc.co.ke", "tel":"0743553455", "postalAddress":"P.O. Box 30456, Nairobi", "joined":"20140101"},
+        {"idCorporate":"3", "name":"Kenya Ordnance Factories", "abbreviation":"KOF", "email":"info@kof.co.ke", "tel":"0746645904", "postalAddress":"P.O. Box 30, Eldoret", "joined":"20150601"},
+        {"idCorporate":"4", "name":"Embu County", "abbreviation":"EMB", "email":"info@embu.co.ke", "tel":"0562895135", "postalAddress":"P.O. Box 599, Embu", "joined":"20150101"},
+        {"idCorporate":"5", "name":"South Eastern Kenya University", "abbreviation":"SEK", "email":"info@seku.ac.ke", "tel":"569875", "postalAddress":"P.O. Box 909, Machakos", "joined":"20151101"}
+    ]
+}
