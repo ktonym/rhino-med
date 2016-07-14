@@ -7,6 +7,7 @@ import ke.co.rhino.uw.entity.MemberType;
 import ke.co.rhino.uw.service.ICorpBenefitService;
 import ke.co.rhino.uw.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,7 +50,7 @@ public class CorpBenefitHandler extends AbstractHandler{
         Long idCategory = ((JsonNumber) jsonObj.get("idCategory")).longValue();
 
 
-        Result<CorpBenefit> ar = corpBenefitService.create(benefitCode,upperLimit,memberType,benefitType,sharing,needPreAuth,waitingPeriod,idParentBenefit,idCategory,getUser());
+        Result<CorpBenefit> ar = corpBenefitService.create(benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefit, idCategory, getUser());
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -79,7 +80,7 @@ public class CorpBenefitHandler extends AbstractHandler{
         Long idCategory = ((JsonNumber) jsonObj.get("idCategory")).longValue();
 
 
-        Result<CorpBenefit> ar = corpBenefitService.update(idCorpBenefit,benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefit, idCategory, getUser());
+        Result<CorpBenefit> ar = corpBenefitService.update(idCorpBenefit, benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefit, idCategory, getUser());
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -89,7 +90,62 @@ public class CorpBenefitHandler extends AbstractHandler{
 
     }
 
-    public String getUser(){
+    @RequestMapping(value="/delete",method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseBody
+    public String delete(@RequestParam(value = "data", required = true) String jsonData,
+                         HttpServletRequest request) {
+
+        JsonObject jsonObj = parseJsonObject(jsonData);
+        Long idCorpBenefit = Long.valueOf(jsonObj.getString("idCorpBenefit"));
+
+        Result<CorpBenefit> ar = corpBenefitService.remove(idCorpBenefit, getUser());
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findAll(@RequestParam(value = "idCorpAnniv", required = true) String idCorpAnnivStr,
+                          HttpServletRequest request) {
+
+        Long idCorpAnniv = Long.parseLong(idCorpAnnivStr);
+
+        int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        Integer size = request.getParameter("limit") == null ? 5 : Integer.valueOf(request.getParameter("limit"));
+        Result<Page<CorpBenefit>> ar = corpBenefitService.findByCorpAnniv(idCorpAnniv,pageNo,size,getUser());
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+    @RequestMapping(value = "/findByCategory", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findByCategory(@RequestParam(value = "idCategory", required = true) String idCategoryStr,
+                          HttpServletRequest request) {
+
+        Long idCategory = Long.parseLong(idCategoryStr);
+
+        int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        Integer size = request.getParameter("limit") == null ? 5 : Integer.valueOf(request.getParameter("limit"));
+        Result<Page<CorpBenefit>> ar = corpBenefitService.findByCategory(idCategory, pageNo, size, getUser());
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+        public String getUser(){
         return authenticationFacade.getAuthentication().getName();
     }
 

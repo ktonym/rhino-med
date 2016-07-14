@@ -27,8 +27,6 @@ import java.util.List;
 @RequestMapping("/uw/intermediary")
 public class IntermediaryHandler extends AbstractHandler {
 
-    //TODO complete find mappings
-
     @Autowired
     private IAuthenticationFacade authenticationFacade;
 

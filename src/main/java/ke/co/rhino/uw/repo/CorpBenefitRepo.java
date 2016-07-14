@@ -18,6 +18,8 @@ public interface CorpBenefitRepo extends JpaRepository<CorpBenefit,Long> {
 
     long countByCategory(Category category);
 
+    long countByParentBenefit(CorpBenefit corpBenefit);
+
     Page<CorpBenefit> findByCategory_CorpAnniv(CorpAnniv anniv, Pageable pageable);
 
     Page<CorpBenefit> findByCategory_CorpAnniv_Corporate(Corporate corporate, Pageable pageable);

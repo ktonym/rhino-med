@@ -20,6 +20,8 @@ public interface CorpMemberBenefitRepo extends JpaRepository<CorpMemberBenefit, 
 
     Stream<CorpMemberBenefit> findByBenefit(CorpBenefit corpBenefit);
 
+    long countByBenefit(CorpBenefit corpBenefit);
+
 //    @Query("SELECT cmb FROM CorpMemberBenefit cmb WHERE cmb.benefit = (SELECT cb FROM CorpBenefit cb WHERE cb.idCorpBenefit = :idCorpBenefit) " +
 //            "AND cmb.memberAnniv = (SELECT ma FROM MemberAnniversary ma WHERE ma.member = (SELECT m FROM Member m where m.memberNo = :memberNo) " +
 //                                        "AND ma.corpAnniv = (SELECT ca FROM CorpAnniv ca WHERE :invoiceDate BETWEEN ca.inception AND ca.expiry ))")

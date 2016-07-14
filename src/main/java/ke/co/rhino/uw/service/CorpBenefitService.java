@@ -1,5 +1,7 @@
 package ke.co.rhino.uw.service;
 
+import ke.co.rhino.fin.repo.FundInvoiceRepo;
+import ke.co.rhino.fin.repo.PremiumInvoiceRepo;
 import ke.co.rhino.uw.entity.*;
 import ke.co.rhino.uw.repo.*;
 import ke.co.rhino.uw.vo.Result;
@@ -35,8 +37,15 @@ public class CorpBenefitService implements ICorpBenefitService {
     private CorporateRepo corporateRepo;
     @Autowired
     private CorpAnnivRepo corpAnnivRepo;
+    @Autowired
+    private CorpMemberBenefitRepo corpMemberBenefitRepo;
+    @Autowired
+    private PremiumInvoiceRepo premiumInvoiceRepo;
+    @Autowired
+    private FundInvoiceRepo fundInvoiceRepo;
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private boolean sharing;
 
     @Override
     @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
@@ -120,6 +129,8 @@ public class CorpBenefitService implements ICorpBenefitService {
             Long idCategory = (Long) map.get("idCategory");
         }
 
+        //TODO create for multiple records, List
+
         corpBenefitRepo.save(corpBenefitList);
         return ResultFactory.getSuccessResult(corpBenefitList,errs.toString());
     }
@@ -135,13 +146,81 @@ public class CorpBenefitService implements ICorpBenefitService {
                                       Integer waitingPeriod, Long idParentBenefit,
                                       Long idCategory, String actionUsername) {
 
-        //TODO 13/07/2016 finish up this..
-        return null;
+        if(idCorpBenefit==null||idCorpBenefit<0){
+            return ResultFactory.getFailResult("Invalid benefit ID provided. Update failed.");
+        }
+
+        if(benefitCode==null||benefitCode<0){
+            return ResultFactory.getFailResult("Invalid benefit code provided. Update failed.");
+        }
+
+        CorpBenefit testBenefit = corpBenefitRepo.findOne(idCorpBenefit);
+
+        if(testBenefit==null){
+            return ResultFactory.getFailResult("No corporate benefit with ID ["+idCorpBenefit+"] was found. Update failed.");
+        }
+
+        BenefitRef benefitRef = benefitRefRepo.findOne(benefitCode);
+        if(benefitRef==null){
+            return ResultFactory.getFailResult("No benefit (ref) with code ["+benefitCode+"] was found. Update failed.");
+        }
+
+        if(idCategory==null||idCategory<0){
+            return ResultFactory.getFailResult("Invalid category ID provided. Update failed.");
+        }
+        Category cat = categoryRepo.findOne(idCategory);
+        if(cat==null){
+            return ResultFactory.getFailResult("No category with ID ["+idCategory+"] was found. Update failed.");
+        }
+
+        if(testBenefit.getBenefitRef()!=benefitRef){
+            //check that no child entity: corpMemberBenefit, fundInvoice or premiumInvoice
+            //have been defined for this corporate benefit
+            //otherwise, drill down and check if there are any bills, preAuths(LOUs)
+            if(premiumInvoiceRepo.countByBenefit(testBenefit)>0||fundInvoiceRepo.countByBenefit(testBenefit)>0){
+                return ResultFactory.getFailResult("Cannot modify this corporate benefit since it has already been invoiced.");
+            }
+            if(corpMemberBenefitRepo.countByBenefit(testBenefit)>0){
+                return ResultFactory.getFailResult("Cannot modify this corporate benefit since it has member benefits assigned.");
+            }
+        }
+
+        CorpBenefit.CorpBenefitBuilder builder = new CorpBenefit.CorpBenefitBuilder(benefitRef,upperLimit,memberType,benefitType,cat);
+
+        if(idParentBenefit!=null&&idParentBenefit>0){
+            CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentBenefit);
+            if(parentBenefit!=null){
+                builder.parentBenefit(parentBenefit);
+            }
+        }
+
+        if(waitingPeriod!=null&&waitingPeriod>0){
+            builder.waitingPeriod(waitingPeriod);
+        }
+
+        if(sharing){
+            builder.sharing(true);
+        } else {
+            builder.sharing(false);
+        }
+
+        if(needPreAuth){
+            builder.requiresPreAuth(true);
+        } else {
+            builder.requiresPreAuth(false);
+        }
+
+        CorpBenefit benefit = builder.build();
+        corpBenefitRepo.save(benefit);
+        return ResultFactory.getSuccessResult(benefit);
     }
 
     @Override
     @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public Result<CorpBenefit> update(List<Map<String, Object>> mapList, String actionUsername) {
+
+        //TODO update for multiple records: List
+
         return null;
     }
 
@@ -202,6 +281,20 @@ public class CorpBenefitService implements ICorpBenefitService {
     @Override
     @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public Result<CorpBenefit> remove(Long idCorpBenefit, String actionUsername) {
-        return null;
+
+        if(idCorpBenefit==null||idCorpBenefit<0){
+            return ResultFactory.getFailResult("Invalid benefit id supplied.");
+        }
+        CorpBenefit benefit = corpBenefitRepo.findOne(idCorpBenefit);
+        if(benefit==null){
+            return ResultFactory.getFailResult("No corporate benefit with ID ["+idCorpBenefit+"] was found.");
+        }
+        if(corpBenefitRepo.countByParentBenefit(benefit)>0||corpMemberBenefitRepo.countByBenefit(benefit)>0){
+            return ResultFactory.getFailResult("Corporate benefit has child records. Cannot delete.");
+        }
+        String msg = benefit.toString() + " was deleted by " + actionUsername;
+        corpBenefitRepo.delete(benefit);
+
+        return ResultFactory.getSuccessResult(msg);
     }
 }
