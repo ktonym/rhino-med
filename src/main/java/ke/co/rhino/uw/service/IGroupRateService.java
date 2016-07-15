@@ -14,7 +14,7 @@ import java.util.Map;
 public interface IGroupRateService {
 
     Result<GroupRate> create(Long idCorporate,
-                             Integer benefitCode,
+                             Long benefitCode,
                              String famSize,
                              BigDecimal upperLimit,
                              BigDecimal premium,
@@ -25,7 +25,7 @@ public interface IGroupRateService {
 
     Result<GroupRate> update(Long idPremiumRate,
                              Long idCorporate,
-                             Integer benefitCode,
+                             Long benefitCode,
                              String famSize,
                              BigDecimal upperLimit,
                              BigDecimal premium,

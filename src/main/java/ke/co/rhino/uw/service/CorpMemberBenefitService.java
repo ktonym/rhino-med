@@ -50,7 +50,7 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     public Result<CorpMemberBenefit> create(Long idMember,
                                             Long idCorpAnniv,
                                             Long idCorpBenefit,
-                                            CorpMemberBenefit parent,
+                                            Long idParentCorpBenefit,
                                             BenefitStatus status,
                                             LocalDate wef,
                                             String actionUsername) {
@@ -96,8 +96,17 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         CorpMemberBenefit.CorpMemberBenefitBuilder benefitBuilder = new CorpMemberBenefit.CorpMemberBenefitBuilder(memberAnniv,corpBenefit)
                 .status(status);
 
-        if(parent!=null){
-            benefitBuilder.parentMemberBenefit(parent);
+        if(idParentCorpBenefit !=null){
+            CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentCorpBenefit);
+            // checking whether the parent member benefit being assigned has a corpBenefit that is a parent corpBenefit of this
+            // member benefit
+            if(corpBenefit.getParentBenefit().equals(parentBenefit)) {
+                CorpMemberBenefitId parentBenefitId = new CorpMemberBenefitId(parentBenefit, memberAnniv);
+                CorpMemberBenefit parent = repo.findOne(parentBenefitId);
+                benefitBuilder.parentMemberBenefit(parent);
+            } else {
+                return ResultFactory.getFailResult("The parent benefit you're assigning to this benefit does not match the parent-child benefit setup at the scheme level. Kindly check and revise.");
+            }
         }
 
         if(wef==null){
@@ -153,7 +162,8 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     public Result<CorpMemberBenefit> update(Long idMember,
                                             Long idCorpAnniv,
                                             Long idCorpBenefit,
-                                            CorpMemberBenefit parent, BenefitStatus status,
+                                            Long idParentCorpBenefit,
+                                            BenefitStatus status,
                                             LocalDate wef,
                                             String actionUsername) {
 
@@ -199,8 +209,17 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         CorpMemberBenefit.CorpMemberBenefitBuilder builder = new CorpMemberBenefit.CorpMemberBenefitBuilder(memberAnniv,corpBenefit);
         builder.status(status).wef(wef);
 
-        if(parent!=null){
-            builder.parentMemberBenefit(parent);
+        if(idParentCorpBenefit!=null){
+            CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentCorpBenefit);
+            // checking whether the parent member benefit being assigned has a corpBenefit that is a parent corpBenefit of this
+            // member benefit
+            if(corpBenefit.getParentBenefit().equals(parentBenefit)) {
+                CorpMemberBenefitId parentBenefitId = new CorpMemberBenefitId(parentBenefit, memberAnniv);
+                CorpMemberBenefit parent = repo.findOne(parentBenefitId);
+                builder.parentMemberBenefit(parent);
+            } else {
+                return ResultFactory.getFailResult("The parent benefit you're assigning to this benefit does not match the parent-child benefit setup at the scheme level. Kindly check and revise.");
+            }
         }
 
         CorpMemberBenefit benefit = builder.build();

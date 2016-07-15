@@ -17,7 +17,7 @@ public interface ICorpMemberBenefitService {
     Result<CorpMemberBenefit> create(Long idMember,
                                      Long idCorpAnniv,
                                      Long idCorpBenefit,
-                                     CorpMemberBenefit parent,
+                                     Long idParentCorpBenefit,
                                      BenefitStatus status,
                                      LocalDate wef,
                                      String actionUsername);
@@ -31,7 +31,7 @@ public interface ICorpMemberBenefitService {
     Result<CorpMemberBenefit> update(Long idMember,
                                      Long idCorpAnniv,
                                      Long idCorpBenefit,
-                                     CorpMemberBenefit parent,
+                                     Long idParentCorpBenefit,
                                      BenefitStatus status,
                                      LocalDate wef,
                                      String actionUsername);

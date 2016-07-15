@@ -41,7 +41,7 @@ public class GroupRateService implements IGroupRateService {
     @Override
     @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public Result<GroupRate> create(Long idCorporate,
-                                    Integer benefitCode,
+                                    Long benefitCode,
                                     String famSize,
                                     BigDecimal upperLimit,
                                     BigDecimal premium,
@@ -99,7 +99,7 @@ public class GroupRateService implements IGroupRateService {
     @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public Result<GroupRate> update(Long idPremiumRate,
                                     Long idCorporate,
-                                    Integer benefitCode,
+                                    Long benefitCode,
                                     String famSize,
                                     BigDecimal upperLimit,
                                     BigDecimal premium,
@@ -115,7 +115,7 @@ public class GroupRateService implements IGroupRateService {
     @Override@Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     public Result<Page<GroupRate>> findAll(Integer pageNumber, Integer size,String actionUsername) {
 
-        PageRequest request = new PageRequest(pageNumber,size);
+        PageRequest request = new PageRequest(pageNumber-1,size);
 
         Page<GroupRate> result = groupRateRepo.findAll(request);
 
@@ -137,7 +137,7 @@ public class GroupRateService implements IGroupRateService {
             return ResultFactory.getFailResult("No corporate with ID ["+idCorporate+"] was found.");
         }
 
-        PageRequest request = new PageRequest(pageNumber,size);
+        PageRequest request = new PageRequest(pageNumber-1,size);
 
         Page<GroupRate> result = groupRateRepo.findByCorporate(corporate,request);
 
