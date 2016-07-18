@@ -5,13 +5,11 @@ import ke.co.rhino.uw.entity.CorpBenefit;
 import ke.co.rhino.uw.entity.EntityItem;
 
 import javax.json.JsonObjectBuilder;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by akipkoech on 13/06/2016.
@@ -21,10 +19,10 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
 
     @Id
     private Long idFundInvoice;
-
-    //private FundInvoiceType invoiceType;
-    @ManyToOne //TODO check whether it's feasible to use @OneToMany instead
-    private AdminFee adminFee;
+    @Column(nullable = false,unique = true)
+    private String invoiceNumber;
+    @OneToMany(mappedBy = "fundInvoice")
+    private List<AdminFee> adminFeeList;
     private BigDecimal amount;
     private LocalDate invoiceDate;
     @OneToOne
@@ -35,17 +33,21 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
     }
 
     public FundInvoice(FundInvoiceBuilder fundInvoiceBuilder) {
+        this.idFundInvoice = fundInvoiceBuilder.idFundInvoice;
+        this.invoiceNumber = fundInvoiceBuilder.invoiceNumber;
         this.benefit = fundInvoiceBuilder.benefit;
         this.amount = fundInvoiceBuilder.amount;
         this.invoiceDate = fundInvoiceBuilder.invoiceDate;
-        this.adminFee = fundInvoiceBuilder.adminFee;
+        this.adminFeeList = fundInvoiceBuilder.adminFeeList;
     }
 
     public static class FundInvoiceBuilder{
+        private Long idFundInvoice;
+        private String invoiceNumber;
         private final CorpBenefit benefit;
         private final BigDecimal amount;
         private final LocalDate invoiceDate;
-        private AdminFee adminFee;
+        private List<AdminFee> adminFeeList;
 
         public FundInvoiceBuilder(CorpBenefit benefit, BigDecimal amount, LocalDate invoiceDate) {
             this.benefit = benefit;
@@ -53,10 +55,21 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
             this.invoiceDate = invoiceDate;
         }
 
-        public FundInvoiceBuilder adminFee(AdminFee adminFee){
-            this.adminFee = adminFee;
+        public FundInvoiceBuilder idFundInvoice(Long idFundInvoice){
+            this.idFundInvoice = idFundInvoice;
             return this;
         }
+
+        public FundInvoiceBuilder invoiceNumber(String invoiceNumber){
+            this.invoiceNumber = invoiceNumber;
+            return this;
+        }
+
+        public FundInvoiceBuilder adminFeeList(List<AdminFee> adminFeeList){
+            this.adminFeeList = adminFeeList;
+            return this;
+        }
+
 
         public FundInvoice build(){
             return new FundInvoice(this);
@@ -71,7 +84,9 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
 
     @Override
     public void addJson(JsonObjectBuilder builder) {
-        builder.add("amount", amount.toString())
+        builder.add("idFundInvoice",idFundInvoice)
+                .add("invoiceNumber", invoiceNumber)
+                .add("amount", amount.toString())
                 .add("invoiceDate",invoiceDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(invoiceDate));
         benefit.addJson(builder);
     }
@@ -80,8 +95,12 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
         return idFundInvoice;
     }
 
-    public AdminFee getAdminFee() {
-        return adminFee;
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public List<AdminFee> getAdminFeeList() {
+        return adminFeeList;
     }
 
     public BigDecimal getAmount() {

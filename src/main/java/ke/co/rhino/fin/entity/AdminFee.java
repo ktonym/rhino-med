@@ -6,6 +6,7 @@ import ke.co.rhino.uw.entity.EntityItem;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,8 +20,8 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
     @Id
     private Long idAdminFee;
     private AdminFeeType adminFeeType;
-    @OneToMany(mappedBy = "adminFee")
-    private List<FundInvoice> fundInvoiceList;
+    @ManyToOne
+    private FundInvoice fundInvoice;
     private BigDecimal amount;
 
     public AdminFee() {
@@ -30,16 +31,23 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
         this.adminFeeType = adminFeeBuilder.adminFeeType;
         this.amount = adminFeeBuilder.amount;
         this.idAdminFee = adminFeeBuilder.idAdminFee;
+        this.fundInvoice = adminFeeBuilder.fundInvoice;
     }
 
     public static class AdminFeeBuilder{
 
         private final AdminFeeType adminFeeType;
+        private FundInvoice fundInvoice;
         private BigDecimal amount;
         private Long idAdminFee;
 
         public AdminFeeBuilder(AdminFeeType adminFeeType) {
             this.adminFeeType = adminFeeType;
+        }
+
+        public AdminFeeBuilder fundInvoice(FundInvoice fundInvoice){
+            this.fundInvoice = fundInvoice;
+            return this;
         }
 
         public AdminFeeBuilder amount(BigDecimal amount){
@@ -65,7 +73,10 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
 
     @Override
     public void addJson(JsonObjectBuilder builder) {
-
+        builder.add("idAdminFee",idAdminFee)
+                .add("adminFeeType",adminFeeType.toString())
+                .add("amount",amount);
+        fundInvoice.addJson(builder);
     }
 
     public Long getIdAdminFee() {
@@ -76,8 +87,8 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
         return adminFeeType;
     }
 
-    public List<FundInvoice> getFundInvoiceList() {
-        return fundInvoiceList;
+    public FundInvoice getFundInvoice() {
+        return fundInvoice;
     }
 
     public BigDecimal getAmount() {
