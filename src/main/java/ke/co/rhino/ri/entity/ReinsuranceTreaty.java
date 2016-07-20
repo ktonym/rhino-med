@@ -19,6 +19,7 @@ public class ReinsuranceTreaty extends AbstractEntity implements EntityItem<Inte
     private Integer idRITreaty;
 
     @Column(name = "RI_TYPE",insertable = false,updatable = false)
+    @Enumerated(EnumType.STRING)
     private ReinsuranceType rIType;
 
     private Integer rIPeriod;
@@ -34,19 +35,19 @@ public class ReinsuranceTreaty extends AbstractEntity implements EntityItem<Inte
         this.idRITreaty = idRITreaty;
     }
 
-    public ReinsuranceType getRiType() {
+    public ReinsuranceType getRIType() {
         return rIType;
     }
 
-    public void setRIType(ReinsuranceType riType) {
-        this.rIType = riType;
+    public void setRIType(ReinsuranceType rIType) {
+        this.rIType = rIType;
     }
 
-    public Integer getrIPeriod() {
+    public Integer getRIPeriod() {
         return rIPeriod;
     }
 
-    public void setrIPeriod(Integer rIPeriod) {
+    public void setRIPeriod(Integer rIPeriod) {
         this.rIPeriod = rIPeriod;
     }
 
