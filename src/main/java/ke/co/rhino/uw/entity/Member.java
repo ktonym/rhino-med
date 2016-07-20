@@ -26,6 +26,7 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="principal_id",nullable = false)
     private Principal principal;
+    @Enumerated(EnumType.STRING)
     private MemberType memberType;
     @OneToMany(mappedBy = "member")
     private List<MemberAnniversary> memberAnniversaries;

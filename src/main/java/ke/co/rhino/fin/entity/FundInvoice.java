@@ -27,6 +27,15 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
     private LocalDate invoiceDate;
     @OneToOne
     private CorpBenefit benefit;
+    @Enumerated(EnumType.STRING)
+    private AdminFeeType adminFeeType;
+    @Basic(optional = true)
+    private double adminFeePercent;
+    @Basic(optional = true)
+    private BigDecimal perVisitAmount;
+    @Basic(optional = true)
+    private BigDecimal flatRateAmount;
+
     static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public FundInvoice() {
@@ -39,6 +48,10 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
         this.amount = fundInvoiceBuilder.amount;
         this.invoiceDate = fundInvoiceBuilder.invoiceDate;
         this.adminFeeList = fundInvoiceBuilder.adminFeeList;
+        this.adminFeeType = fundInvoiceBuilder.adminFeeType;
+        this.adminFeePercent = fundInvoiceBuilder.adminFeePercent;
+        this.perVisitAmount = fundInvoiceBuilder.perVisitAmount;
+        this.flatRateAmount = fundInvoiceBuilder.flatRateAmount;
     }
 
     public static class FundInvoiceBuilder{
@@ -48,6 +61,10 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
         private final BigDecimal amount;
         private final LocalDate invoiceDate;
         private List<AdminFee> adminFeeList;
+        private AdminFeeType adminFeeType;
+        private double adminFeePercent;
+        private BigDecimal perVisitAmount;
+        private BigDecimal flatRateAmount;
 
         public FundInvoiceBuilder(CorpBenefit benefit, BigDecimal amount, LocalDate invoiceDate) {
             this.benefit = benefit;
@@ -70,6 +87,25 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
             return this;
         }
 
+        public FundInvoiceBuilder adminFeeType(AdminFeeType adminFeeType){
+            this.adminFeeType = adminFeeType;
+            return this;
+        }
+
+        public FundInvoiceBuilder adminFeePercent(double adminFeePercent){
+            this.adminFeePercent = adminFeePercent;
+            return this;
+        }
+
+        public FundInvoiceBuilder perVisitAmount(BigDecimal perVisitAmount){
+            this.perVisitAmount = perVisitAmount;
+            return this;
+        }
+
+        public FundInvoiceBuilder flatRateAmount(BigDecimal flatRateAmount){
+            this.flatRateAmount = flatRateAmount;
+            return this;
+        }
 
         public FundInvoice build(){
             return new FundInvoice(this);
@@ -87,6 +123,10 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
         builder.add("idFundInvoice",idFundInvoice)
                 .add("invoiceNumber", invoiceNumber)
                 .add("amount", amount.toString())
+                .add("adminFeeType", adminFeeType.toString())
+                .add("adminFeePercent", adminFeePercent == 0 ? "" : String.valueOf(adminFeePercent))
+                .add("perVisitAmount", perVisitAmount == null ? "" : perVisitAmount.toString())
+                .add("flatRateAmount", flatRateAmount == null ? "" : flatRateAmount.toString())
                 .add("invoiceDate",invoiceDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(invoiceDate));
         benefit.addJson(builder);
     }
@@ -113,5 +153,21 @@ public class FundInvoice extends AbstractEntity implements EntityItem<Long> {
 
     public CorpBenefit getBenefit() {
         return benefit;
+    }
+
+    public AdminFeeType getAdminFeeType() {
+        return adminFeeType;
+    }
+
+    public double getAdminFeePercent() {
+        return adminFeePercent;
+    }
+
+    public BigDecimal getPerVisitAmount() {
+        return perVisitAmount;
+    }
+
+    public BigDecimal getFlatRateAmount() {
+        return flatRateAmount;
     }
 }

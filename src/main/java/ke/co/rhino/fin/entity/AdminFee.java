@@ -19,7 +19,6 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
 
     @Id
     private Long idAdminFee;
-    private AdminFeeType adminFeeType;
     @ManyToOne
     private FundInvoice fundInvoice;
     private BigDecimal amount;
@@ -28,7 +27,7 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
     }
 
     public AdminFee(AdminFeeBuilder adminFeeBuilder) {
-        this.adminFeeType = adminFeeBuilder.adminFeeType;
+       // this.adminFeeType = adminFeeBuilder.adminFeeType;
         this.amount = adminFeeBuilder.amount;
         this.idAdminFee = adminFeeBuilder.idAdminFee;
         this.fundInvoice = adminFeeBuilder.fundInvoice;
@@ -36,19 +35,19 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
 
     public static class AdminFeeBuilder{
 
-        private final AdminFeeType adminFeeType;
+        //private final AdminFeeType adminFeeType;
         private FundInvoice fundInvoice;
         private BigDecimal amount;
         private Long idAdminFee;
 
-        public AdminFeeBuilder(AdminFeeType adminFeeType) {
-            this.adminFeeType = adminFeeType;
+        public AdminFeeBuilder(FundInvoice fundInvoice) {
+            this.fundInvoice = fundInvoice;
         }
 
-        public AdminFeeBuilder fundInvoice(FundInvoice fundInvoice){
-            this.fundInvoice = fundInvoice;
-            return this;
-        }
+//        public AdminFeeBuilder fundInvoice(){
+//            this.fundInvoice = fundInvoice;
+//            return this;
+//        }
 
         public AdminFeeBuilder amount(BigDecimal amount){
             this.amount = amount;
@@ -74,17 +73,13 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("idAdminFee",idAdminFee)
-                .add("adminFeeType",adminFeeType.toString())
+                //.add("adminFeeType",adminFeeType.toString())
                 .add("amount",amount);
         fundInvoice.addJson(builder);
     }
 
     public Long getIdAdminFee() {
         return idAdminFee;
-    }
-
-    public AdminFeeType getAdminFeeType() {
-        return adminFeeType;
     }
 
     public FundInvoice getFundInvoice() {

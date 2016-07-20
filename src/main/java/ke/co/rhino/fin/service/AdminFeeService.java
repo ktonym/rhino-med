@@ -2,6 +2,7 @@ package ke.co.rhino.fin.service;
 
 import ke.co.rhino.fin.entity.AdminFee;
 import ke.co.rhino.fin.entity.AdminFeeType;
+import ke.co.rhino.fin.entity.FundInvoice;
 import ke.co.rhino.fin.repo.AdminFeeRepo;
 import ke.co.rhino.fin.repo.FundInvoiceRepo;
 import ke.co.rhino.uw.repo.CorpBenefitRepo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 19/07/2016.
@@ -37,18 +39,31 @@ public class AdminFeeService implements IAdminFeeService {
         if(adminFeeType==null){
             return ResultFactory.getFailResult("Admin fee type not provided. Cannot save.");
         }
+        Optional<FundInvoice> fundInvoiceOptional = fundInvoiceRepo.getOne(idFundInvoice);
+        if(!fundInvoiceOptional.isPresent()){
+            return ResultFactory.getFailResult("No fund invoice with ID ["+idFundInvoice+"] was found.");
+        }
+        AdminFee.AdminFeeBuilder builder = new AdminFee.AdminFeeBuilder(fundInvoiceOptional.get());
         switch (adminFeeType){
             case PERCENTAGE_OF_FUND:
                 // Get percentage from fund invoice
+                double percentage = fundInvoiceOptional.get().getAdminFeePercent();
+                BigDecimal bigPercentage = BigDecimal.valueOf(percentage);
+                BigDecimal amt = fundInvoiceOptional.get().getAmount().multiply(bigPercentage).divide(BigDecimal.valueOf(100));
+                if(amount.compareTo(amt)<0){
+                    amount = amt;
+                }
                 break;
             case BY_POPULATION:
                 // Get count of corpMemberBenefit under the corresponding CorpBenefit;
                 break;
             case FLAT_RATE:
                 // Just save the amount
+                BigDecimal flatRate = fundInvoiceOptional.get().getFlatRateAmount();
                 break;
             case PER_VISIT:
                 // Get definition of per visit fee from fund invoice;
+                BigDecimal perVisitAmount = fundInvoiceOptional.get().getPerVisitAmount();
                 break;
             default:
                 break;

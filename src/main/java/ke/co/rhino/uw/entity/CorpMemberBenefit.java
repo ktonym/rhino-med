@@ -24,6 +24,7 @@ public class CorpMemberBenefit extends AbstractEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idCorpBenefit", referencedColumnName = "idCorpBenefit")
     private CorpBenefit benefit;
+    @Enumerated(EnumType.STRING)
     private BenefitStatus status;
     @Convert(converter = LocalDatePersistenceConverter.class)
     private LocalDate wef;
