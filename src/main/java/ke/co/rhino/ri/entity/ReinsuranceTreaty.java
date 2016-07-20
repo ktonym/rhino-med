@@ -19,7 +19,7 @@ public class ReinsuranceTreaty extends AbstractEntity implements EntityItem<Inte
     private Integer idRITreaty;
 
     @Column(name = "RI_TYPE",insertable = false,updatable = false)
-    private ReinsuranceType riType;
+    private ReinsuranceType rIType;
 
     private Integer rIPeriod;
 
@@ -35,11 +35,11 @@ public class ReinsuranceTreaty extends AbstractEntity implements EntityItem<Inte
     }
 
     public ReinsuranceType getRiType() {
-        return riType;
+        return rIType;
     }
 
-    public void setRiType(ReinsuranceType riType) {
-        this.riType = riType;
+    public void setRIType(ReinsuranceType riType) {
+        this.rIType = riType;
     }
 
     public Integer getrIPeriod() {
@@ -58,7 +58,7 @@ public class ReinsuranceTreaty extends AbstractEntity implements EntityItem<Inte
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("idRITreaty",idRITreaty)
-                .add("riType", riType.toString())
+                .add("rIType", rIType.toString())
                 .add("rIPeriod",rIPeriod);
 
     }

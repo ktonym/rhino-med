@@ -1,5 +1,6 @@
 package ke.co.rhino.fin.web;
 
+import ke.co.rhino.fin.entity.AdminFeeType;
 import ke.co.rhino.fin.entity.FundInvoice;
 import ke.co.rhino.fin.service.IFundInvoiceService;
 import ke.co.rhino.security.IAuthenticationFacade;
@@ -40,8 +41,13 @@ public class FundInvoiceHandler extends AbstractHandler {
         String invoiceDateStr = jsonObject.getString("invoiceDate");
         LocalDate invoiceDate = LocalDate.parse(invoiceDateStr, DATE_FORMAT_yyyyMMdd);
         Long idCorpBenefit = ((JsonNumber) jsonObject.get("idCorpBenefit")).longValue();
+        AdminFeeType adminFeeType = AdminFeeType.valueOf(jsonObject.getString("adminFeeType"));
+        Double adminFeePercent = ((JsonNumber) jsonObject.get("adminFeePercent")).doubleValue();
+        BigDecimal perVisitAmount = ((JsonNumber) jsonObject.get("perVisitAmount")).bigDecimalValue();
+        BigDecimal flatRateAmount = ((JsonNumber) jsonObject.get("flatRateAmount")).bigDecimalValue();
+        BigDecimal ratePerHead = ((JsonNumber) jsonObject.get("ratePerHead")).bigDecimalValue();
 
-        Result<FundInvoice> ar = service.create(amount,invoiceDate,idCorpBenefit,getUser());
+        Result<FundInvoice> ar = service.create(amount, invoiceDate,adminFeeType,adminFeePercent,perVisitAmount,flatRateAmount,ratePerHead, idCorpBenefit, getUser());
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
@@ -62,8 +68,15 @@ public class FundInvoiceHandler extends AbstractHandler {
         String invoiceDateStr = jsonObject.getString("invoiceDate");
         LocalDate invoiceDate = LocalDate.parse(invoiceDateStr, DATE_FORMAT_yyyyMMdd);
         Long idCorpBenefit = ((JsonNumber) jsonObject.get("idCorpBenefit")).longValue();
+        AdminFeeType adminFeeType = AdminFeeType.valueOf(jsonObject.getString("adminFeeType"));
+        Double adminFeePercent = ((JsonNumber) jsonObject.get("adminFeePercent")).doubleValue();
+        BigDecimal perVisitAmount = ((JsonNumber) jsonObject.get("perVisitAmount")).bigDecimalValue();
+        BigDecimal flatRateAmount = ((JsonNumber) jsonObject.get("flatRateAmount")).bigDecimalValue();
+        BigDecimal ratePerHead = ((JsonNumber) jsonObject.get("ratePerHead")).bigDecimalValue();
 
-        Result<FundInvoice> ar = service.update(idFundInvoice,invoiceNumber,amount, invoiceDate, idCorpBenefit, getUser());
+        Result<FundInvoice> ar = service.update(idFundInvoice,invoiceNumber,
+                amount,invoiceDate,adminFeeType,adminFeePercent,perVisitAmount,
+                flatRateAmount,ratePerHead,idCorpBenefit,getUser());
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {

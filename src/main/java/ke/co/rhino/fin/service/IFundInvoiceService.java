@@ -1,6 +1,7 @@
 package ke.co.rhino.fin.service;
 
 import ke.co.rhino.fin.entity.AdminFee;
+import ke.co.rhino.fin.entity.AdminFeeType;
 import ke.co.rhino.fin.entity.FundInvoice;
 import ke.co.rhino.uw.vo.Result;
 import org.springframework.data.domain.Page;
@@ -17,10 +18,13 @@ public interface IFundInvoiceService {
 
     @PreAuthorize("hasAnyRole('ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
     Result<FundInvoice> create(BigDecimal amount,LocalDate invoiceDate,
-                               Long idCorpBenefit,String actionUsername);
+                               AdminFeeType adminFeeType,Double adminFeePercent,BigDecimal perVisitAmount,
+                               BigDecimal flatRateAmount, BigDecimal ratePerHead,Long idCorpBenefit,String actionUsername);
 
     @PreAuthorize("hasAnyRole('ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
     Result<FundInvoice> update(Long idFundInvoice, String invoiceNumber,BigDecimal amount,LocalDate invoiceDate,
+                               AdminFeeType adminFeeType,Double adminFeePercent,BigDecimal perVisitAmount,
+                               BigDecimal flatRateAmount,BigDecimal ratePerHead,
                                Long idCorpBenefit,String actionUsername);
 
     @PreAuthorize("hasAnyRole('ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")

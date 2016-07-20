@@ -22,6 +22,7 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
     @ManyToOne
     private FundInvoice fundInvoice;
     private BigDecimal amount;
+    private String notes;
 
     public AdminFee() {
     }
@@ -31,6 +32,7 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
         this.amount = adminFeeBuilder.amount;
         this.idAdminFee = adminFeeBuilder.idAdminFee;
         this.fundInvoice = adminFeeBuilder.fundInvoice;
+        this.notes = adminFeeBuilder.notes;
     }
 
     public static class AdminFeeBuilder{
@@ -39,6 +41,7 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
         private FundInvoice fundInvoice;
         private BigDecimal amount;
         private Long idAdminFee;
+        private String notes;
 
         public AdminFeeBuilder(FundInvoice fundInvoice) {
             this.fundInvoice = fundInvoice;
@@ -59,6 +62,11 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
             return this;
         }
 
+        public AdminFeeBuilder notes(String notes){
+            this.notes = notes;
+            return this;
+        }
+
         public AdminFee build(){
             return new AdminFee(this);
         }
@@ -73,8 +81,9 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("idAdminFee",idAdminFee)
+                .add("notes",notes)
                 //.add("adminFeeType",adminFeeType.toString())
-                .add("amount",amount);
+                .add("amount", amount);
         fundInvoice.addJson(builder);
     }
 
@@ -88,5 +97,9 @@ public class AdminFee extends AbstractEntity implements EntityItem<Long>{
 
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    public String getNotes() {
+        return notes;
     }
 }

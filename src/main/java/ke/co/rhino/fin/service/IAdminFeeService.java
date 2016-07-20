@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 public interface IAdminFeeService {
 
     @PreAuthorize("hasAnyRole('ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
-    Result<AdminFee> create(Long idFundInvoice,AdminFeeType adminFeeType,BigDecimal amount, String actionUsername);
+    Result<AdminFee> create(Long idFundInvoice,BigDecimal amount,String notes,String actionUsername);
     @PreAuthorize("isAuthenticated()")
     Result<Page<AdminFee>> findAll(Long idCorpBenefit,int pageNo, int size,String actionUsername);
     @PreAuthorize("hasAnyRole('ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
-    Result<AdminFee> update(Long idAdminFee,Long idFundInvoice,AdminFeeType adminFeeType,BigDecimal amount,String actionUsername);
+    Result<AdminFee> update(Long idAdminFee,Long idFundInvoice,BigDecimal amount,String notes,String actionUsername);
     @PreAuthorize("hasAnyRole('ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
     Result<AdminFee> remove(Long idAdminFee,String actionUsername);
 
