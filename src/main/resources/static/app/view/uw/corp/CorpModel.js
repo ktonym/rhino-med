@@ -22,6 +22,11 @@ Ext.define('Rhino.view.uw.corp.CorpModel',{
             //    property: 'idCorporate',
             //    value: '{idCorporateFilter}'
             //}]
+        },
+
+        principals: {
+            model: 'Rhino.model.uw.Principal',
+            autoLoad: false
         }
     },
     
@@ -48,6 +53,30 @@ Ext.define('Rhino.view.uw.corp.CorpModel',{
             },
             set: function(anniv){
                 anniv = this.set('selectedAnniversary',anniv);
+            }
+        },
+        selectedPrincipal: {
+            bind: {
+                bindTo: '{corpPrincipalList.selection}',
+                deep: true
+            },
+            get: function(principal){
+                return principal;
+            },
+            set: function(principal){
+                principal = this.set('selectedPrincipal',principal);
+            }
+        },
+        selectedMember: {
+            bind: {
+                bindTo: '{corpMembers.selection}',
+                deep: true
+            },
+            get: function(member){
+                return member;
+            },
+            set: function(member){
+                member = this.set('selectedMember',member);
             }
         }
     }
