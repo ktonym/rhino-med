@@ -2,6 +2,8 @@ Ext.define('Rhino.view.care.CareModel',{
     extend: 'Ext.app.ViewModel',
     
     alias: 'viewmodel.care',
+
+    requires: ['Rhino.model.care.Provider'],
     
     stores: {
         admissions: {

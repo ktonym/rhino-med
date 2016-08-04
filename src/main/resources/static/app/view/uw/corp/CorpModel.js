@@ -1,7 +1,7 @@
 Ext.define('Rhino.view.uw.corp.CorpModel',{
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.corporate',
-    
+    requires: ['Rhino.model.uw.CorpAnniv'],
     stores: {
         corporates: {
             model: 'Rhino.model.uw.Corporate',
