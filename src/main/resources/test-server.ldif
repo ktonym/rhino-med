@@ -137,12 +137,19 @@ objectclass: top
 objectclass: groupOfNames
 cn: uw_managers
 ou: uw_manager
-uniqueMember: uid=liz,ou=groups,dc=springframework,dc=org
+uniqueMember: uid=liz,ou=people,dc=springframework,dc=org
 
-dn: cn=claimAnalysts,ou=groups,dc=springframework,dc=org
+dn: cn=clm_analysts,ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: groupOfNames
-cn: claimAnalysts
-ou: claimAnalyst
+cn: clm_analysts
+ou: clm_analyst
 uniqueMember: uid=motari,ou=people,dc=springframework,dc=org
 uniqueMember: uid=liz,ou=people,dc=springframework,dc=org
+
+dn: cn=clm_managers,ou=groups,dc=springframework,dc=org
+objectclass: top
+objectclass: groupOfNames
+cn: clm_managers
+ou: clm_manager
+uniqueMember: uid=motari,ou=people,dc=springframework,dc=org

@@ -31,7 +31,7 @@ public interface ICorpService {
     List<Member> listActiveMembers(Corporate corporate);
     List<Category> listCategories(Corporate corporate);
 */
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Corporate> update(
             Long idCorporate,
             String corporateName,
@@ -44,7 +44,7 @@ public interface ICorpService {
             LocalDateTime lastUpdate,
             String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
     Result<Corporate> create(
             String name,
             String abbreviation,
@@ -56,7 +56,7 @@ public interface ICorpService {
             LocalDateTime lastUpdate,
             String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
     Result<List<Corporate>> create(List<Map<String,Object>> corporateMap, String actionUsername);
 
     //Result<List<Corporate>> store(List<Map<String,Object>> corporateMap, String actionUsername);
