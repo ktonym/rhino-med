@@ -4,6 +4,10 @@ Ext.define('Rhino.view.care.Controller',{
     
     init: function(){
         this.setCurrentView('admission-list');
+    },
+
+    onGridCellItemClick: function () {
+        console.log("Grid cell clicked.");
     }
     
 });

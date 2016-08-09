@@ -1,13 +1,11 @@
 Ext.define('Rhino.view.uw.corp.CorpList',{
     extend: 'Ext.grid.Panel',
-    
     alias: 'widget.corplist',
-
     reference: 'corpList',
-
-    requires:  ['Rhino.model.uw.Corporate',
+    session: true,
+    requires:  [//'Rhino.model.uw.Corporate',
                 //'Rhino.model.uw.CorpAnniv',
-                'Rhino.model.uw.AnnivSusp'
+                //'Rhino.model.uw.AnnivSusp'
                 ],//,'Rhino.model.uw.ContactPerson'],
     
     cls: 'email-inbox-panel shadow-panel',
