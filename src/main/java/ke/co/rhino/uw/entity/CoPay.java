@@ -1,5 +1,7 @@
 package ke.co.rhino.uw.entity;
 
+import ke.co.rhino.care.entity.ServiceProvider;
+
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -8,15 +10,16 @@ import java.math.BigDecimal;
  * Created by akipkoech on 12/8/14.
  */
 @Entity
-public class CoPay extends AbstractEntity implements EntityItem<Integer> {
+public class CoPay extends AbstractEntity implements EntityItem<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer idCoPay;
-    @Column(name = "provider_id")
-    private Integer idProvider;
+    private Long idCoPay;
+    @OneToOne
+    @JoinColumn(name = "provider_id") //to be redefined in a micro service edition
+    private ServiceProvider serviceProvider;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="regulation_id")
+    @JoinColumn(name="regulation_id") //to be redefined in a micro service edition
     private Regulation regulation;
     private BigDecimal coPayAmount;
 
@@ -24,18 +27,18 @@ public class CoPay extends AbstractEntity implements EntityItem<Integer> {
     }
 
     public CoPay(CoPayBuilder coPayBuilder) {
-        this.idProvider = coPayBuilder.idProvider;
+        this.serviceProvider = coPayBuilder.serviceProvider;
         this.regulation = coPayBuilder.regulation;
         this.coPayAmount = coPayBuilder.coPayAmount;
     }
 
     public static class CoPayBuilder{
-        private final Integer idProvider;
+        private ServiceProvider serviceProvider;
         private final Regulation regulation;
         private final BigDecimal coPayAmount;
 
-        public CoPayBuilder(Integer idProvider, Regulation regulation, BigDecimal coPayAmount) {
-            this.idProvider = idProvider;
+        public CoPayBuilder(ServiceProvider serviceProvider, Regulation regulation, BigDecimal coPayAmount) {
+            this.serviceProvider = serviceProvider;
             this.regulation = regulation;
             this.coPayAmount = coPayAmount;
         }
@@ -45,12 +48,12 @@ public class CoPay extends AbstractEntity implements EntityItem<Integer> {
         }
     }
 
-    public Integer getIdCoPay() {
+    public Long getIdCoPay() {
         return idCoPay;
     }
 
-    public Integer getIdProvider() {
-        return idProvider;
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
     }
 
     public Regulation getRegulation() {
@@ -62,16 +65,15 @@ public class CoPay extends AbstractEntity implements EntityItem<Integer> {
     }
 
     @Override
-    public Integer getId() {
+    public Long getId() {
         return idCoPay;
     }
 
     @Override
     public void addJson(JsonObjectBuilder builder) {
-        builder.add("idCoPay", idCoPay);
-        builder.add("idProvider", idProvider);
+        builder.add("idCoPay", idCoPay)
+                .add("coPayAmount",coPayAmount);
+        serviceProvider.addJson(builder);
         regulation.addJson(builder);
-        builder.add("coPayAmount",coPayAmount);
-
     }
 }

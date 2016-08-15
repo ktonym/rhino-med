@@ -2,8 +2,10 @@ package ke.co.rhino.care.entity;
 
 import ke.co.rhino.fin.entity.BankDetail;
 import ke.co.rhino.uw.entity.AbstractEntity;
+import ke.co.rhino.uw.entity.CoPay;
 import ke.co.rhino.uw.entity.EntityItem;
 import ke.co.rhino.uw.entity.JsonItem;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -23,8 +25,10 @@ public class ServiceProvider extends AbstractEntity implements EntityItem<Long> 
     private String email;
     private String town;
     private String tel;
-    @OneToOne(mappedBy = "serviceProvider")//field should be redefined in a microservice edition
+    @OneToOne(mappedBy = "serviceProvider")//field should be redefined in a micro service edition
     private BankDetail bankDetail;
+    @OneToOne(mappedBy = "serviceProvider")//redefinition in a micro service edition
+    private CoPay coPay;
 
     public ServiceProvider() {
     }
@@ -36,6 +40,7 @@ public class ServiceProvider extends AbstractEntity implements EntityItem<Long> 
         this.town = serviceProviderBuilder.town;
         this.tel = serviceProviderBuilder.tel;
         this.bankDetail = serviceProviderBuilder.bankDetail;
+        this.coPay = serviceProviderBuilder.coPay;
     }
 
     public static class ServiceProviderBuilder{
@@ -45,6 +50,7 @@ public class ServiceProvider extends AbstractEntity implements EntityItem<Long> 
         private String town;
         private String tel;
         private BankDetail bankDetail;
+        private CoPay coPay;
 
         public ServiceProviderBuilder(String providerName) {
             this.providerName = providerName;
@@ -72,6 +78,11 @@ public class ServiceProvider extends AbstractEntity implements EntityItem<Long> 
 
         public ServiceProviderBuilder bankDetail(BankDetail bankDetail){
             this.bankDetail = bankDetail;
+            return this;
+        }
+
+        public ServiceProviderBuilder coPay(CoPay coPay){
+            this.coPay = coPay;
             return this;
         }
 

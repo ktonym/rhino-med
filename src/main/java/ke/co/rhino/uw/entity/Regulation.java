@@ -8,11 +8,11 @@ import java.util.List;
  * Created by akipkoech on 12/8/14.
  */
 @Entity
-public class Regulation extends AbstractEntity implements EntityItem<Integer> {
+public class Regulation extends AbstractEntity implements EntityItem<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer idRegulation;
+    private Long idRegulation;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "anniv_id",unique = true)
     private CorpAnniv anniv;
@@ -25,11 +25,11 @@ public class Regulation extends AbstractEntity implements EntityItem<Integer> {
     public Regulation() {
     }
 
-    public Integer getIdRegulation() {
+    public Long getIdRegulation() {
         return idRegulation;
     }
 
-    public void setIdRegulation(Integer idRegulation) {
+    public void setIdRegulation(Long idRegulation) {
         this.idRegulation = idRegulation;
     }
 
@@ -83,7 +83,7 @@ public class Regulation extends AbstractEntity implements EntityItem<Integer> {
     }
 
     @Override
-    public Integer getId() {
+    public Long getId() {
         return idRegulation;
     }
 }
