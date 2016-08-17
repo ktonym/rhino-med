@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by akipkoech on 24/02/2016.
  */
-//@Controller
+@Controller
 public class LogoutHandler{
 
-    //@RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null){

@@ -116,7 +116,7 @@ public class RegulationService implements IRegulationService {
 
             // commission rate and withholding tax rate ought to be established from corpAnniv.getIntermediary().getType
 
-            Intermediary intermediary = intermediaryRepo.findByCorpAnniv(anniv);
+            Intermediary intermediary = intermediaryRepo.findByAnniv(idCorpAnniv);
 
             switch (intermediary.getType()){
                 case DIRECT:

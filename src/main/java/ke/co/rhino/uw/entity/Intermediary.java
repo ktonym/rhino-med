@@ -56,7 +56,7 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
         this.tel = builder.tel;
         this.lastUpdate = builder.lastUpdate;
         this.idIntermediary = builder.idIntermediary; //TODO check whether this always works -- hint: NPE
-        this.corpAnnivs.add(builder.corpAnniv);
+       // this.corpAnnivs.add(builder.corpAnniv);
     }
 
     public static class IntermediaryBuilder{
@@ -71,7 +71,7 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
         private String tel;
         private LocalDateTime lastUpdate;
         private Long idIntermediary;
-        private CorpAnniv corpAnniv;
+        //private CorpAnniv corpAnniv;
 
         public IntermediaryBuilder(String name, String pin, IntermediaryType type, LocalDate joinDate) {
             this.name = name;
@@ -110,10 +110,10 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
             return this;
         }
 
-        public IntermediaryBuilder corpAnniv(CorpAnniv anniv){
-            this.corpAnniv = anniv;
-            return this;
-        }
+//        public IntermediaryBuilder corpAnniv(CorpAnniv anniv){
+//            this.corpAnniv = anniv;
+//            return this;
+//        }
 
         public IntermediaryBuilder lastUpdate(LocalDateTime lastUpdate){
             this.lastUpdate = lastUpdate;

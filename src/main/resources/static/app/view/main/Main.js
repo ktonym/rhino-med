@@ -79,7 +79,10 @@ Ext.define('Rhino.view.main.Main', {
                     xtype: 'button',
                     text: 'Logout',
                     tooltip: 'Logout this session',
-                    handler: 'onLogout'
+                    //handler: 'onLogout'
+                    handler: function(){
+                        console.log("Clicked logout..");
+                    }
                 }
 //                {
 //                    xtype: 'image',

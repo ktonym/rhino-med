@@ -16,7 +16,7 @@ public interface RegulationRepo extends PagingAndSortingRepository<Regulation,Lo
 
     Regulation findByCorpAnniv(CorpAnniv anniv);
 
-    Page<Regulation> findByCorpAnnivCorporate(Corporate corporate, Pageable pageable);
+    Page<Regulation> findByCorpAnniv_Corporate(Corporate corporate, Pageable pageable);
 
     Optional<Regulation> getOne(Long idRegulation);
 

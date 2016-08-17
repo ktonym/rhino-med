@@ -28,12 +28,14 @@ public class CorpAnniv extends AbstractEntity implements EntityItem<Long> {
     @JoinColumn(name="corp_id")
     private Corporate corporate;
     @ManyToOne //(cascade = CascadeType.ALL)
-    @JoinColumn(name = "intermediary_id",referencedColumnName = "idIntermediary",nullable = true)
+    @JoinColumn(name = "idIntermediary",referencedColumnName = "idIntermediary",nullable = true)
     private Intermediary intermediary;
     @OneToMany(mappedBy = "corpAnniv")
     private List<MemberAnniversary> memberAnniversaries;
     @OneToMany(mappedBy = "corpAnniv")
     private List<CorpAnnivSuspension> annivSuspensions;
+    @OneToOne(mappedBy = "corpAnniv")
+    private Regulation regulation;
     @Convert(converter = LocalDateTimePersistenceConverter.class)
     private LocalDateTime lastUpdate;
 

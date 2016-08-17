@@ -27,7 +27,9 @@ public interface IntermediaryRepo extends PagingAndSortingRepository<Intermediar
     List<Intermediary> findByJoinDateBefore(LocalDate joinDate);
     List<Intermediary> findByNameLike(String searchStr);
 
+    @Query("SELECT c.intermediary FROM CorpAnniv c WHERE c.idCorpAnniv = :annivId")
+    Intermediary findByAnniv(@Param("annivId") Long annivId);
 
-    Intermediary findByCorpAnniv(CorpAnniv anniv);
+    List<Intermediary> findAll();
 
 }

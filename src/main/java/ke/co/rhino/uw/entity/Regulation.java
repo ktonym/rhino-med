@@ -15,7 +15,7 @@ public class Regulation extends AbstractEntity implements EntityItem<Long> {
     private Long idRegulation;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "anniv_id",unique = true)
-    private CorpAnniv anniv;
+    private CorpAnniv corpAnniv;
     private Integer commRate;
     private Integer whTaxRate;
     private Boolean coPay;
@@ -27,7 +27,7 @@ public class Regulation extends AbstractEntity implements EntityItem<Long> {
 
     public Regulation(RegulationBuilder builder) {
         this.idRegulation = builder.idRegulation;
-        this.anniv = builder.anniv;
+        this.corpAnniv = builder.anniv;
         this.commRate = builder.commRate;
         this.whTaxRate = builder.whTaxRate;
         this.coPay = builder.coPay;
@@ -81,8 +81,8 @@ public class Regulation extends AbstractEntity implements EntityItem<Long> {
         return idRegulation;
     }
 
-    public CorpAnniv getAnniv() {
-        return anniv;
+    public CorpAnniv getCorpAnniv() {
+        return corpAnniv;
     }
 
     public Integer getCommRate() {
@@ -107,7 +107,7 @@ public class Regulation extends AbstractEntity implements EntityItem<Long> {
                 .add("commRate", commRate)
                 .add("whTaxRate",whTaxRate)
                 .add("coPay",coPay);
-        anniv.addJson(builder);
+        corpAnniv.addJson(builder);
     }
 
     @Override
