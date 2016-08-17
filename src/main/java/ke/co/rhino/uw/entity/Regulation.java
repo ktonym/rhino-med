@@ -25,52 +25,80 @@ public class Regulation extends AbstractEntity implements EntityItem<Long> {
     public Regulation() {
     }
 
-    public Long getIdRegulation() {
-        return idRegulation;
+    public Regulation(RegulationBuilder builder) {
+        this.idRegulation = builder.idRegulation;
+        this.anniv = builder.anniv;
+        this.commRate = builder.commRate;
+        this.whTaxRate = builder.whTaxRate;
+        this.coPay = builder.coPay;
+        this.coPayList.addAll(builder.coPayList);
     }
 
-    public void setIdRegulation(Long idRegulation) {
-        this.idRegulation = idRegulation;
+    public static class RegulationBuilder{
+
+        private Long idRegulation;
+        private final CorpAnniv anniv;
+        private Integer commRate;
+        private Integer whTaxRate;
+        private Boolean coPay;
+        private List<CoPay> coPayList;
+
+        public RegulationBuilder(CorpAnniv anniv) {
+            this.anniv = anniv;
+        }
+
+        public RegulationBuilder idRegulation(Long idRegulation){
+            this.idRegulation = idRegulation;
+            return this;
+        }
+
+        public RegulationBuilder commRate(Integer commRate){
+            this.commRate = commRate;
+            return this;
+        }
+
+        public RegulationBuilder whTaxRate(Integer whTaxRate){
+            this.whTaxRate = whTaxRate;
+            return this;
+        }
+
+        public RegulationBuilder coPay(Boolean coPay){
+            this.coPay = coPay;
+            return this;
+        }
+
+        public RegulationBuilder coPayList(List<CoPay> coPayList){
+            this.coPayList = coPayList;
+            return this;
+        }
+
+        public Regulation build(){
+            return new Regulation(this);
+        }
+    }
+
+    public Long getIdRegulation() {
+        return idRegulation;
     }
 
     public CorpAnniv getAnniv() {
         return anniv;
     }
 
-    public void setAnniv(CorpAnniv anniv) {
-        this.anniv = anniv;
-    }
-
     public Integer getCommRate() {
         return commRate;
-    }
-
-    public void setCommRate(Integer commRate) {
-        this.commRate = commRate;
     }
 
     public Integer getWhTaxRate() {
         return whTaxRate;
     }
 
-    public void setWhTaxRate(Integer whTaxRate) {
-        this.whTaxRate = whTaxRate;
-    }
-
     public Boolean getCoPay() {
         return coPay;
     }
 
-    public void setCoPay(Boolean coPay) {
-        this.coPay = coPay;
-    }
-
     public List<CoPay> getCoPayList() {
         return coPayList;
-    }
-
-    public void setCoPayList(List<CoPay> coPayList) {
-        this.coPayList = coPayList;
     }
 
     @Override

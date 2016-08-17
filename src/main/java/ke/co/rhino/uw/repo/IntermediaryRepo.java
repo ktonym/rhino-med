@@ -1,5 +1,6 @@
 package ke.co.rhino.uw.repo;
 
+import ke.co.rhino.uw.entity.CorpAnniv;
 import ke.co.rhino.uw.entity.Intermediary;
 import ke.co.rhino.uw.entity.IntermediaryType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,6 @@ public interface IntermediaryRepo extends PagingAndSortingRepository<Intermediar
     List<Intermediary> findByNameLike(String searchStr);
 
 
+    Intermediary findByCorpAnniv(CorpAnniv anniv);
 
 }

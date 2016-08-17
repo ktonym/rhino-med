@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.function.IntBinaryOperator;
 
 /**
  * Created by akipkoech on 12/8/14.
@@ -55,6 +56,7 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
         this.tel = builder.tel;
         this.lastUpdate = builder.lastUpdate;
         this.idIntermediary = builder.idIntermediary; //TODO check whether this always works -- hint: NPE
+        this.corpAnnivs.add(builder.corpAnniv);
     }
 
     public static class IntermediaryBuilder{
@@ -69,6 +71,7 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
         private String tel;
         private LocalDateTime lastUpdate;
         private Long idIntermediary;
+        private CorpAnniv corpAnniv;
 
         public IntermediaryBuilder(String name, String pin, IntermediaryType type, LocalDate joinDate) {
             this.name = name;
@@ -104,6 +107,11 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
 
         public IntermediaryBuilder tel(String tel){
             this.tel = tel;
+            return this;
+        }
+
+        public IntermediaryBuilder corpAnniv(CorpAnniv anniv){
+            this.corpAnniv = anniv;
             return this;
         }
 

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static ke.co.rhino.uw.entity.IntermediaryType.BROKER;
 
 /**
@@ -76,11 +78,10 @@ public class RegulationService implements IRegulationService {
             coPay = false;
         }
 
-        Regulation regulation = new Regulation();
-        regulation.setAnniv(anniv);
-        regulation.setCommRate(commRate);
-        regulation.setCoPay(coPay);
-        regulation.setWhTaxRate(whTaxRate);
+        Regulation regulation = new Regulation.RegulationBuilder(anniv)
+                                              .commRate(commRate)
+                                              .coPay(coPay)
+                                              .whTaxRate(whTaxRate).build();
 
         repo.save(regulation);
 
@@ -91,7 +92,54 @@ public class RegulationService implements IRegulationService {
     @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public Result<Regulation> update(Long idRegulation, Long idCorpAnniv,
                                      Integer commRate, Integer whTaxRate, Boolean coPay, String actionUsername) {
-        return null;
+
+        if(idRegulation == null || idRegulation<1 || idCorpAnniv == null || idCorpAnniv<1){
+            return ResultFactory.getFailResult("Invalid regulation ID specified. Update failed.");
+        }
+
+        Optional<Regulation> regulationOpt = repo.getOne(idRegulation);
+
+        if(regulationOpt.isPresent()){
+            CorpAnniv anniv = corpAnnivRepo.getOne(idCorpAnniv);
+            if(anniv==null){
+                return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found. Update failed.");
+            }
+
+            Regulation.RegulationBuilder builder = new Regulation.RegulationBuilder(anniv)
+                    .idRegulation(idRegulation);
+
+            if(coPay == null){
+                builder.coPay(false);
+            } else {
+                builder.coPay(coPay);
+            }
+
+            // commission rate and withholding tax rate ought to be established from corpAnniv.getIntermediary().getType
+
+            Intermediary intermediary = intermediaryRepo.findByCorpAnniv(anniv);
+
+            switch (intermediary.getType()){
+                case DIRECT:
+                    builder.commRate(0);
+                    builder.whTaxRate(0);
+                    break;
+                case BROKER:
+                    builder.commRate(10);
+                    builder.whTaxRate(5);
+                    break;
+                default:
+                    builder.commRate(10);
+                    builder.whTaxRate(10);
+                    break;
+            }
+
+            Regulation regulation = builder.build();
+
+            return ResultFactory.getSuccessResult(regulation);
+
+        } else {
+            return ResultFactory.getFailResult("No regulation with ID ["+idRegulation+"] was found. Update failed.");
+        }
     }
 
     @Override
