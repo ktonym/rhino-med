@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface RegulationRepo extends PagingAndSortingRepository<Regulation,Long> {
 
-    Regulation findByCorpAnniv(CorpAnniv anniv);
+    Optional<Regulation> findByCorpAnniv(CorpAnniv anniv);
 
     Page<Regulation> findByCorpAnniv_Corporate(Corporate corporate, Pageable pageable);
 

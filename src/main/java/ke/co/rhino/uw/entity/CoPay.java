@@ -23,6 +23,8 @@ public class CoPay extends AbstractEntity implements EntityItem<Long> {
     private Regulation regulation;
     private BigDecimal coPayAmount;
 
+    //When co-pay gets associated with other classes,e.g. bill, cascade functionality downstream
+
     public CoPay() {
     }
 
