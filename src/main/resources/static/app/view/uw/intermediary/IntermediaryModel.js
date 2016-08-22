@@ -30,4 +30,4 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryModel',{
             }
         }
     }
-})
+});

@@ -188,7 +188,7 @@ public class Intermediary extends AbstractEntity implements EntityItem<Long> {
                 .add("street",street)
                 .add("town", town)
                 .add("postalAddress", postalAddress == null ? "" : postalAddress)
-                .add("joined", joinDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(joinDate))
+                .add("joinDate", joinDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(joinDate))
                 .add("email",email)
                 .add("tel",tel)
                 .add("lastUpdate", lastUpdate == null ? "" : DATE_FORMATTER_yyyyMMddHHmm.format(lastUpdate));

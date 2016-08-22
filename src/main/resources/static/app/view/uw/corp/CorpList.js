@@ -2,7 +2,7 @@ Ext.define('Rhino.view.uw.corp.CorpList',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.corplist',
     reference: 'corpList',
-    session: true,
+    // session: true,
     requires:  [//'Rhino.model.uw.Corporate',
                 //'Rhino.model.uw.CorpAnniv',
                 //'Rhino.model.uw.AnnivSusp'

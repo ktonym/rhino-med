@@ -38,8 +38,9 @@ public class IntermediaryHandler extends AbstractHandler {
     public String create(@RequestParam(value = "data", required = true) String jsonData, HttpServletRequest request){
 
         JsonObject jsonObj = parseJsonObject(jsonData);
-        String joinDateVal = jsonObj.getString("joined");
-        String lastUpdateVal = jsonObj.getString("lastUpdate");
+        String joinDateVal = jsonObj.getString("joinDate");
+        //logger.debug(jsonObj.getString("lastUpdate"));
+        //String lastUpdateVal = jsonObj.getString("lastUpdate");
 
         Result<Intermediary> ar = intermediaryService.create(
                 jsonObj.getString("name"),
@@ -51,7 +52,8 @@ public class IntermediaryHandler extends AbstractHandler {
                 jsonObj.getString("street"),
                 jsonObj.getString("postalAddress"),
                 LocalDate.parse(joinDateVal,DATE_FORMAT_yyyyMMdd),
-                LocalDateTime.parse(lastUpdateVal,DATE_FORMAT_yyyyMMdd),
+                LocalDateTime.now(),
+                //LocalDateTime.parse(lastUpdateVal,DATE_FORMAT_yyyyMMdd),
                 getUser()
         );
 
@@ -70,7 +72,7 @@ public class IntermediaryHandler extends AbstractHandler {
 
         JsonObject jsonObj = parseJsonObject(jsonData);
         IntermediaryType type = IntermediaryType.valueOf(jsonObj.getString("type"));
-        String joinDateVal = jsonObj.getString("joined");
+        String joinDateVal = jsonObj.getString("joinDate");
 //        String lastUpdateVal = jsonObj.getString("lastUpdate");
         Long intId = ((JsonNumber) jsonObj.get("idIntermediary")).longValue();
 

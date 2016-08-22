@@ -125,11 +125,11 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         var me = this,
             view = me.getView(),
             rec;
-        console.info("Getting a peek at the session..");
-        console.log(me.getView().getSession());
+        // console.info("Getting a peek at the session..");
+        // console.log(me.getView().getSession());
         me.dialog = view.add({
                     xtype: 'corp-form',
-                    session: true,
+                    // session: true,
                     viewModel: {
                         schema: 'uwSchema',
                         data: {
@@ -150,7 +150,7 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         });
 
         if(record === null){
-            //rec = Ext.create('Rhino.model.uw.Corporate'); //use session instead..
+            // rec = Ext.create('Rhino.model.uw.Corporate'); //use session instead..
             rec = me.getView().getSession().createRecord('Rhino.model.uw.Corporate');
             me.dialog.down('form').loadRecord(rec);
         }else{

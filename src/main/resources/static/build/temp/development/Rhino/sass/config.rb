@@ -1,2 +1,2 @@
 Compass.add_project_configuration('..\..\..\..\..\sass\config.rb')
-cache_path = 'D:\projects\Rhino-Med\src\main\resources\static/build/.sass-cache'
+cache_path = 'C:\Users\akipkoech\IdeaProjects\rhino-med\src\main\resources\static/build/.sass-cache'

@@ -2,6 +2,7 @@ package ke.co.rhino.care.service;
 
 import ke.co.rhino.care.entity.ServiceProvider;
 import ke.co.rhino.uw.vo.Result;
+import org.springframework.data.domain.Page;
 
 import java.util.stream.Stream;
 
@@ -27,6 +28,6 @@ public interface IProviderService {
 
     Result<ServiceProvider> find(Long idProvider,String actionUsername);
 
-    Result<Stream<ServiceProvider>> findAll(String actionUsername);
+    Result<Page<ServiceProvider>> findAll(int page, int size,String actionUsername);
 
 }

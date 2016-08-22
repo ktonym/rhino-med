@@ -3,7 +3,6 @@
  * "mainView" property. That setting automatically applies the "viewport"
  * plugin causing this view to become the body element (i.e., the viewport).
  *
- * TODO - Replace this content of this view to suite the needs of your application.
  */
 Ext.define('Rhino.view.main.Main', {
     extend: 'Ext.container.Viewport',
@@ -46,7 +45,7 @@ Ext.define('Rhino.view.main.Main', {
                     xtype: 'component',
                     reference: 'rhinoLogo',
                     cls: 'rhino-logo',
-                    html: '<div class="main-logo"><img src="resources/images/rhino-logo.png">Rhino</div>',
+                    html: '<div class="main-logo"><img src="resources/images/rhino-logo.png">Rhino-Med</div>',
                     width: 250
                 },
                 {
@@ -78,11 +77,11 @@ Ext.define('Rhino.view.main.Main', {
                     cls: 'delete-focus-bg',
                     xtype: 'button',
                     text: 'Logout',
-                    tooltip: 'Logout this session',
-                    //handler: 'onLogout'
-                    handler: function(){
-                        console.log("Clicked logout..");
-                    }
+                    tooltip: 'End session',
+                    handler: 'onLogout'
+                    // handler: function(){
+                    //     console.log("Clicked logout..");
+                    // }
                 }
 //                {
 //                    xtype: 'image',

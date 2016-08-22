@@ -51,7 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin().loginProcessingUrl("/login").successHandler(successHandler)
                     .failureHandler(failureHandler).and()
 //                        .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
-                    .csrf().disable();
+                    .csrf().disable()
+                .sessionManagement().maximumSessions(1); // ensure no more than one login occurs for a user
                 //.csrf().csrfTokenRepository(csrfTokenRepository());
 
                /* .exceptionHandling()

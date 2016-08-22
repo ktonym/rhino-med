@@ -9,6 +9,8 @@ Ext.define('Rhino.view.main.MainController', {
 
     alias: 'controller.main',
 
+    requires: ['Rhino.util.Util'],
+
     listen : {
         controller : {
             '#' : {
@@ -171,12 +173,19 @@ Ext.define('Rhino.view.main.MainController', {
     },
     
     onLogout: function(){
-
+        var me = this;
+        console.log('Logging out..');
         Ext.Ajax.request({
             url: 'logout',
-            success: 'onSuccessfulLogout'
-        })
+            scope: me,
+            success: 'onSuccessfulLogout',
+            failure: 'onFailedLogout'
+        });
 
+    },
+
+    onFailedLogout: function (conn,response,options,eOpts) {
+        Rhino.util.Util.showErrorMsg(conn.responseText);
     },
 
     onSuccessfulLogout: function(conn,response,options,eOpts){
@@ -193,6 +202,8 @@ Ext.define('Rhino.view.main.MainController', {
             Ext.create({
                 xtype: 'login'
             });
+        } else {
+            Rhino.util.Util.showErrorMsg(result.msg);
         }
 
     }

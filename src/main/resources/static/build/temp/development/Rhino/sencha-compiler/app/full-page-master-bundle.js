@@ -1,2 +1,2 @@
 // @tag full-page
-// @require D:\projects\Rhino-Med\src\main\resources\static\app.js
+// @require C:\Users\akipkoech\IdeaProjects\rhino-med\src\main\resources\static\app.js

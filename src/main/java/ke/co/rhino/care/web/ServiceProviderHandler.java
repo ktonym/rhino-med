@@ -6,6 +6,7 @@ import ke.co.rhino.security.IAuthenticationFacade;
 import ke.co.rhino.uw.vo.Result;
 import ke.co.rhino.uw.web.AbstractHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,8 +84,10 @@ public class ServiceProviderHandler extends AbstractHandler {
     @ResponseBody
     public String findAll(HttpServletRequest request){
 
+        int page = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        Integer size = request.getParameter("limit") == null ? 5 : Integer.valueOf(request.getParameter("limit"));
 
-        Result<Stream<ServiceProvider>> ar = providerService.findAll(getUser());
+        Result<Page<ServiceProvider>> ar = providerService.findAll(page,size,getUser());
 
         if (ar.isSuccess()) {
             return getJsonSuccessData(ar.getData());

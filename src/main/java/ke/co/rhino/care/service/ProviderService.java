@@ -6,6 +6,9 @@ import ke.co.rhino.base.service.AbstractService;
 import ke.co.rhino.uw.vo.Result;
 import ke.co.rhino.uw.vo.ResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,7 +119,11 @@ public class ProviderService extends AbstractService implements IProviderService
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Result<Stream<ServiceProvider>> findAll(String actionUsername) {
-        return ResultFactory.getSuccessResult(repo.findAll().stream());
+    public Result<Page<ServiceProvider>> findAll(int page,int size,String actionUsername) {
+
+        PageRequest request = new PageRequest(page-1,size, Sort.Direction.ASC,"providerName");
+        Page<ServiceProvider> spPage = repo.findAll(request);
+        return ResultFactory.getSuccessResult(spPage);
+
     }
 }
