@@ -1,5 +1,6 @@
 package ke.co.rhino.uw.repo;
 
+import ke.co.rhino.fin.entity.PremiumInvoice;
 import ke.co.rhino.uw.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,10 @@ public interface CorpBenefitRepo extends PagingAndSortingRepository<CorpBenefit,
     List<CorpBenefit> findByParentBenefit(CorpBenefit parentBenefit); //will give subBenefits
 
     CorpBenefit findByCategoryAndBenefitRef(Category category,BenefitRef benefitRef);
+
+    //To get CorpBenefit from PremiumInvoice
+    @Query("SELECT p.benefit FROM PremiumInvoice p WHERE  p.idPremiumInvoice = :idPremiumInvoice ")
+    Optional<CorpBenefit> queryByPremiumInvoice(@Param("idPremiumInvoice") Long idPremiumInvoice);
 
     Optional<CorpBenefit> getOne(Long idCorpBenefit);
 }

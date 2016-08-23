@@ -29,7 +29,13 @@ public class PremiumInvoice extends AbstractEntity implements EntityItem<Long> {
     private LocalDate invoiceDate;
     @OneToOne
     private CorpBenefit benefit;
+    private Integer stampDuty;
     static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+    @OneToOne(mappedBy = "parentInvoice")
+    private PremiumInvoice reversalInvoice;
+    @OneToOne
+    @JoinColumn(name = "idParentInvoice",unique = true)
+    private PremiumInvoice parentInvoice;
 
     public PremiumInvoice(PremiumInvoiceBuilder premiumInvoiceBuilder) {
         this.idPremiumInvoice = premiumInvoiceBuilder.idPremiumInvoice;
@@ -37,6 +43,8 @@ public class PremiumInvoice extends AbstractEntity implements EntityItem<Long> {
         this.businessClass = premiumInvoiceBuilder.businessClass;
         this.invoiceDate = premiumInvoiceBuilder.invoiceDate;
         this.benefit = premiumInvoiceBuilder.benefit;
+        this.stampDuty = premiumInvoiceBuilder.stampDuty;
+        this.parentInvoice = premiumInvoiceBuilder.parentInvoice;
     }
 
     @Override
@@ -49,8 +57,10 @@ public class PremiumInvoice extends AbstractEntity implements EntityItem<Long> {
         builder.add("idPremiumInvoice",idPremiumInvoice)
                 .add("invoiceNumber", invoiceNumber)
                 .add("businessClass",businessClass.toString())
-                .add("invoiceDate",invoiceDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(invoiceDate));
+                .add("invoiceDate",invoiceDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(invoiceDate))
+                .add("SD",stampDuty == null ? 0 : stampDuty);
         benefit.addJson(builder);
+        parentInvoice.addJson(builder);
     }
 
     public PremiumInvoice() {
@@ -59,19 +69,35 @@ public class PremiumInvoice extends AbstractEntity implements EntityItem<Long> {
     public static class PremiumInvoiceBuilder{
         private Long idPremiumInvoice;
         private final String invoiceNumber;
-        private final BusinessClass businessClass;
+        private BusinessClass businessClass;
         private final LocalDate invoiceDate;
         private final CorpBenefit benefit;
+        private Integer stampDuty;
+        public PremiumInvoice parentInvoice;
 
-        public PremiumInvoiceBuilder(String invoiceNumber, BusinessClass businessClass, LocalDate invoiceDate, CorpBenefit benefit) {
+        public PremiumInvoiceBuilder(String invoiceNumber, LocalDate invoiceDate, CorpBenefit benefit) {
             this.invoiceNumber = invoiceNumber;
-            this.businessClass = businessClass;
             this.invoiceDate = invoiceDate;
             this.benefit = benefit;
         }
 
+        public PremiumInvoiceBuilder businessClass(BusinessClass businessClass){
+            this.businessClass = businessClass;
+            return this;
+        }
+
         public PremiumInvoiceBuilder idPremiumInvoice(Long idPremiumInvoice){
             this.idPremiumInvoice = idPremiumInvoice;
+            return this;
+        }
+
+        public PremiumInvoiceBuilder stampDuty(Integer stampDuty){
+            this.stampDuty = stampDuty;
+            return this;
+        }
+
+        public PremiumInvoiceBuilder parentInvoice(PremiumInvoice parentInvoice){
+            this.parentInvoice = parentInvoice;
             return this;
         }
 
@@ -103,5 +129,9 @@ public class PremiumInvoice extends AbstractEntity implements EntityItem<Long> {
 
     public CorpBenefit getBenefit() {
         return benefit;
+    }
+
+    public Integer getStampDuty() {
+        return stampDuty;
     }
 }
