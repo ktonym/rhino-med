@@ -8,6 +8,12 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryController',{
             view = me.getView(),
             rec;
 
+        if(record){
+            rec = record;
+        } else{
+            rec = view.getSession().createRecord('Rhino.model.uw.Corporate');
+        }
+
         me.dialog = view.add({
             xtype: 'intermediary-form',
 
@@ -25,12 +31,12 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryController',{
             }
         });
 
-        if( record === null){
-            rec = Ext.create('Rhino.model.uw.Intermediary');
+        // if( record === null){
+        //     rec = Ext.create('Rhino.model.uw.Intermediary');
             me.dialog.down('form').loadRecord(rec);
-        } else {
-            me.dialog.down('form').loadRecord(record);
-        }
+        // } else {
+        //     me.dialog.down('form').loadRecord(record);
+        // }
 
         me.dialog.show();
 

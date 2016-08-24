@@ -68,7 +68,8 @@ public class PremiumInvoiceService implements IPremiumInvoiceService {
             invoiceDate = LocalDate.now();
         }
 
-        PremiumInvoice.PremiumInvoiceBuilder builder = new PremiumInvoice.PremiumInvoiceBuilder("",invoiceDate,corpBenefitOpt.get());
+        String invNo = generateInvoiceNo();
+        PremiumInvoice.PremiumInvoiceBuilder builder = new PremiumInvoice.PremiumInvoiceBuilder(invNo,invoiceDate,corpBenefitOpt.get());
 
         switch (businessClass){
             case NEW:
@@ -151,5 +152,14 @@ public class PremiumInvoiceService implements IPremiumInvoiceService {
         }
     }
 
+
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    private String generateInvoiceNo(){
+
+        StringBuilder builder = new StringBuilder("INV-");
+        long cnt = repo.count()+1;
+
+        return builder.append(cnt).toString();
+    }
 
 }

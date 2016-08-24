@@ -150,8 +150,8 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         });
 
         if(record === null){
-            // rec = Ext.create('Rhino.model.uw.Corporate'); //use session instead..
-            rec = me.getView().getSession().createRecord('Rhino.model.uw.Corporate');
+            rec = Ext.create('Rhino.model.uw.Corporate'); //use session instead..
+            // rec = me.getView().getSession().createRecord('Rhino.model.uw.Corporate');
             me.dialog.down('form').loadRecord(rec);
         }else{
             me.dialog.down('form').loadRecord(record);

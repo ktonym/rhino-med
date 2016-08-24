@@ -49,9 +49,9 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryList',{
     columns: [
 
         {
-            width: 100,
+            width: 50,
             dataIndex: "idIntermediary",
-            text: "Intermediary ID",
+            text: "#",
             filter: {
                 type: 'numeric'
             }
