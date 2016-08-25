@@ -167,6 +167,10 @@ public class CorpBenefit extends AbstractEntity implements EntityItem<Long> {
         return (this.getParentBenefit() == null);
     }
 
+    public BenefitType getBenefitType() {
+        return benefitType;
+    }
+
     @Override
     public Long getId() {
         return idCorpBenefit;

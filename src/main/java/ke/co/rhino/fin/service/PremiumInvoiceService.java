@@ -5,6 +5,7 @@ import ke.co.rhino.fin.entity.BusinessClass;
 import ke.co.rhino.fin.entity.PremiumInvoice;
 import ke.co.rhino.fin.repo.PremiumInvoiceItemRepo;
 import ke.co.rhino.fin.repo.PremiumInvoiceRepo;
+import ke.co.rhino.uw.entity.BenefitType;
 import ke.co.rhino.uw.entity.CorpBenefit;
 import ke.co.rhino.uw.entity.Corporate;
 import ke.co.rhino.uw.repo.CorpAnnivRepo;
@@ -62,6 +63,10 @@ public class PremiumInvoiceService implements IPremiumInvoiceService {
         //Need to check whether it's a main benefit.
         if(!corpBenefitOpt.get().isMainBenefit()){
             return ResultFactory.getFailResult("Invoicing is not allowed for child benefits.");
+        }
+
+        if(corpBenefitOpt.get().getBenefitType()== BenefitType.FUNDED){
+            return ResultFactory.getFailResult("Invoicing only allowed for insured benefits.");
         }
 
         if(invoiceDate==null){
