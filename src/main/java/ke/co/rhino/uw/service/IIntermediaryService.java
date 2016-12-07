@@ -42,6 +42,8 @@ public interface IIntermediaryService {
 
     Result<Intermediary> find(Long idIntermediary, String username);
 
+    Result<Intermediary> findByAnniv(Long idCorpAnniv, String username);
+
     Result<Intermediary> remove(Long idIntermediary, String username);
 
 }

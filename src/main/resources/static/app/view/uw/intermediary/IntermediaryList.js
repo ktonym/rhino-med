@@ -2,7 +2,7 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryList',{
    extend: 'Ext.grid.Panel',
     alias: 'widget.intermediarylist',
     reference: 'intermediaryList',
-
+    session: true,
     controller: 'intermediary',
     viewModel: {
         type: 'intermediary'
@@ -50,7 +50,7 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryList',{
 
         {
             width: 50,
-            dataIndex: "idIntermediary",
+            dataIndex: "id",
             text: "#",
             filter: {
                 type: 'numeric'

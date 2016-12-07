@@ -1,28 +1,64 @@
 Ext.define('Rhino.view.uw.corp.CorpController',{
-    extend: 'Rhino.view.uw.UwController',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.corporate',
     requires: ['Rhino.model.uw.Corporate'],
-    
-    onBackBtnClick: function(){
-        this.setCurrentView('corplist');
-    },
-    
-    onDiscardClick: function(button,e,eOpts){
-        console.log('Canceled corporate creation/editing');
-    },
-    
-    onSaveCorpClick: function(btn,e,eOpts){
 
-        store.sync({
-            success: function(){
-                store.load();
-                Rhino.util.Util.showToast('Record saved');
-            }
-        });
+    // setCurrentView: function(view,params){
+    //     var contentPanel = this.getView().lookupReference('underwriting').down('#contentPanel');
+    //     console.info('CorpController: Looking at #contentPanel')
+    //     console.log(contentPanel);
+    //     //We skip rendering for the following scenarios:
+    //     // * There is no contentPanel
+    //     // * view xtype is not specified
+    //     // * current view is the same
+    //     if(!contentPanel || view === '' || (contentPanel.down() && contentPanel.down().xtype === view)){
+    //         console.info('CorpController: Did not get a #contentPanel!!');
+    //         return false;
+    //     }
+    //
+    //     if (params && params.openWindow){
+    //         var cfg = Ext.apply({
+    //             xtype: 'uwwindow',
+    //             items: [
+    //                 Ext.apply({
+    //                     xtype: view
+    //                 }, params.targetCfg)
+    //             ]
+    //         }, params.windowCfg);
+    //
+    //         Ext.create(cfg);
+    //     } else {
+    //         Ext.suspendLayouts();
+    //
+    //         contentPanel.removeAll(true);
+    //         contentPanel.add(
+    //             Ext.apply({
+    //                 xtype: view
+    //             }, params)
+    //         );
+    //
+    //         Ext.resumeLayouts(true);
+    //
+    //     }
+    //
+    // },
 
-    },
+    // onBackBtnClick: function(){
+    //     this.setCurrentView('corplist');
+    // },
 
-    beforeAnnivListRender: function(){
+    // onSaveCorpClick: function(btn,e,eOpts){
+    //
+    //     store.sync({
+    //         success: function(){
+    //             store.load();
+    //             Rhino.util.Util.showToast('Record saved');
+    //         }
+    //     });
+    //
+    // },
+
+/*    beforeAnnivListRender: function(){
 
         console.log('About to load CorpAnnivList');
 
@@ -34,7 +70,7 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         //me.getCorpAnnivStore().loadByCorporate(record.id);
         //console.log(me.getCorpAnnivStore());
     },
-
+*/
     //beforeAnnivListRender : function(me,eOpts){
     //    var vm = me.getViewModel(),
     //        store = vm.getStore('anniversaries');
@@ -45,15 +81,6 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
     //
     //    me.getViewModel().setData(me.config.data);
     //},
-
-    beforeCorpFormRender: function(mimi,eOpts){
-
-        var me = this;
-
-        if (mimi.isNewRecord) {
-        }
-
-    },
 
     onAddCorpBtnClick: function(btn,e,eOpts){
         this.createDialog(null);
@@ -79,7 +106,7 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
                             var result = Rhino.util.Util.decodeJSON(operation.responseText);
                             if (success) {
                                 Rhino.util.Util.showToast(result.msg);
-                                me.onCancel();
+                                // me.onCancel();
                                 me.refresh();
                             } else {
                                 Rhino.util.Util.showErrorMsg(result.msg);
@@ -102,10 +129,12 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         this.setCurrentView('corp-form',
             {
                 openWindow: true,
-                targetCfg: {
-                    header : false
-                },
                 windowCfg: {
+                    header : false,
+                    maxHeight: 450,
+                    maxWidth: 500
+                },
+                targetCfg: {
                     viewModel: {
                         data: {
                             currentCorporate: record //this.lookupReference('corpDetails').getViewModel().get('currentCorporate')
@@ -113,15 +142,13 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
                     },
                     bind: {
                         title: 'Edit: <b>{currentCorporate.name}</b> ({currentCorporate.abbreviation})'
-                    },
-                    maxHeight: 450,
-                    maxWidth: 500
+                    }
                 }
             });
 
-    },
+    }
 
-    createDialog: function(record){
+/*    createDialog: function(record){
         var me = this,
             view = me.getView(),
             rec;
@@ -129,13 +156,9 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         // console.log(me.getView().getSession());
         me.dialog = view.add({
                     xtype: 'corp-form',
-                    // session: true,
+                    session: true,
                     viewModel: {
                         schema: 'uwSchema',
-                        data: {
-                            title: record ? 'Edit: ' + record//.get('name')
-                                : 'Add Corporate Plan'
-                        },
                         links: {
                             currentCorporate: record || {
                                 type: 'Rhino.model.uw.Corporate',
@@ -145,17 +168,19 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
                     },
 
                     bind: {
-                        title: record ? 'Edit: ' + record.name : 'Add Corporate Plan'
+                        title: record ? 'Edit: <b>{currentCorporate.name}</b> ({currentCorporate.abbreviation})' : 'Add Corporate'
                     }
         });
 
         if(record === null){
-            rec = Ext.create('Rhino.model.uw.Corporate'); //use session instead..
-            // rec = me.getView().getSession().createRecord('Rhino.model.uw.Corporate');
-            me.dialog.down('form').loadRecord(rec);
+            // rec = Ext.create('Rhino.model.uw.Corporate'); //use session instead..
+            rec = view.getSession().createRecord('Corporate');
         }else{
-            me.dialog.down('form').loadRecord(record);
+            rec = record;
         }
+
+        me.dialog.down('form').loadRecord(rec);
+
         me.dialog.show();
     },
 
@@ -176,26 +201,27 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
             record = vm.get('selectedCorporate'),
             store = vm.getStore('anniversaries');
 
-        //store.getProxy().getExtraParams().idCorporate = record.id;
         //We're loading anniversaries only relevant to the selected corporate
         store.load({params: {'idCorporate' : record.id}});
-        console.info('Pouring out proxy of anniversaries store..');
-        console.log(store);
-        this.setCurrentView('corpdetails');
-        //vm.set('idCorporateFilter',record.id);
 
-        //me.loadCorpAnnivs();
-
+        // me.loadCorpAnnivs('corp-anniv-list');
+        this.fireViewEvent('setCV','corp-anniv-list');
     },
 
-    loadCorpAnnivs: function(){
-        console.log('About to render corp anniv list..');
-        this.setCurrentView('corp-anniv-list', {
-            openWindow : true
-        });
+    loadCorpAnnivs: function(child){
+        var me = this,
+            view = me.getView();
+
+        view.add(
+            Ext.apply({
+                xtype: child
+            })
+        );
+
     },
 
     onMembersBtnClick: function(){
+        console.log('clicked on members...');
         this.setCurrentView('corpmembers');
     },
 
@@ -203,30 +229,9 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
 
     },
 
-    onSaveCorpClick: function(){
-        var me = this,
-            form = me.dialog.down('form'),
-            record = form.getRecord(),
-            msg;
-
-        form.updateRecord(record);
-
-        console.log('Showing form record...');
-        console.log(form.getRecord().data);
-
-        record.save({
-            callback:  function(record, operation, success) {
-                var result = Rhino.util.Util.decodeJSON(operation.responseText);
-                if (success) {
-                    Rhino.util.Util.showToast('Success! Corporate saved.');
-                    me.onCancel();
-                    me.refresh();
-                } else {
-                    Rhino.util.Util.showErrorMsg(result.msg);
-                }
-            }
-        });
-
+    onSaveCorpClick: function(btn,e,eOpts){
+        var me = this;
+        me.onSaveBtnClick();
     },
     refresh: function(){
         var me = this;
@@ -236,5 +241,6 @@ Ext.define('Rhino.view.uw.corp.CorpController',{
         var me = this;
         me.dialog = Ext.destroy(me.dialog);
     }
+*/
 
 });

@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 public interface IPrincipalService {
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Principal> create(//String familyNo,
                              String firstName,
                              String surname,
@@ -23,7 +23,7 @@ public interface IPrincipalService {
                              Long idCorporate,
                              String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Principal> update(Long idPrincipal,
                              String familyNo,
                              String firstName,
@@ -33,7 +33,7 @@ public interface IPrincipalService {
                             // Long idCorporate, //TODO in future, this may be necessary: when changing the corporate that a principal belongs to!!
                              String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Principal> remove(Long idPrincipal, String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
@@ -42,4 +42,5 @@ public interface IPrincipalService {
     @PreAuthorize("isAuthenticated()")
     Result<Page<Principal>> findByCorporate(Long idCorporate, Integer pageNum, Integer size, String actionUsername);
 
+    Result<Page<Principal>> findByCorpAnniv(Long idCorpAnniv, Integer pageNo, Integer size, String actionUsername);
 }

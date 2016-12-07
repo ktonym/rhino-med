@@ -9,4 +9,4 @@ Ext.define('Rhino.store.CorpAnniv',{
             }
         });
     }
-})
+});

@@ -1,9 +1,7 @@
 package ke.co.rhino.uw.service;
 
-import ke.co.rhino.uw.entity.Member;
-import ke.co.rhino.uw.entity.MemberType;
-import ke.co.rhino.uw.entity.Principal;
-import ke.co.rhino.uw.entity.Sex;
+import ke.co.rhino.uw.entity.*;
+import ke.co.rhino.uw.repo.CorpAnnivRepo;
 import ke.co.rhino.uw.repo.MemberRepo;
 import ke.co.rhino.uw.repo.PrincipalRepo;
 import ke.co.rhino.uw.vo.Result;
@@ -36,6 +34,9 @@ public class MemberService implements IMemberService {
 
     @Autowired
     private PrincipalRepo principalRepo;
+
+    @Autowired
+    private CorpAnnivRepo corpAnnivRepo;
 
     final protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -301,6 +302,30 @@ public class MemberService implements IMemberService {
 
         return ResultFactory.getSuccessResult(memberList);
 
+    }
+
+    @Override
+    public Result<Page<Member>> findByCorpAnniv(int pageNum, int size, Long idCorpAnniv, String actionUsername) {
+
+        if(idCorpAnniv==null || idCorpAnniv<1){
+            return ResultFactory.getFailResult("Invalid Anniversary ID ["+idCorpAnniv+"] provided.");
+        }
+
+        CorpAnniv corpAnniv = corpAnnivRepo.findOne(idCorpAnniv);
+
+        if(corpAnniv==null){
+            return ResultFactory.getFailResult("No anniversary with ID ["+idCorpAnniv+"] was found.");
+        }
+
+        PageRequest pageRequest = new PageRequest(pageNum-1,size, Sort.Direction.ASC,"surname");
+
+        Page<Member> memberPage = memberRepo.findByAnniversary(corpAnniv,pageRequest);
+
+        if(memberPage.getNumberOfElements()<1){
+            return ResultFactory.getFailResult("No members have been set up for this anniversary");
+        }
+
+        return ResultFactory.getSuccessResult(memberPage);
     }
 
     private String generateMemberNo(Principal principal){

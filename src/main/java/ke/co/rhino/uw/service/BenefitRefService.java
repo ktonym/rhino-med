@@ -84,6 +84,7 @@ public class BenefitRefService implements IBenefitRefService {
         }
 
         BenefitRef.BenefitRefBuilder benefitRefBuilder = new BenefitRef.BenefitRefBuilder(benefitName)
+                .benefitCode(benefitCode)
                 .lastUpdate(LocalDateTime.now());
 
         BenefitRef benefitRef;
@@ -101,7 +102,7 @@ public class BenefitRefService implements IBenefitRefService {
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     @Override
-    public Result<BenefitRef> remove(Long benefitCode, String actionUsername) {
+    public Result<String> remove(Long benefitCode, String actionUsername) {
 
         /**
          * First confirm if the benefit ref has any child records: corporate benefits

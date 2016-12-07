@@ -2,7 +2,6 @@
  * This class is the controller for the main view for the application. It is specified as
  * the "controller" of the Main view class.
  *
- * TODO - Replace this content of this view to suite the needs of your application.
  */
 Ext.define('Rhino.view.main.MainController', {
     extend: 'Ext.app.ViewController',
@@ -140,8 +139,7 @@ Ext.define('Rhino.view.main.MainController', {
             }            
         } 
     },
-    
-    
+
     onMainViewRender: function(){
         if (!window.location.hash) {
             this.redirectTo("tickets");
@@ -154,6 +152,10 @@ Ext.define('Rhino.view.main.MainController', {
     
     onSearchRouteChange: function(){
         this.setCurrentView('search');
+    },
+
+    onRegRouteChange: function () {
+        this.setCurrentView('registration');
     },
     
     onUwRouteChange: function(){
@@ -174,14 +176,18 @@ Ext.define('Rhino.view.main.MainController', {
     
     onLogout: function(){
         var me = this;
-        console.log('Logging out..');
-        Ext.Ajax.request({
-            url: 'logout',
-            scope: me,
-            success: 'onSuccessfulLogout',
-            failure: 'onFailedLogout'
-        });
-
+        Ext.Msg.confirm('End session','Are you sure you want to log out of this application?',
+            function (key) {
+                if(key === 'yes'){
+                    Ext.Ajax.request({
+                        url: 'logout',
+                        scope: me,
+                        success: 'onSuccessfulLogout',
+                        failure: 'onFailedLogout'
+                    });
+                }
+            }
+        );
     },
 
     onFailedLogout: function (conn,response,options,eOpts) {
@@ -189,23 +195,17 @@ Ext.define('Rhino.view.main.MainController', {
     },
 
     onSuccessfulLogout: function(conn,response,options,eOpts){
-
         var result = Rhino.util.Util.decodeJSON(conn.responseText);
-
         console.log(result);
         if (result.success) {
-
-            localStorage.removeItem('RhinoLoggedIn');
-
+            sessionStorage.removeItem('RhinoLoggedIn');
             this.getView().destroy();
-
             Ext.create({
                 xtype: 'login'
             });
         } else {
             Rhino.util.Util.showErrorMsg(result.msg);
         }
-
     }
     
 });

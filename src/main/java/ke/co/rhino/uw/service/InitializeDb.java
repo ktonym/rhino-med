@@ -2,14 +2,8 @@ package ke.co.rhino.uw.service;
 
 import ke.co.rhino.care.entity.ServiceProvider;
 import ke.co.rhino.care.repo.ServiceProviderRepo;
-import ke.co.rhino.uw.entity.CorpAnniv;
-import ke.co.rhino.uw.entity.Corporate;
-import ke.co.rhino.uw.entity.Intermediary;
-import ke.co.rhino.uw.entity.IntermediaryType;
-import ke.co.rhino.uw.repo.ContactPersonRepo;
-import ke.co.rhino.uw.repo.CorpAnnivRepo;
-import ke.co.rhino.uw.repo.CorporateRepo;
-import ke.co.rhino.uw.repo.IntermediaryRepo;
+import ke.co.rhino.uw.entity.*;
+import ke.co.rhino.uw.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +33,9 @@ public class InitializeDb {
 
     @Autowired
     private ServiceProviderRepo spRepo;
+
+    @Autowired
+    private PrincipalRepo principalRepo;
 
     //    @Autowired
 //    private UserRepo userRepo;
@@ -440,20 +437,22 @@ public class InitializeDb {
                 .expiry(LocalDate.of(2016, 3, 1).plusYears(1).minusDays(1)).renewal(LocalDate.of(2016, 3, 1).plusYears(1))
                 .intermediary(intm2).lastUpdate(LocalDateTime.now()).build();
 
+        CorpAnniv ca3 = new CorpAnniv.CorpAnnivBuilder(2,LocalDate.of(2017, 5, 1),corp1)
+                .expiry(LocalDate.of(2017, 5, 1).plusYears(1).minusDays(1)).renewal(LocalDate.of(2017, 5, 1).plusYears(1))
+                .intermediary(intm1).lastUpdate(LocalDateTime.now()).build();
+
         corpAnnivRepo.save(ca1);
         corpAnnivRepo.save(ca2);
+        corpAnnivRepo.save(ca3);
 
+//        Principal p1 = new Principal();
+//        p1.setCorporate(corpRepo.findOne(1L));
+//        p1.setFamilyNo("KBC/0001");
+//        p1.setFirstName("Joel");
+//        p1.setSurname("Mukunya");
+//        p1.setOtherNames("Kunye");
+//        principalRepo.save(p1);
 
-//        CorpAnniv ca1 = new CorpAnniv();
-//        ca1.setCorporate(c1);
-//        ca1.setAnniv(1);
-//        LocalDate incep = LocalDate.of(2015, 12, 20);
-//        LocalDate exp = incep.plusYears(1);
-//        LocalDate ren = exp.plusDays(1);
-//        ca1.setInception(incep);
-//        ca1.setExpiry(exp);
-//        ca1.setRenewalDate(ren);
-//        corpAnnivRepo.save(ca1);
 
     }
 }

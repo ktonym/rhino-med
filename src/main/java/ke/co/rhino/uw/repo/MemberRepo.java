@@ -29,7 +29,7 @@ public interface MemberRepo extends JpaRepository<Member,Long> {
 
     /**
      * try (Stream<User> stream = repository.findAllByCustomQueryAndStream()) {
-     * stream.forEach(…);
+     * stream.forEach(ï¿½);
      * }
      * @param principal
      * @return
@@ -42,22 +42,22 @@ public interface MemberRepo extends JpaRepository<Member,Long> {
 
     //To find all members in a given corporate anniversary..
     @Query("SELECT m FROM Member m WHERE m.memberAnniversaries " +
-                "IN ( SELECT ma FROM MemberAnniversary ma " +
-                    " WHERE ma.corpAnniv = :corpAnniv)")
+            "IN ( SELECT ma FROM MemberAnniversary ma " +
+            " WHERE ma.corpAnniv = :corpAnniv)")
     Page<Member> findByAnniversary(@Param("corpAnniv") CorpAnniv corpAnniv, Pageable pageable);
 
     //To find all members currently covered. Hospital list??
     @Query("SELECT m FROM Member m WHERE m.memberAnniversaries " +
-                "IN (SELECT ma FROM MemberAnniversary ma " +
-                    " WHERE current_date BETWEEN ma.inception AND ma.expiry)")
+            "IN (SELECT ma FROM MemberAnniversary ma " +
+            " WHERE current_date BETWEEN ma.inception AND ma.expiry)")
     Page<Member> findAllCovered(Pageable pageable);
 
     //To find all suspended members.
     @Query("SELECT m FROM Member m WHERE m.memberAnniversaries " +
             "IN (SELECT ma FROM MemberAnniversary ma " +
-                "WHERE current_date BETWEEN ma.inception AND ma.expiry " +
-                "AND ma.memberSuspensions " +
-                "IN (SELECT ms FROM MemberSuspension ms WHERE ms.reinstatementDate IS NULL ))")
+            "WHERE current_date BETWEEN ma.inception AND ma.expiry " +
+            "AND ma.memberSuspensions " +
+            "IN (SELECT ms FROM MemberSuspension ms WHERE ms.reinstatementDate IS NULL ))")
     Page<Member> findSuspended(Pageable pageable);
 
     //All Active and reinstated members..

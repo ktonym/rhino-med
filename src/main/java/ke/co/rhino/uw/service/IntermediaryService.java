@@ -112,6 +112,11 @@ public class IntermediaryService implements IIntermediaryService {
     }
 
     @Override
+    public Result<Intermediary> findByAnniv(Long idCorpAnniv, String username) {
+        return ResultFactory.getSuccessResult(intermediaryRepo.findByAnniv(idCorpAnniv));
+    }
+
+    @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Result<Intermediary> remove(Long idIntermediary, String username) {
         return null;

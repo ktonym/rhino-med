@@ -1,6 +1,6 @@
 Ext.define('Rhino.view.uw.corp.CorpDetails',{
    extend: 'Ext.panel.Panel',
-    xtype: 'corpdetails',
+    alias: 'widget.corp-details',
     reference: 'corpDetails',
     
     requires: [
@@ -33,6 +33,7 @@ Ext.define('Rhino.view.uw.corp.CorpDetails',{
             emptyText: 'No anniversaries defined',
             tpl: [
                 '<tpl for=".">',
+                '<div class="anniv">',
                 '<table style="width:100%">',
                 '<tr>',
                 '<td>Anniv: {anniv}</td>',
@@ -43,8 +44,12 @@ Ext.define('Rhino.view.uw.corp.CorpDetails',{
                 '</tr>',
                 '<tr>',
                 '<td><b>Renewal: </b> {renewal}</td>',
-                '</tr>'
-            ]
+                '</tr>',
+                '</table>',
+                '</div>',
+                '</tpl>'
+            ],
+            itemSelector: 'div.anniv'
         },
         {
             xtype: 'container',

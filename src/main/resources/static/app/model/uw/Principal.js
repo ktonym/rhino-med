@@ -5,12 +5,12 @@ Ext.define('Rhino.model.uw.Principal', {
 
     fields: [
         { name: 'idPrincipal', type: 'integer', useNull: true },
-        { name: 'familyNo', type: 'string' },
+        { name: 'familyNo', type: 'string', useNull: true },
         { name: 'firstName', type: 'string' },
         { name: 'surname', type: 'string' },
         { name: 'otherNames', type: 'string' },
         { name: 'idCorporate', type: 'integer' },
-        { name: 'dob', type: 'date' },
+        { name: 'dob', type: 'date', dateFormat: 'Ymd' },
         { name: 'fullName', type: 'string', persist: false},
         { name: 'corporate', type: 'string', persist: false,
             convert: function(v,rec){

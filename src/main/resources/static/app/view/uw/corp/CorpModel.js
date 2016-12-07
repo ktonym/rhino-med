@@ -5,7 +5,7 @@ Ext.define('Rhino.view.uw.corp.CorpModel',{
     stores: {
         corporates: {
             model: 'Rhino.model.uw.Corporate',
-            pageSize: 3,
+            pageSize: 10,
             autoLoad: true,
             session: true
         },

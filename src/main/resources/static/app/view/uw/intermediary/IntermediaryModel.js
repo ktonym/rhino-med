@@ -6,6 +6,7 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryModel',{
     stores: {
         intermediaries: {
             model: 'Rhino.model.uw.Intermediary',
+            session: true,
             autoLoad: true
         },
         intermediaryTypes: {

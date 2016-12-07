@@ -80,7 +80,7 @@ Ext.define('Rhino.view.login.LoginController', {
         console.log(result);
         if (result.success) {
             //console.log('About to destroy this view and create app-main');
-            localStorage.setItem("RhinoLoggedIn",true);
+            sessionStorage.setItem("RhinoLoggedIn",true);
             this.getView().destroy();
             //var win = Ext.create({
             //    xtype: 'app-main'

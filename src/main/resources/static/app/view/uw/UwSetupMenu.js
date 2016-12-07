@@ -10,20 +10,6 @@ Ext.define('Rhino.view.uw.UwSetupMenu',{
     floating: false,
     
     items: [
-        //{
-        //    routeId: 'intermediary-form',//TODO create this widget
-        //    iconCls: 'x-fa fa-create',
-        //    text: 'Create intermediary',
-        //    params: {
-        //        openWindow: true,
-        //        targetCfg: {},
-        //        windowCfg: {
-        //            title: 'Create Intermediary',
-        //            maxHeight: 500,
-        //            maxWidth: 500
-        //        }
-        //    }
-        //},
         {
             routeId: 'intermediarylist',
             iconCls: 'x-fa fa-list-alt',
@@ -46,9 +32,14 @@ Ext.define('Rhino.view.uw.UwSetupMenu',{
         //    }
         //},
         {
-            routeId: 'benefitlist', //TODO create this widget
+            routeId: 'benefit-ref-list',
             iconCls: 'x-fa fa-gift',
             text: 'Benefits'
+        },
+        {
+            routeId: 'branches',
+            iconCls: 'x-fa fa-link',
+            text: 'Branches'
         }
         
     ]

@@ -78,14 +78,15 @@ public class BenefitRefHandler extends AbstractHandler{
     @RequestMapping (value = "/delete", method=RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
     public String removeBenefit(
-            @RequestParam(value="benefitCode", required = true) String benefitCodeStr,
-            HttpServletRequest request){
+            @RequestParam(value="data", required = true) String jsonData){
 
-        Long benefitCode = Long.parseLong(benefitCodeStr);
-        Result<BenefitRef> ar = benefitRefService.remove(benefitCode,getUser());
+        JsonObject jsonObj = parseJsonObject(jsonData);
+        Long benefitCode = ((JsonNumber) jsonObj.get("benefitCode")).longValue();
+
+        Result<String> ar = benefitRefService.remove(benefitCode,getUser());
 
         if(ar.isSuccess()){
-            return getJsonSuccessData(ar.getData());
+            return getJsonSuccessMsg(ar.getMsg());
         } else {
             return getJsonErrorMsg(ar.getMsg());
         }

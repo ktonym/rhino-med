@@ -16,9 +16,16 @@ Ext.define('Rhino.store.NavigationTree',{
                 text: 'Dashboard',
                 view: 'dashboard.Dashboard',
                 leaf: true,
-                iconCls: 'x-fa fa-desktop',
+                iconCls: 'x-fa fa-dashboard',
                 //iconCls: 'right-icon new-icon x-fa fa-desktop',
                 routeId: 'dashboard'
+            },
+            {
+                text: 'Registration',
+                view: 'reg.Registration',
+                iconCls: 'right-icon x-fa fa-briefcase',
+                leaf: true,
+                routeId: 'registration'
             },
             {
                 text:   'Underwriting',

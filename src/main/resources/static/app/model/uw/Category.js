@@ -4,27 +4,27 @@ Ext.define('Rhino.model.uw.Category', {
     idProperty: 'idCategory',
     
     fields: [
-        { name: 'idCategory', type: 'integer', useNull: true },
+        { name: 'idCategory', type: 'int', useNull: true },
         { name: 'cat', type: 'string' },
         { name: 'description', type: 'string' },
         { name: 'idCorpAnniv', type: 'integer' },
-        { name: 'corporate', type: 'string', persist: false,
+        { name: 'corpanniv', type: 'string', persist: false,
             convert: function(v,rec){
                 var data = rec.data;
-                if (data.corporate && data.corporate.name){
-                    return data.corporate.name;
+                if (data.corpanniv && data.corpanniv.anniv){
+                    return data.corpanniv.anniv;
                 }
-                return data.idCorporate;
+                return data.idCorpAnniv;
             }
         }
     ],
 
     hasOne: [
         {
-            model: 'Corporate',
-            name: 'corporate',
-            foreignKey: 'idCorporate',
-            associationKey: 'corporate'
+            model: 'CorpAnniv',
+            name: 'corpanniv',
+            foreignKey: 'idCorpAnniv',
+            associationKey: 'corpanniv'
         }
     ],
 

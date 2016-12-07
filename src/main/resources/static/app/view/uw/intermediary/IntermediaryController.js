@@ -8,15 +8,9 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryController',{
             view = me.getView(),
             rec;
 
-        if(record){
-            rec = record;
-        } else{
-            rec = view.getSession().createRecord('Rhino.model.uw.Corporate');
-        }
-
         me.dialog = view.add({
             xtype: 'intermediary-form',
-
+            //$initParent: view,
             viewModel:{
                schema: 'uwSchema',
                 links: {
@@ -26,20 +20,21 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryController',{
                     }
                 }
             },
+            session: true,
             bind: {
-                title: record ? 'Edit ' + record.name : 'Add Intermediary'
+                title: record ? 'Edit : {currentIntermediary.name} ' : 'Add Intermediary'
             }
         });
 
-        // if( record === null){
-        //     rec = Ext.create('Rhino.model.uw.Intermediary');
-            me.dialog.down('form').loadRecord(rec);
-        // } else {
-        //     me.dialog.down('form').loadRecord(record);
-        // }
+        if(record === null){
+            // rec = Ext.create('Rhino.model.uw.Intermediary'); //use session instead..
+            rec = view.getSession().createRecord('Intermediary');
+        }else{
+            rec = record;
+        }
 
+        me.dialog.down('form').loadRecord(rec);
         me.dialog.show();
-
     },
     
     onAddBtnClick: function(){
@@ -80,7 +75,10 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryController',{
     },
     
     onDiscardClick: function(){
-        this.setCurrentView('intermediarylist');
+
+            var me = this;
+            me.dialog = Ext.destroy(me.dialog);
+
     },
 
     onSaveIntermediaryClick: function(){

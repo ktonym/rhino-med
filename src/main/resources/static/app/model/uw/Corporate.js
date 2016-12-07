@@ -30,7 +30,6 @@ Ext.define('Rhino.model.uw.Corporate',{
         //],
         email: [
             { type: 'presence', message: 'This field is mandatory' },
-            { type: 'length', min:5, max:40 } ,
             { type: 'email' }
         ],
         tel: [

@@ -24,7 +24,7 @@ public interface IBenefitRefService {
                              String actionUsername);
 
     @PreAuthorize("hasRole('ROLE_UW_MANAGERS')")
-    Result<BenefitRef> remove(Long benefitCode,
+    Result<String> remove(Long benefitCode,
                               String actionUsername);
 
     @PreAuthorize("isAuthenticated()")

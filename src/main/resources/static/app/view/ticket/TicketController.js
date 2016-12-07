@@ -1,6 +1,7 @@
 Ext.define('Rhino.view.ticket.TicketController',{
-    extend: 'Rhino.view.BaseController',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.ticket',
+    mixins: ['Rhino.util.ControllerMixin'],
     
     init: function(){
         this.setCurrentView('ticket-list');

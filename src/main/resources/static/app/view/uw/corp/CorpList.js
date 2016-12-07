@@ -2,7 +2,7 @@ Ext.define('Rhino.view.uw.corp.CorpList',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.corplist',
     reference: 'corpList',
-    // session: true,
+    session: true,
     requires:  [//'Rhino.model.uw.Corporate',
                 //'Rhino.model.uw.CorpAnniv',
                 //'Rhino.model.uw.AnnivSusp'
@@ -14,7 +14,7 @@ Ext.define('Rhino.view.uw.corp.CorpList',{
         type: 'corporate'
     },
 
-    controller: 'corporate',
+    //controller: 'underwriting',
     
     bind: '{corporates}',
     
@@ -30,7 +30,8 @@ Ext.define('Rhino.view.uw.corp.CorpList',{
 //    },
     
     listeners: {
-        cellclick: 'onCorpListItemClick'
+        //cellclick: 'onCorpListItemClick'
+        //itemclick: 'onAnnivsBtnClick'
     },
 
     headerBorders: false,
@@ -66,6 +67,18 @@ Ext.define('Rhino.view.uw.corp.CorpList',{
             iconCls: 'x-fa fa-umbrella',
             listeners: {
                 click: 'onAnnivsBtnClick'
+                // click: function () {
+                //     Ext.Msg.alert('clicked on anniversaries');
+                // }
+            },
+            bind: {
+                disabled: '{!corpList.selection}'
+            }
+        },
+        {
+            iconCls: 'x-fa fa-users',
+            listeners: {
+                click: 'onMembersBtnClick'
             },
             bind: {
                 disabled: '{!corpList.selection}'

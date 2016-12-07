@@ -63,4 +63,7 @@ public interface IMemberService {
     Result<List<Member>> findByPrincipal(Long idPrincipal,
                                            String actionUsername);
 
+    @PreAuthorize("isAuthenticated()")
+    Result<Page<Member>> findByCorpAnniv(int pageNum, int size, Long idCorpAnniv,
+                                         String actionUsername);
 }

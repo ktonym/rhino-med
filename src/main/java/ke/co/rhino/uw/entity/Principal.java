@@ -112,9 +112,7 @@ public class Principal extends AbstractEntity implements EntityItem<Long> {
 
         StringBuilder builder = new StringBuilder("Principal name: ")
                 .append(firstName)
-                .append(" ")
-                .append(surname)
-                .append(otherNames);
+                .append(" ").append(surname).append(" ").append(otherNames);
 
         return builder.toString();
     }
@@ -131,9 +129,9 @@ public class Principal extends AbstractEntity implements EntityItem<Long> {
                 .add("familyNo", familyNo)
                 .add("firstName", firstName)
                 .add("surname", surname)
-                .add("otherNames", otherNames)
+                .add("otherNames", otherNames == null ? "" : otherNames)
                 .add("dob", dob == null ? "" : DATE_FORMATTER_yyyyMMdd.format(dob))
-                .add("fullName", firstName.concat(" ").concat(surname).concat(" ").concat(otherNames));
+                .add("fullName", firstName.concat(" ").concat(surname).concat(" ").concat(otherNames==null?"":otherNames));
 
         if(corporate!=null){
             corporate.addJson(builder);

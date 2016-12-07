@@ -16,6 +16,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 /**
  * Created by akipkoech on 16/05/2016.
@@ -102,20 +103,19 @@ public class PrincipalHandler extends AbstractHandler{
 
     @RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
-    public String findAll(@RequestParam(value = "idCorporate", required = true) String idCorpStr,
+    public String findAll(@RequestParam(value = "idCorporate", required = true) String idStr,
             HttpServletRequest request) {
 
-        logger.info("Showing page param: " + request.getParameter("page"));
         // The hack below was to sidestep null error when editing a corporate.
         // Yup, I copy-pasted this and adapted it for this controller method :-)
         // Sweet!!
         // Lazy... ;-)
         int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
-        Integer size = request.getParameter("limit") == null ? 5 : Integer.valueOf(request.getParameter("limit"));
+        Integer size = request.getParameter("limit") == null ? 25 : Integer.valueOf(request.getParameter("limit"));
 
-        Long idCorporate = Long.parseLong(idCorpStr);
+        Long id = Long.parseLong(idStr);
 
-        Result<Page<Principal>> ar = principalService.findByCorporate(idCorporate, pageNo, size, getUser());
+        Result<Page<Principal>> ar = principalService.findByCorporate(id, pageNo, size, getUser());
 
         if (ar.isSuccess()) {
             return getJsonSuccessData(ar.getData());
@@ -124,6 +124,26 @@ public class PrincipalHandler extends AbstractHandler{
         }
 
     }
+
+//    @RequestMapping(value = "/findByCorporate", method = RequestMethod.GET, produces = {"application/json"})
+//    @ResponseBody
+//    public String findByCorporate(@RequestParam(value = "idCorporate", required = true) String idStr,
+//                                  HttpServletRequest request){
+//
+//        int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+//        Integer size = request.getParameter("limit") == null ? 25 : Integer.valueOf(request.getParameter("limit"));
+//
+//        Long id = Long.parseLong(idStr);
+//
+//        Result<Page<Principal>> ar = principalService.findByCorporate(id, pageNo, size, getUser());
+//
+//        if(ar.isSuccess()){
+//            return getJsonSuccessData(ar.getData());
+//        } else {
+//            return getJsonErrorMsg(ar.getMsg());
+//        }
+//
+//    }
 
     private String getUser(){
         return authenticationFacade.getAuthentication().getName();

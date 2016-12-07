@@ -1,6 +1,7 @@
 package ke.co.rhino.uw.repo;
 
 import ke.co.rhino.uw.entity.Category;
+import ke.co.rhino.uw.entity.CorpAnniv;
 import ke.co.rhino.uw.entity.Corporate;
 import ke.co.rhino.uw.entity.Principal;
 import org.springframework.data.domain.Page;
@@ -34,4 +35,8 @@ public interface PrincipalRepo extends JpaRepository<Principal,Long> {
 
     Principal findByFamilyNo(String familyNo);
 
+    @Query("SELECT p FROM Principal p WHERE p.corporate = " +
+            "(SELECT c FROM Corporate c WHERE  c.annivs IN " +
+                "(SELECT a FROM CorpAnniv a WHERE a.idCorpAnniv = :idCorpAnniv))")
+    Page<Principal> findByCorpAnniv(@Param("idCorpAnniv") Long idCorpAnniv, Pageable pageable);
 }

@@ -9,6 +9,7 @@ import ke.co.rhino.uw.service.IPrincipalService;
 import ke.co.rhino.uw.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -130,6 +131,23 @@ public class MemberHandler extends AbstractHandler{
 
     }
 
+    @RequestMapping(value = "/findByAnniv", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findByAnniv(@RequestParam(value = "idCorpAnniv", required = true) String idCorpAnnivStr, HttpServletRequest request){
+
+        Long idCorpAnniv = Long.parseLong(idCorpAnnivStr);
+
+        int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        Integer size = request.getParameter("limit") == null ? 5 : Integer.valueOf(request.getParameter("limit"));
+
+        Result<Page<Member>> ar = memberService.findByCorpAnniv(pageNo, size, idCorpAnniv, getUser());
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+    }
 
     private String getUser(){
         return authenticationFacade.getAuthentication().getName();

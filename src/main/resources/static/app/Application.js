@@ -5,28 +5,20 @@
  */
 Ext.define('Rhino.Application', {
     extend: 'Ext.app.Application',
-    
     name: 'Rhino',
-
     stores: [
         'Rhino.store.NavigationTree'
     ],
-
     views: [
         'Rhino.view.login.Login',
         'Rhino.view.main.Main'
     ],
-    
     launch: function () {
-
         var loggedIn;
-
-        loggedIn = localStorage.getItem("RhinoAuthenticated");
-
+        loggedIn = sessionStorage.getItem("RhinoLoggedIn");
         Ext.create({
             xtype: loggedIn ? 'app-main' : 'login'
         });
-
     },
 
     //init: function(application){
@@ -74,7 +66,13 @@ Ext.Ajax.on('requestexception', function(con,response,op,e){
     } else if (response.status === 403){
         Ext.Msg.alert('Insufficient privileges','You do not have the stones to access this content');
     } else if (response.status === 500){
-        Ext.Msg.alert(response.responseText);
+        var result = Ext.JSON.decode(response.responseText,true);
+        if (!result){
+            result = {};
+            result.success = false;
+            result.msg = response.responseText;
+        }
+        Ext.Msg.alert('Something went wrong',result.msg);
     }
 });
 
