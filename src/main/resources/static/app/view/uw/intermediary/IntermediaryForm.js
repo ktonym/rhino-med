@@ -34,9 +34,9 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryForm',{
             items: [
                 {
                     xtype: 'hiddenfield',
-                    name: 'idIntermediary',
+                    name: 'id',
                     fieldLabel: 'Label',
-                    bind: '{currentIntermediary.idIntermediary}'
+                    bind: '{currentIntermediary.id}'
                 },
                 {
                     fieldLabel: 'Name',

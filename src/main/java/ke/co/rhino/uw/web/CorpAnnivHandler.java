@@ -1,17 +1,20 @@
 package ke.co.rhino.uw.web;
 
 import ke.co.rhino.security.IAuthenticationFacade;
+import ke.co.rhino.uw.entity.Category;
 import ke.co.rhino.uw.entity.CorpAnniv;
+import ke.co.rhino.uw.entity.Corporate;
+import ke.co.rhino.uw.entity.Intermediary;
+import ke.co.rhino.uw.service.ICategoryService;
 import ke.co.rhino.uw.service.ICorpAnnivService;
 import ke.co.rhino.uw.service.ICorpService;
+import ke.co.rhino.uw.service.IIntermediaryService;
 import ke.co.rhino.uw.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.json.JsonArray;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
+import javax.json.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +31,12 @@ public class CorpAnnivHandler extends AbstractHandler {
 
     @Autowired
     private ICorpAnnivService corpAnnivService;
+
+    @Autowired
+    private IIntermediaryService intermediaryService;
+
+    @Autowired
+    private ICategoryService categoryService;
     
     @Autowired
     private ICorpService corpService;
@@ -45,7 +54,64 @@ public class CorpAnnivHandler extends AbstractHandler {
             Result<List<CorpAnniv>> ar = corpAnnivService.findByCorporate(idCorporate, getUser());
 
             if (ar.isSuccess()) {
-                return getJsonSuccessData(ar.getData());
+                JsonObjectBuilder builder = Json.createObjectBuilder();
+                builder.add("success", true);
+                JsonArrayBuilder annivsArrayBuilder = Json.createArrayBuilder();
+
+                for (CorpAnniv anniv: ar.getData()) {
+
+                    Intermediary intermediary = intermediaryService.findByAnniv(anniv.getId(),getUser()).getData();
+                    JsonObjectBuilder intBuilder = Json.createObjectBuilder()
+                            .add("idIntermediary", intermediary.getId())
+                            .add("email", intermediary.getEmail() == null ? "" : intermediary.getEmail())
+                            .add("name", intermediary.getName() == null ? "" : intermediary.getName())
+                            .add("tel", intermediary.getTel() == null ? "" : intermediary.getTel())
+                            .add("postalAddress", intermediary.getPostalAddress() == null ? "": intermediary.getPostalAddress() )
+                            .add("town", intermediary.getTown() == null ? "" : intermediary.getTown() )
+                            .add("pin", intermediary.getPin() == null ? "" : intermediary.getPin())
+                            .add("street", intermediary.getStreet() == null ? "" : intermediary.getStreet() );
+
+                    Corporate corp = corpService.find(idCorporate,getUser()).getData();
+                    JsonObjectBuilder corpBuilder = Json.createObjectBuilder()
+                            .add("idCorporate", corp.getId())
+                            .add("pin", corp.getPin() == null ? "" : corp.getPin())
+                            .add("name", corp.getName())
+                            .add("email", corp.getEmail() == null ? "" : corp.getEmail())
+                            .add("postalAddress", corp.getPostalAddress() == null ? "" : corp.getPostalAddress())
+                            .add("tel", corp.getTel() == null ? "" : corp.getTel())
+                            .add("lastUpdate", corp.getLastUpdate() == null ? "" : corp.getLastUpdate().format(DATE_FORMAT_yyyyMMddHHmm))
+                            .add("abbreviation", corp.getAbbreviation() == null ? "" : corp.getAbbreviation());
+
+                    Result<List<Category>> catAr = categoryService.findByAnniv(anniv.getId());
+                    if(catAr.isSuccess()){
+                        JsonArrayBuilder categoryBuilder = Json.createArrayBuilder();
+                        for (Category cat:catAr.getData()) {
+                            categoryBuilder.add(
+                                    Json.createObjectBuilder()
+                                        .add("idCategory", cat.getId())
+                                        .add("cat", cat.getCat())
+                                        .add("description", cat.getDescription())
+                            );
+                        }
+                        annivsArrayBuilder.add(Json.createObjectBuilder().add("categories", categoryBuilder));
+                    }
+
+
+                    annivsArrayBuilder.add(
+                            Json.createObjectBuilder()
+                                    .add("intermediary",intBuilder)
+                                    .add("corporate", corpBuilder)
+                                    .add("idCorpAnniv", anniv.getId())
+                                    .add("anniv", anniv.getAnniv())
+                                    .add("inception", anniv.getInception().format(DATE_FORMAT_yyyyMMdd))
+                                    .add("expiry", anniv.getExpiry().format(DATE_FORMAT_yyyyMMdd))
+                                    .add("renewalDate", anniv.getRenewalDate().format(DATE_FORMAT_yyyyMMdd))
+                                    .add("lastUpdate", anniv.getLastUpdate().format(DATE_FORMAT_yyyyMMddHHmm))
+                    );
+                }
+
+                builder.add("data",annivsArrayBuilder);
+                return toJsonString(builder.build());
             } else {
                 return getJsonErrorMsg(ar.getMsg());
             }

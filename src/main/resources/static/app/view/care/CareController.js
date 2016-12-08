@@ -1,6 +1,7 @@
 Ext.define('Rhino.view.care.Controller',{
-    extend: 'Rhino.view.BaseController',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.care',
+    mixins: ['Rhino.util.ControllerMixin'],
     
     init: function(){
         this.setCurrentView('admission-list');

@@ -144,7 +144,7 @@ public class CorpHandler extends AbstractHandler {
     @ResponseBody
     public String findAll(HttpServletRequest request) {
 
-        logger.info("Showing page param: " + request.getParameter("page"));
+        //logger.info("Showing page param: " + request.getParameter("page"));
         // The hack below was to sidestep null error when editing a corporate.
         // TODO establish why during editing of the record, Extjs does a round trip to the back-end.
         int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));

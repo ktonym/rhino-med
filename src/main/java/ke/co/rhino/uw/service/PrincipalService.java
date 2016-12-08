@@ -1,11 +1,9 @@
 package ke.co.rhino.uw.service;
 
+import ke.co.rhino.uw.entity.CorpAnniv;
 import ke.co.rhino.uw.entity.Corporate;
 import ke.co.rhino.uw.entity.Principal;
-import ke.co.rhino.uw.repo.CategoryPrincipalRepo;
-import ke.co.rhino.uw.repo.CorporateRepo;
-import ke.co.rhino.uw.repo.MemberRepo;
-import ke.co.rhino.uw.repo.PrincipalRepo;
+import ke.co.rhino.uw.repo.*;
 import ke.co.rhino.uw.vo.Result;
 import ke.co.rhino.uw.vo.ResultFactory;
 import org.slf4j.Logger;
@@ -40,6 +38,9 @@ public class PrincipalService implements IPrincipalService {
 
     @Autowired
     private MemberRepo memberRepo;
+
+    @Autowired
+    private CorpAnnivRepo corpAnnivRepo;
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -188,7 +189,7 @@ public class PrincipalService implements IPrincipalService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Result<Page<Principal>> findByCorporate(Long idCorporate, Integer pageNum, Integer size, String actionUsername) {
+    public Result<Page<Principal>> findByCorporate(Long idCorporate, Integer page, Integer size, String actionUsername) {
 
         if(idCorporate == null){
             return ResultFactory.getFailResult("Cannot find Principal(s) for a null idCorporate!");
@@ -200,12 +201,32 @@ public class PrincipalService implements IPrincipalService {
             return ResultFactory.getFailResult("No corporate with ID ["+idCorporate+"] was found");
         }
 
-        PageRequest request = new PageRequest(pageNum,size);
+        PageRequest request = new PageRequest(page-1,size);
 
         Page<Principal> principalPage = principalRepo.findByCorporate(corporate, request);
 
         return ResultFactory.getSuccessResult(principalPage);
 
+    }
+
+    @Override
+    public Result<Page<Principal>> findByCorpAnniv(Long idCorpAnniv, Integer pageNo, Integer size, String actionUsername) {
+
+        if(idCorpAnniv == null){
+            return ResultFactory.getFailResult("Cannot find Principal(s) for a null corporate anniversary ID");
+        }
+
+        CorpAnniv anniv = corpAnnivRepo.findOne(idCorpAnniv);
+
+        if(anniv == null){
+            return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found in the system.");
+        }
+
+        PageRequest request = new PageRequest(pageNo-1,size);
+
+        Page<Principal> principalPage = principalRepo.findByCorpAnniv(idCorpAnniv, request);
+
+        return ResultFactory.getSuccessResult(principalPage);
     }
 
     private String generateFamilyNo(Corporate corporate){

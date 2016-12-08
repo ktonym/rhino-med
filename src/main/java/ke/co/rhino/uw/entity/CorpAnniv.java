@@ -183,6 +183,13 @@ public class CorpAnniv extends AbstractEntity implements EntityItem<Long> {
         return idCorpAnniv;
     }
 
+    public boolean isOpen(){
+        if(expiry.isAfter(LocalDate.now())){
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("idCorpAnniv", idCorpAnniv)
@@ -190,6 +197,7 @@ public class CorpAnniv extends AbstractEntity implements EntityItem<Long> {
                 .add("inception", inception == null ? "" : DATE_FORMATTER_yyyyMMdd.format(inception))
                 .add("expiry", expiry == null ? "" : DATE_FORMATTER_yyyyMMdd.format(expiry))
                 .add("renewalDate", renewalDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(renewalDate))
+                .add("isOpen", isOpen())
                 .add("lastUpdate", lastUpdate == null ? "" : DATE_FORMATTER_yyyyMMddHHmm.format(lastUpdate));
         if(this.getCorporate()!=null){
             corporate.addJson(builder);

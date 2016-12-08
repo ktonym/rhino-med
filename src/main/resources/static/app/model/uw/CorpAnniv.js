@@ -12,6 +12,7 @@ Ext.define('Rhino.model.uw.CorpAnniv', {
         { name: 'expiry', type: 'date', dateFormat: 'Ymd' },
         { name: 'renewalDate', type: 'date', dateFormat: 'Ymd' },
         { name: 'idCorporate', type: 'int'},
+        { name: 'isOpen', type: 'boolean'},
         { name: 'corporate', type: 'string', persist: false,
             convert: function(v,rec){
                 var data = rec.data;

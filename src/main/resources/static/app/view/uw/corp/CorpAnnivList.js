@@ -1,36 +1,38 @@
 Ext.define('Rhino.view.uw.corp.CorpAnnivList',{
     extend: 'Ext.grid.Panel',
-    xtype: 'corp-anniv-list',
+    alias: 'widget.corp-anniv-list',
     reference: 'corpAnnivList',
 
     headerBorders: false,
     rowLines: false,
 
-    //viewModel: {
-    //    type: 'corporate'
-    //},
-    controller: 'corporate',
+    viewModel: {
+       type: 'corporate'
+    },
+    controller: 'underwriting',
 
     bind:  '{anniversaries}',
     //store: 'CorpAnniv',
 
-    //listeners: {
-    //    beforerender : 'beforeAnnivListRender'
-    //},
+    listeners: {
+       beforerender : function () {
+            Ext.Msg.alert('{selectedCorporate}', 'Anniversaries loading..');
+       }
+    },
 
     defaults: {
       xtype: 'datecolumn'
     },
 
-    tbar: [
-        {
-            iconCls: 'x-fa fa-angle-left',
-            listeners: {
-                click: 'onBack2CorpDtlsBtnClick'
-            }
-        }
-
-    ],
+    // tbar: [
+    //     {
+    //         iconCls: 'x-fa fa-angle-left',
+    //         listeners: {
+    //             click: 'onBack2CorpDtlsBtnClick'
+    //         }
+    //     }
+    //
+    // ],
 
     columns: [
         {
