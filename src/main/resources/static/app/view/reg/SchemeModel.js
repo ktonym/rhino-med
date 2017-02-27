@@ -4,7 +4,8 @@
 Ext.define('Rhino.view.reg.SchemeModel',{
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.scheme',
-    requires: ['Rhino.model.uw.Corporate'],
+    requires: ['Rhino.model.uw.Corporate','Rhino.model.uw.Intermediary',
+        'Rhino.model.uw.Category','Rhino.model.uw.CorpBenefit'],
     data: {},
     formulas: {
         currentScheme: {
@@ -58,6 +59,23 @@ Ext.define('Rhino.view.reg.SchemeModel',{
                     }
                 });
             }
+        },
+        corpBenefits: {
+            model: 'Rhino.model.uw.CorpBenefit',
+            autoLoad: false,
+            loadByCategory: function (idCategory) {
+                this.load({
+                    params: {
+                        idCategory: idCategory
+                    }
+                });
+            }
+        },
+        planTypes: {
+            model: 'Rhino.model.TextCombo',
+            data: [
+                ['CORPORATE'],['INDIVIDUAL'],['SME']
+            ]
         }
     }
 });

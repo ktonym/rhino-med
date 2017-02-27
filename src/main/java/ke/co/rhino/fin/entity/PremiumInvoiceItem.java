@@ -1,12 +1,16 @@
 package ke.co.rhino.fin.entity;
 
-import ke.co.rhino.uw.entity.*;
+
+
+import ke.co.rhino.uw.entity.CorpMemberBenefit;
+import ke.co.rhino.uw.entity.LocalDatePersistenceConverter;
+import ke.co.rhino.uw.entity.PremiumRate;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 
 /**
  * Created by akipkoech on 16/11/2015.
@@ -31,8 +35,6 @@ public class PremiumInvoiceItem extends AbstractEntity implements EntityItem<Lon
                   @JoinColumn(name = "idCorpBenefit",referencedColumnName = "idCorpBenefit", nullable = false)})
     private CorpMemberBenefit corpMemberBenefit;
     private BigDecimal amount;
-
-    static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public PremiumInvoiceItem(PremiumInvoiceItemBuilder premiumInvoiceItemBuilder) {
         this.invoiceDate = premiumInvoiceItemBuilder.invoiceDate;

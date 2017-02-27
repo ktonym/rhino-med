@@ -2,6 +2,7 @@ package ke.co.rhino.uw.web;
 
 import ke.co.rhino.security.IAuthenticationFacade;
 import ke.co.rhino.uw.entity.Corporate;
+import ke.co.rhino.uw.entity.PlanType;
 import ke.co.rhino.uw.service.ICorpService;
 import ke.co.rhino.uw.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class CorpHandler extends AbstractHandler {
                      jsonObj.getString("postalAddress"),
                      LocalDate.parse(joinDateVal, DATE_FORMAT_yyyyMMdd),
                      lastUpdateVal,
+                     PlanType.valueOf(jsonObj.getString("planType")),
                      getUser());
 
              if (ar.isSuccess()) {

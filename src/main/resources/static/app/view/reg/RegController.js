@@ -33,8 +33,9 @@ Ext.define('Rhino.view.reg.RegController',{
     onSchemeAdd: function () {
         var me = this,
             vm = me.getViewModel(),
-            scheme;
-        scheme = Ext.create('Rhino.model.uw.Corporate',{});
+            scheme = Ext.create('Rhino.model.uw.Corporate',{
+                        planType: 'CORPORATE'
+            });
         vm.set('current.scheme',scheme);
         this.setCurrentView('scheme-form',{
             openWindow: true,
@@ -44,7 +45,8 @@ Ext.define('Rhino.view.reg.RegController',{
                 maxWidth: 500
             },
             targetCfg: {
-                title: 'Create scheme'
+                title: 'Create scheme',
+                iconCls: 'x-fa fa-plus'
             }
         });
     },
@@ -60,7 +62,8 @@ Ext.define('Rhino.view.reg.RegController',{
             targetCfg: {
                 bind: {
                     title: 'Edit: <b>{current.scheme.name}</b>'
-                }
+                },
+                iconCls: 'x-fa fa-edit'
             }
         });
     },
@@ -78,13 +81,14 @@ Ext.define('Rhino.view.reg.RegController',{
             openWindow: true,
             windowCfg: {
                 header : false,
-                maxHeight: 450,
-                maxWidth: 500
+                maxHeight: 350,
+                maxWidth: 450
             },
             targetCfg: {
                 bind: {
                     title: 'Create anniversary for <b>{current.scheme.name}</b>'
-                }
+                },
+                iconCls: 'x-fa fa-plus'
             }
         });
 
@@ -94,13 +98,14 @@ Ext.define('Rhino.view.reg.RegController',{
             openWindow: true,
             windowCfg: {
                 header : false,
-                maxHeight: 450,
-                maxWidth: 500
+                maxHeight: 350,
+                maxWidth: 450
             },
             targetCfg: {
                 bind: {
-                    title: 'Edit: <b>{current.scheme.name}</b> ({current.anniv.anniv})'
-                }
+                    title: 'Edit: <b>{current.scheme.name}</b> (Policy Term {current.anniv.anniv})'
+                },
+                iconCls: 'x-fa fa-edit'
             }
         });
     },
@@ -137,11 +142,11 @@ Ext.define('Rhino.view.reg.RegController',{
             vm = me.getViewModel(),
             idCorp = vm.get('current.scheme.id'),
             principal;
-        principal = Ext.create('Rhino.model.uw.Principal',{
+        principal = Ext.create('Rhino.model.uw.Member',{
             idCorporate: idCorp
         });
         vm.set('current.principal',principal);
-        this.setCurrentView('principal-form',{
+        this.setCurrentView('member-form',{
             openWindow: true,
             windowCfg: {
                 header : false,
@@ -173,11 +178,11 @@ Ext.define('Rhino.view.reg.RegController',{
     onAddMember: function () {
         var me = this,
             vm = me.getViewModel(),
-            idPrincipal = vm.get('current.principal.idPrincipal'),
-            member;
-        member = Ext.create('Rhino.model.uw.Member',{
-            idPrincipal: idPrincipal
-        });
+            //idPrincipal = vm.get('current.principal.idPrincipal'),
+            idCorp = vm.get('current.scheme.id'),
+            member = Ext.create('Rhino.model.uw.Member',{
+                idCorporate: idCorp
+            });
         vm.set('current.member',member);
         this.setCurrentView('member-form',{
             openWindow: true,
@@ -189,9 +194,14 @@ Ext.define('Rhino.view.reg.RegController',{
             targetCfg: {
                 bind: {
                     title: 'Add Member to <b>{current.scheme.name}</b>'
+                },
+                iconCls: 'x-fa fa-plus',
+                listeners: {
+                    memberadded: 'onMemberAdded'
                 }
             }
         });
+
     },
     onEditMember: function () {
         this.setCurrentView('member-form',{
@@ -207,5 +217,21 @@ Ext.define('Rhino.view.reg.RegController',{
                 }
             }
         });
+    },
+
+    listen: {
+        controller: {
+            '*' : {
+                memberadded: function (rec) {
+                    Ext.Msg.alert('Member added', 'Fire event!!!');
+                    // var memberlist = this.getView().lookupReference('schemeMembers'),
+                    //     store = memberlist.getStore();
+                    // if(rec.store===undefined){
+                    //     store.add(rec);
+                    //     //vm.get('members').add(rec);
+                    // }
+                }
+            }
+        }
     }
 });

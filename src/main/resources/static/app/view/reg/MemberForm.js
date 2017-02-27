@@ -16,11 +16,21 @@ Ext.define('Rhino.view.reg.MemberForm',{
     },
     bodyPadding: 10,
     scrollable: true,
-
     defaults: {
         labelWidth: 120,
         labelSeparator: '',
         xtype: 'textfield'
+    },
+    listeners: {
+        beforerender : function () {
+            var me = this,
+                vm = me.getViewModel(),
+                corpId = vm.get('current.scheme.id'),
+                store = vm.getStore('corpPrincipals');
+            store.loadByCorporate(corpId);
+            console.info('Showing contents of store..');
+            console.log(store);
+        }
     },
     items: [
         {
@@ -29,34 +39,93 @@ Ext.define('Rhino.view.reg.MemberForm',{
             bind: '{current.member.idMember}'
         },
         {
-            xtype: 'textfield',
+            fieldLabel: 'Member No',
             name: 'memberNo',
-            bind: '{current.member.memberNo}'
+            bind: '{current.member.memberNo}',
+            disabled: true
         },
         {
-            xtype: 'textfield',
-            name: 'firstName',
-            bind: '{current.member.firstName}'
+            xtype: 'fieldcontainer',
+            layout: 'hbox',
+            fieldLabel: 'Name',
+            items: [
+                {
+                    fieldLabel: '',
+                    xtype: 'textfield',
+                    flex: 1,
+                    name: 'firstName',
+                    hideLabel: true,
+                    emptyText: 'First Name',
+                    bind: '{current.member.firstName}'
+                },
+                {
+                    fieldLabel: '',
+                    xtype: 'textfield',
+                    flex: 1,
+                    emptyText: 'Surname',
+                    name: 'surname',
+                    bind: '{current.member.surname}'
+                }
+            ]
         },
         {
-            xtype: 'textfield',
-            name: 'surname',
-            bind: '{current.member.surname}'
-        },
-        {
-            xtype: 'textfield',
+            fieldLabel: 'Other name(s)',
             name: 'otherNames',
             bind: '{current.member.otherNames}'
         },
         {
-            xtype: 'combo',
-            name: 'sex',
-            bind: '{current.member.sex}'
+            xtype: 'datefield',
+            fieldLabel: 'DoB',
+            name: 'dob',
+            //format: 'Ymd',
+            bind: '{current.member.dob}'
         },
         {
             xtype: 'combo',
+            fieldLabel: 'Sex',
+            name: 'sex',
+            displayField: 'text',
+            valueField: 'text',
+            bind: {
+                value: '{current.member.sex}',
+                store: '{sexes}'
+            },
+            queryMode: 'local'
+            //,valueField: 'sex'
+        },
+        {
+            xtype: 'combo',
+            fieldLabel: 'Member Type',
             name: 'memberType',
-            bind: '{current.member.memberType}'
+            displayField: 'text',
+            valueField: 'text',
+            queryMode : 'local',
+            bind: {
+                store: '{memberTypes}',
+                value: '{current.member.memberType}'
+            } 
+        },
+        {
+            xtype: 'combo',
+            fieldLabel: 'Principal',
+            name: 'principal',
+            displayField: 'fullName',
+            queryMode: 'local',
+            //hideTrigger: false,
+            bind: {
+                store: '{principals}',
+                value: '{current.member.idPrincipal}'
+            },
+            valueField: 'surname'
+            /*minChars: 3,
+            listConfig: {
+                loadingText: 'Searching...',
+                emptyText: 'No matching principals found.',
+                getInnerTpl: function () {
+                    return '<h3><span>{surname}, {firstName}</span></h3></br> ' +
+                            '{memberNo}';
+                }
+            }*/
         }
     ],
     bbar: {

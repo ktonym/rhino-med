@@ -167,11 +167,11 @@ public class PrincipalService implements IPrincipalService {
             return ResultFactory.getFailResult("Principal has categories defined. Delete failed.");
         }
 
-        long dependantCount = memberRepo.countByPrincipal(principal);
+        /*long dependantCount = memberRepo.countByPrincipal(principal);
 
         if(dependantCount > 0) {
             return ResultFactory.getFailResult("Principal has dependants defined. Delete failed.");
-        }
+        }*/
 
         principalRepo.delete(principal);
 

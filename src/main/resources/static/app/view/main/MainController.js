@@ -20,6 +20,13 @@ Ext.define('Rhino.view.main.MainController', {
     
     routes: {
         ':node': 'onRouteChange'
+        /*{
+            before: 'checkSession',
+            action: 'onRouteChange',
+            conditions:{
+                ':node': '([%a-zA-Z0-9\\.\\-\\_\\s,]+)'
+            }
+        }*/
     },
     
     setCurrentView: function(hashTag) {
@@ -206,6 +213,22 @@ Ext.define('Rhino.view.main.MainController', {
         } else {
             Rhino.util.Util.showErrorMsg(result.msg);
         }
+    },
+    
+    checkSession: function () {
+        var args   = Ext.Array.slice(arguments),
+            action = args[args.length - 1];
+
+        Ext.Ajax.request({url:'/session', method: 'GET',
+            success: function(conn,res,opts,eOpts){
+                var result = Ext.JSON.decode(conn.responseText);
+                if(result.success){
+                    action.resume();
+                }
+            }
+        });
+
+
     }
     
 });

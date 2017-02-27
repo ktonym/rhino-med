@@ -4,23 +4,24 @@
 Ext.define('Rhino.view.reg.MemberModel',{
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.member',
+    requires: ['Rhino.store.Members'],
     data: {},
     stores: {
         corpPrincipals: {
-            model: 'Rhino.model.uw.Principal',
+            model: 'Rhino.model.uw.Member',
             proxy: {
                 type: 'ajax',
-                url: '/uw/principal/findAll',
-                extraParams: {
+                url: '/uw/member/principals',
+                /*extraParams: {
                     idCorporate: '{current.scheme.id}'
-                },
+                },*/
                 reader: {
                     type: 'json',
                     rootProperty: 'data',
                     totalProperty: 'results'
                 }
             },
-            autoLoad: true,
+            autoLoad: false,
             loadByCorporate: function (corpId) {
                 this.load({
                     params: {
@@ -30,60 +31,29 @@ Ext.define('Rhino.view.reg.MemberModel',{
             }
         },
         principals: {
-            model: 'Rhino.model.uw.Principal',
-            autoLoad: false,
-            loadByCorporate: function (corpId) {
-                this.load({
-                    params: {
-                        filter: "corporate",
-                        id: corpId
-                    }
-                });
+            source: {
+                type: 'members'
             },
-            loadByAnniv: function (idCorpAnniv) {
-                this.load({
-                    params: {
-                        filter: "corpAnniv",
-                        id: idCorpAnniv
-                    }
-                });
+            autoLoad: true,
+            filterBy: function (record) {
+                return record.get('memberType')==='PRINCIPAL';
             }
         },
         members: {
-            model: 'Rhino.model.uw.Member',
-            autoLoad: false,
-            loadByCorporate: function (corpId) {
-                this.load({
-                    params: {
-                        filter: "corporate",
-                        id: corpId
-                    }
-                });
-            },
-            loadByPrincipal: function (idPrincipal) {
-                this.load({
-                    params: {
-                        filter: "principal",
-                        id: idPrincipal
-                    }
-                });
-            },
-            loadByCategory: function (catId) {
-                this.load({
-                   params: {
-                       filter: "category",
-                       id: catId
-                   }
-                });
-            },
-            loadByAnniversary: function (idCorpAnniv) {
-                this.load({
-                   params: {
-                       filter: "corpAnniv",
-                       id: idCorpAnniv
-                   }
-                });
-            }
+            type: 'members'
+        },
+        sexes: {
+            model: 'Rhino.model.TextCombo',
+            data: [
+                ['MALE'],['FEMALE']
+            ]
+        },
+        memberTypes: {
+            model: 'Rhino.model.TextCombo',
+            data: [
+                ['PRINCIPAL'],['SPOUSE'],['CHILD'],['PARENT'],['GRANDPARENT'],['OTHER']
+            ]
         }
     }
+
 });

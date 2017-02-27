@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 13/06/2016.
@@ -17,7 +18,7 @@ public interface ICorpMemberBenefitService {
     Result<CorpMemberBenefit> create(Long idMember,
                                      Long idCorpAnniv,
                                      Long idCorpBenefit,
-                                     Long idParentCorpBenefit,
+                                     Optional<Long> idParentCorpBenefitOpt,
                                      BenefitStatus status,
                                      LocalDate wef,
                                      String actionUsername);
@@ -31,7 +32,7 @@ public interface ICorpMemberBenefitService {
     Result<CorpMemberBenefit> update(Long idMember,
                                      Long idCorpAnniv,
                                      Long idCorpBenefit,
-                                     Long idParentCorpBenefit,
+                                     Optional<Long> idParentCorpBenefitOpt,
                                      BenefitStatus status,
                                      LocalDate wef,
                                      String actionUsername);

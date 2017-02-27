@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 26/05/2016.
@@ -23,7 +24,7 @@ public interface ICorpBenefitService {
                                BenefitType benefitType,
                                boolean sharing,boolean needPreAuth,
                                Integer waitingPeriod,
-                               Long idParentBenefit,
+                               Optional<Long> idParentBenefitOpt,
                                Long idCategory,
                                String actionUsername);
 
@@ -38,7 +39,7 @@ public interface ICorpBenefitService {
                                BenefitType benefitType,
                                boolean sharing,boolean needPreAuth,
                                Integer waitingPeriod,
-                               Long idParentBenefit,
+                               Optional<Long> idParentBenefitOpt,
                                Long idCategory,
                                String actionUsername);
 

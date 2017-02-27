@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -17,8 +18,8 @@ import java.util.stream.Stream;
  */
 public interface IMemberService {
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
-    Result<Member> create(Long idPrincipal,
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
+    Result<Member> create(Long idCorporate, Optional<Long> idPrincipal,
                           String firstName,
                           String surname,
                           String otherNames,
@@ -27,16 +28,16 @@ public interface IMemberService {
                           MemberType memberType,
                           String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<List<Member>> create(List<Map<String,Object>> memberMap,
-                                  Long idPrincipal,
+                                  Long idPrincipal,Long idCorporate,
                                   String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Stream<Member>> create(List<Map<String, Object>> memberMap,
                                   String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Member> update(Long idMember,
                           String memberNo,
                           String firstName,
@@ -44,10 +45,10 @@ public interface IMemberService {
                           String otherNames,
                           Sex sex,
                           LocalDate dob,
-                          MemberType memberType,
+                          MemberType memberType,Long idCorporate,
                           String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Member> remove(Long idMember,String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
@@ -66,4 +67,7 @@ public interface IMemberService {
     @PreAuthorize("isAuthenticated()")
     Result<Page<Member>> findByCorpAnniv(int pageNum, int size, Long idCorpAnniv,
                                          String actionUsername);
+
+    @PreAuthorize("isAuthenticated()")
+    Result<List<Member>> findPrincipals(Long idCorporate, String actionUsername);
 }

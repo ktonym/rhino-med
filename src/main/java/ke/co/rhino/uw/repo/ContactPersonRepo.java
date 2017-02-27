@@ -13,4 +13,5 @@ public interface ContactPersonRepo extends JpaRepository<ContactPerson,Long> {
 
     List<ContactPerson> findByCorporate(Corporate corporate);
     ContactPerson findByEmail(String email);
+    long countByCorporate(Corporate corporate);
 }

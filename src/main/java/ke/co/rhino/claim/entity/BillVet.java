@@ -2,13 +2,11 @@ package ke.co.rhino.claim.entity;
 
 import ke.co.rhino.fin.entity.Payment;
 import ke.co.rhino.fin.entity.PaymentVoucher;
-import ke.co.rhino.uw.entity.AbstractEntity;
-import ke.co.rhino.uw.entity.EntityItem;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 
 /**
  * Created by ktonym on 1/10/15.
@@ -31,7 +29,7 @@ public class BillVet extends AbstractEntity implements EntityItem<Long> {
     @Column(nullable = false)
     private VetStatus vetStatus;
 
-    static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+    //static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public BillVet() {
     }

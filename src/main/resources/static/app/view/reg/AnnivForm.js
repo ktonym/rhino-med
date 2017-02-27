@@ -4,8 +4,11 @@
 Ext.define('Rhino.view.reg.AnnivForm',{
     extend: 'Ext.form.Panel',
     alias: 'widget.anniv-form',
-    requires: ['Rhino.view.reg.AnnivController'],
+    requires: ['Rhino.view.reg.AnnivController','Rhino.view.reg.SchemeModel'],
     controller: 'anniv',
+    viewModel: {
+        type : 'scheme'
+    },
     cls: 'form-compose',
     layout: {
         type: 'vbox',
@@ -47,11 +50,11 @@ Ext.define('Rhino.view.reg.AnnivForm',{
             name: 'intermediary',
             bind: {
                 store: '{intermediaries}',
-                value: '{current.anniv.idIntermediary}'//,
+                value: '{current.anniv.intermediaryId}'//,
                 // selection: '{current.anniv.intermediary}'
             },
             valueField: 'idIntermediary',
-            displayField: 'idIntermediary',
+            displayField: 'name',
             queryMode: 'local'
            // bind: '{current.anniv.intermediary}'
         },

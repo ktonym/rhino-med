@@ -1,7 +1,6 @@
 package ke.co.rhino.claim.entity;
 
 import ke.co.rhino.care.entity.ServiceProvider;
-import ke.co.rhino.uw.entity.AbstractEntity;
 import ke.co.rhino.uw.entity.CorpMemberBenefit;
 import ke.co.rhino.uw.entity.EntityItem;
 import ke.co.rhino.uw.entity.LocalDatePersistenceConverter;
@@ -10,14 +9,13 @@ import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
  * Created by akipkoech on 21/04/2016.
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_no","provider_id"})})
+//@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_no","provider_id"})})
 public class Bill extends AbstractEntity implements EntityItem<Long> {
 
     @Id
@@ -55,14 +53,15 @@ public class Bill extends AbstractEntity implements EntityItem<Long> {
     private BillVet billVet;
     @OneToMany(mappedBy = "bill")
     private List<PreAuthBill> preAuthBills;
-
-    static final DateTimeFormatter DATE_FORMAT_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+    /*@ManyToOne
+    private Treatment treatment;*/
 
     public Bill() {
     }
 
     public Bill(BillBuilder billBuilder) {
         this.idBill = billBuilder.idBill;
+        //this.treatment = billBuilder.treatment;
         this.corpMemberBenefit = billBuilder.corpMemberBenefit;
         this.invoiceNo = billBuilder.invoiceNo;
         this.claimNo = billBuilder.claimNo;
@@ -88,6 +87,7 @@ public class Bill extends AbstractEntity implements EntityItem<Long> {
         private LocalDate enteredDate;
         private ServiceProvider provider;
         private ClaimBatch batch;
+        //public Treatment treatment;
 
         public BillBuilder(CorpMemberBenefit corpMemberBenefit) {
             this.corpMemberBenefit = corpMemberBenefit;
@@ -181,9 +181,9 @@ public class Bill extends AbstractEntity implements EntityItem<Long> {
         return enteredDate;
     }
 
-    public CorpMemberBenefit getCorpMemberBenefit() {
+    /*public CorpMemberBenefit getCorpMemberBenefit() {
         return corpMemberBenefit;
-    }
+    }*/
 
     public ServiceProvider getProvider() {
         return provider;
@@ -211,15 +211,15 @@ public class Bill extends AbstractEntity implements EntityItem<Long> {
         builder.add("idBill",idBill)
                 .add("invoiceNo",invoiceNo)
                 .add("claimNo", claimNo)
-                .add("invoiceDate", invoiceDate==null ? "" : DATE_FORMAT_yyyyMMdd.format(invoiceDate))
+                .add("invoiceDate", invoiceDate==null ? "" : DATE_FORMATTER_yyyyMMdd.format(invoiceDate))
                 .add("invoiceAmt", invoiceAmt)
                 .add("deductionAmt",deductionAmt)
                 .add("deductionReason",deductionReason)
-                .add("enteredDate",enteredDate==null ? "" : DATE_FORMAT_yyyyMMdd.format(enteredDate));
+                .add("enteredDate",enteredDate==null ? "" : DATE_FORMATTER_yyyyMMdd.format(enteredDate));
 
-        if(corpMemberBenefit!=null){
-            corpMemberBenefit.addJson(builder);
-        }
+        /*if(treatment!=null){
+            treatment.addJson(builder);
+        }*/
 
         if(batch!=null){
             batch.addJson(builder);

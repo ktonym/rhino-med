@@ -1,14 +1,15 @@
 package ke.co.rhino.uw.repo;
 
 import ke.co.rhino.uw.entity.Corporate;
-import org.springframework.data.jpa.repository.JpaRepository;
+import ke.co.rhino.uw.entity.PlanType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,13 +29,15 @@ public interface CorporateRepo extends PagingAndSortingRepository<Corporate, Lon
     @Query("SELECT c FROM Corporate c WHERE UPPER(c.pin) = UPPER(:pin)")
     Corporate findByPinEqualsIgnoreCase(@Param("pin") String pin);
 
-    List<Corporate> findByJoinedAfter(LocalDate localDate);
+    Page<Corporate> findByJoinedAfter(LocalDate localDate, Pageable pageable);
 
-    List<Corporate> findByJoinedBefore(LocalDate localDate);
+    Page<Corporate> findByJoinedBefore(LocalDate localDate, Pageable pageable);
 
-    List<Corporate> findByLastUpdateAfter(LocalDateTime localDate);
+    Page<Corporate> findByLastUpdateAfter(LocalDateTime localDate, Pageable pageable);
 
     Optional<Corporate> getOne(Long idCorporate);
+
+    Page<Corporate> findByPlanType(PlanType planType, Pageable pageable);
 
 }
 

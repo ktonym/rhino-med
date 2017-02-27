@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ICorpAnnivService {
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<CorpAnniv> create(
             Long idCorporate,
             //Long idCorpAnniv,
@@ -25,7 +25,7 @@ public interface ICorpAnnivService {
             String actionUsername
     );
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<CorpAnniv> update(
             Long idCorporate,
             Long idCorpAnniv,
@@ -37,7 +37,7 @@ public interface ICorpAnnivService {
             String actionUsername
     );
 
-    @PreAuthorize("hasRole('ROLE_uw_managers')")
+    @PreAuthorize("hasRole('ROLE_UW_MANAGERS')")
     Result<CorpAnniv> remove(Long idCorpAnniv, String actionUsername);
 
     @PreAuthorize("isAuthenticated()")

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 28/06/2016.
@@ -26,10 +27,10 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
 
     @Autowired
     private CorpMemberBenefitRepo repo;
-    @Autowired
+    /*@Autowired
     private CategoryRepo categoryRepo;
     @Autowired
-    private BenefitRefRepo benefitRefRepo;
+    private BenefitRefRepo benefitRefRepo;*/
     @Autowired
     private MemberAnniversaryRepo memberAnniversaryRepo;
     @Autowired
@@ -50,7 +51,7 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     public Result<CorpMemberBenefit> create(Long idMember,
                                             Long idCorpAnniv,
                                             Long idCorpBenefit,
-                                            Long idParentCorpBenefit,
+                                            Optional<Long> idParentCorpBenefitOpt,
                                             BenefitStatus status,
                                             LocalDate wef,
                                             String actionUsername) {
@@ -96,7 +97,8 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         CorpMemberBenefit.CorpMemberBenefitBuilder benefitBuilder = new CorpMemberBenefit.CorpMemberBenefitBuilder(memberAnniv,corpBenefit)
                 .status(status);
 
-        if(idParentCorpBenefit !=null){
+        if(idParentCorpBenefitOpt.isPresent()){
+            Long idParentCorpBenefit = idParentCorpBenefitOpt.get();
             CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentCorpBenefit);
             // checking whether the parent member benefit being assigned has a corpBenefit that is a parent corpBenefit of this
             // member benefit
@@ -114,7 +116,7 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         } else {
             // This may result in some hibernate transaction-related exception..
             if(memberAnniv.getCorpAnniv().getInception().isAfter(wef)){
-                return ResultFactory.getFailResult("Member's benefit cannot take effect before start of corporate anniversary.");
+                return ResultFactory.getFailResult("Member's benefit cannot take effect before start of plan policy term.");
             }
         }
 
@@ -162,7 +164,7 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     public Result<CorpMemberBenefit> update(Long idMember,
                                             Long idCorpAnniv,
                                             Long idCorpBenefit,
-                                            Long idParentCorpBenefit,
+                                            Optional<Long> idParentCorpBenefitOpt,
                                             BenefitStatus status,
                                             LocalDate wef,
                                             String actionUsername) {
@@ -209,7 +211,8 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         CorpMemberBenefit.CorpMemberBenefitBuilder builder = new CorpMemberBenefit.CorpMemberBenefitBuilder(memberAnniv,corpBenefit);
         builder.status(status).wef(wef);
 
-        if(idParentCorpBenefit!=null){
+        if(idParentCorpBenefitOpt.isPresent()){
+            Long idParentCorpBenefit = idParentCorpBenefitOpt.get();
             CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentCorpBenefit);
             // checking whether the parent member benefit being assigned has a corpBenefit that is a parent corpBenefit of this
             // member benefit

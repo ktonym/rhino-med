@@ -84,7 +84,7 @@ Ext.define('Rhino.view.reg.SchemeList',{
             flex: 1
         },
         {
-            xtype: 'datecolumn',
+            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
             dataIndex: 'joined',
             text: 'Join Date',
             flex: 1

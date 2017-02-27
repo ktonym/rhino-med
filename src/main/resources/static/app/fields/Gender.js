@@ -3,6 +3,6 @@ Ext.define('Rhino.fields.Gender', {
     alias: 'data.field.gender',
     validators: {
         type: 'inclusion',
-        list: [ 'female', 'male' ]
+        list: [ 'FEMALE', 'MALE' ]
     }
 });

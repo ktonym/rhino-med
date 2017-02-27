@@ -23,7 +23,7 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
     @Convert(converter=LocalDatePersistenceConverter.class)
     private LocalDate joined;
     @OneToMany(mappedBy = "corporate")
-    private List<Principal> principals;
+    private List<Member> members;
     @OneToMany(mappedBy = "corporate")
     private List<CorpAnniv> annivs;
     @OneToMany(mappedBy = "corporate")
@@ -32,6 +32,8 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
     private LocalDateTime lastUpdate;
     @OneToMany(mappedBy = "corporate")
     private List<GroupRate> rates;
+    @Enumerated(EnumType.STRING)
+    private PlanType planType;
 
     public Corporate() {
     }
@@ -46,6 +48,7 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
         this.lastUpdate = builder.lastUpdate;
         this.idCorporate = builder.idCorporate;
         this.pin = builder.pin;
+        this.planType = builder.planType;
     }
 
     @Override
@@ -63,7 +66,8 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
                 .add("email",email)
                 .add("postalAddress", postalAddress == null ? "" : postalAddress)
                 .add("joined", joined == null ? "" : DATE_FORMATTER_yyyyMMdd.format(joined))
-                .add("lastUpdate", lastUpdate == null ? "" : DATE_FORMATTER_yyyyMMddHHmm.format(lastUpdate));
+                .add("lastUpdate", lastUpdate == null ? "" : DATE_FORMATTER_yyyyMMddHHmm.format(lastUpdate))
+                .add("planType", planType.toString());
     }
 
     public static class CorporateBuilder{
@@ -76,6 +80,7 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
         private String postalAddress;
         private LocalDate joined;
         private LocalDateTime lastUpdate;
+        private PlanType planType;
 
         public CorporateBuilder(String name, String abbreviation) {
             this.name = name;
@@ -114,6 +119,11 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
 
         public CorporateBuilder lastUpdate(LocalDateTime lastUpdate){
             this.lastUpdate = lastUpdate;
+            return this;
+        }
+
+        public CorporateBuilder planType(PlanType planType){
+            this.planType = planType;
             return this;
         }
 
@@ -159,8 +169,8 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
         return rates;
     }
 
-    public List<Principal> getPrincipals() {
-        return principals;
+    public List<Member> getMembers() {
+        return members;
     }
 
     public String getPin(){
@@ -173,5 +183,9 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
 
     public List<ContactPerson> getContactPersons() {
         return contactPersons;
+    }
+
+    public PlanType getPlanType() {
+        return planType;
     }
 }

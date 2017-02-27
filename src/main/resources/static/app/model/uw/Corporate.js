@@ -3,7 +3,7 @@ Ext.define('Rhino.model.uw.Corporate',{
     extend: 'Rhino.model.uw.Base',
     entityName: 'Corporate',
     //idProperty: 'idCorporate',
-    requires: ['Rhino.fields.Pin'],
+    requires: ['Rhino.fields.Pin','Rhino.fields.PlanType'],
     fields: [
         { name: 'id', type: 'int', mapping: 'idCorporate', useNull: true },
         { name: 'name', type: 'string' },
@@ -12,6 +12,7 @@ Ext.define('Rhino.model.uw.Corporate',{
         { name: 'email', type: 'auto' },
         { name: 'tel', type: 'string' },
         { name: 'postalAddress', type: 'auto' },
+        { name: 'planType', type: 'plan' },
         { name: 'joined', type: 'date', dateFormat: 'Ymd'}
 
     ],
@@ -36,7 +37,8 @@ Ext.define('Rhino.model.uw.Corporate',{
             { type: 'presence', message: 'This field is mandatory' },
             { type: 'length', min:5, max:40 }
         ],
-        joined: 'presence'
+        joined: 'presence',
+        planType: 'presence'
     }
     
 

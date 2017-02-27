@@ -59,7 +59,7 @@ Ext.Ajax.on('requestexception', function(con,response,op,e){
             modal: true,
             defaultFocus: 'username',
             items: [ {
-                xtype: 'login-form'
+                xtype: 'login'
             } ]
         });
         win.show();

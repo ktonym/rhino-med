@@ -1,14 +1,10 @@
 package ke.co.rhino.uw.entity;
 
-import org.springframework.cglib.core.Local;
-
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.function.IntBinaryOperator;
 
 /**
  * Created by akipkoech on 12/8/14.

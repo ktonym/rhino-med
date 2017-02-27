@@ -20,7 +20,7 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @JoinColumn(name = "ANNIV_ID",nullable = false)
     private CorpAnniv corpAnniv;
     @OneToMany(mappedBy = "category")
-    private List<CategoryPrincipal> categoryPrincipal;
+    private List<MemberCategory> memberCategories;
 
     public Category() {
     }
@@ -64,8 +64,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
         return idCategory;
     }
 
-    public List<CategoryPrincipal> getCategoryPrincipal() {
-        return categoryPrincipal;
+    public List<MemberCategory> getMemberCategories() {
+        return memberCategories;
     }
 
     public char getCat() {

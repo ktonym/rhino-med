@@ -86,7 +86,6 @@ Ext.define('Rhino.view.reg.SchemeAnnivList',{
             text: 'IdCorporate'
         },*/
         {
-            xtype: 'numbercolumn',
             dataIndex: 'anniv',
             text: 'Anniversary',
             width: 50

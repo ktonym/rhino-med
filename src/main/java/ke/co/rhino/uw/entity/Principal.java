@@ -30,8 +30,6 @@ public class Principal extends AbstractEntity implements EntityItem<Long> {
     @JoinColumn(name = "idCorporate",nullable = false)
     private Corporate corporate;
 
-    static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
-
     public Principal() {
     }
 

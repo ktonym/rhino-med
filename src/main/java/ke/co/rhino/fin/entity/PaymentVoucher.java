@@ -1,15 +1,11 @@
 package ke.co.rhino.fin.entity;
 
 import ke.co.rhino.claim.entity.BillVet;
-import ke.co.rhino.claim.entity.ClaimBatch;
-import ke.co.rhino.uw.entity.AbstractEntity;
-import ke.co.rhino.uw.entity.EntityItem;
 import ke.co.rhino.uw.entity.LocalDatePersistenceConverter;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -35,8 +31,6 @@ public class PaymentVoucher extends AbstractEntity implements EntityItem<Long> {
 //    private List<ClaimBatch> batch;
     @OneToMany(mappedBy = "paymentVoucher")
     private List<BillVet> billVetList;
-
-    static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public PaymentVoucher() {
     }

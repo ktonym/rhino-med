@@ -11,31 +11,13 @@ Ext.define('Rhino.model.uw.CorpAnniv', {
         { name: 'inception', type: 'date', dateFormat: 'Ymd' },
         { name: 'expiry', type: 'date', dateFormat: 'Ymd' },
         { name: 'renewalDate', type: 'date', dateFormat: 'Ymd' },
-        { name: 'idCorporate', type: 'int'},
+        { name: 'idCorporate', type: 'int', reference: 'Corporate'},
         { name: 'isOpen', type: 'boolean'},
-        { name: 'corporate', type: 'string', persist: false,
-            convert: function(v,rec){
-                var data = rec.data;
-                if (data.corporate && data.corporate.name){
-                    return data.corporate.name;
-                }
-                return data.idCorporate;
-            }
-        },
-        { name: 'idIntermediary', type: 'int'},
-        { name: 'intermediary', type: 'string', persist: false,
-            convert: function(v,rec){
-                var data = rec.data;
-                if (data.intermediary && data.intermediary.name){
-                    return data.intermediary.name;
-                }
-                return data.idIntermediary;
-            }
-        }
+        { name: 'intermediaryId', type: 'int', reference: 'Intermediary'}
 
     ],
 
-    hasOne: [
+    /*hasOne: [
         {
             model: 'Corporate',
             name: 'corporate',
@@ -48,7 +30,7 @@ Ext.define('Rhino.model.uw.CorpAnniv', {
             foreignKey: 'idIntermediary',
             associationKey: 'intermediary'
         }
-    ],
+    ],*/
 
     validators: {
         anniv: [

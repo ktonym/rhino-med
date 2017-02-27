@@ -6,11 +6,8 @@ Ext.define('Rhino.view.reg.SchemeForm',{
     alias: 'widget.scheme-form',
     controller: 'scheme',
     requires: [
-        'Rhino.view.reg.SchemeController','Rhino.view.reg.SchemeModel','Ext.button.Button','Ext.form.field.Text'
+        'Rhino.view.reg.SchemeController','Rhino.view.reg.SchemeModel' //,'Ext.button.Button','Ext.form.field.Text'
     ],
-
-    /*maxHeight: 420,
-    maxWidth: 450,*/
     cls: 'form-compose',
     layout: {
         type: 'vbox',
@@ -70,6 +67,18 @@ Ext.define('Rhino.view.reg.SchemeForm',{
             fieldLabel: 'Date joined',
             name: 'joined',
             bind: '{current.scheme.joined}'
+        },
+        {
+            xtype: 'combo',
+            fieldLabel: 'Plan Type',
+            name: 'planType',
+            displayField: 'text',
+            valueField: 'text',
+            queryMode : 'local',
+            bind: {
+                store: '{planTypes}',
+                value: '{current.scheme.planType}'
+            }
         }
     ],
 

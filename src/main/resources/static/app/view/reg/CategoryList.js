@@ -6,9 +6,9 @@ Ext.define('Rhino.view.reg.CategoryList',{
     alias: 'widget.category-list',
     reference: 'categoryList',
     cls: 'email-inbox-panel shadow-panel',
-    viewModel: {
+    /*viewModel: {
         type: 'scheme'
-    },
+    },*/
     bind: {
         store: '{categories}',
         selection: '{current.category}'
@@ -18,7 +18,7 @@ Ext.define('Rhino.view.reg.CategoryList',{
             iconCls: 'x-fa fa-plus',
             text: 'Add',
             listeners: {
-                click: 'onAddCatBtnClick'
+                click: 'onAddCategory'
             }
         },
         {
@@ -33,7 +33,7 @@ Ext.define('Rhino.view.reg.CategoryList',{
         },
         {
             iconCls: 'x-fa fa-remove',
-            text: 'Details',
+            text: 'Delete',
             listeners: {
                 click: 'onDelCatBtnClick'
             },
@@ -56,5 +56,5 @@ Ext.define('Rhino.view.reg.CategoryList',{
             dataIndex: 'description',
             text: 'Description'
         }
-        ]
+    ]
 });

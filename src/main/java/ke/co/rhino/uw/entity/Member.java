@@ -1,5 +1,7 @@
 package ke.co.rhino.uw.entity;
 
+import ke.co.rhino.claim.entity.Assessment;
+
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,12 +26,21 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
     @Convert(converter = LocalDatePersistenceConverter.class)
     private LocalDate dob;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="principal_id",nullable = false)
-    private Principal principal;
+    @JoinColumn(name="idPrincipal")
+    private Member principal;
+    @OneToMany(mappedBy = "principal")
+    private List<Member> dependants;
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
     @OneToMany(mappedBy = "member")
     private List<MemberAnniversary> memberAnniversaries;
+    /*@OneToMany(mappedBy = "member")
+    private List<Assessment> assessments;*/
+    @ManyToOne//(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idCorporate",nullable = false)
+    private Corporate corporate;
+    @OneToMany(mappedBy = "member")
+    private List<MemberCategory> memberCategories;
 
     static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -45,28 +56,36 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
         this.dob = memberBuilder.dob;
         this.principal = memberBuilder.principal;
         this.memberType = memberBuilder.memberType;
+        this.corporate = memberBuilder.corporate;
     }
 
     public static class MemberBuilder{
         private final String firstName;
         private final String surname;
         private String otherNames;
-        private final String memberNo;
+        private String memberNo;
         private final Sex sex;
         private final LocalDate dob;
-        private Principal principal;
+        private Member principal;
         private final MemberType memberType;
+        private final Corporate corporate;
 
-        public MemberBuilder(String firstName, String surname, String memberNo, Sex sex, LocalDate dob, MemberType memberType) {
+        public MemberBuilder(String firstName, String surname,Sex sex,
+                             LocalDate dob, MemberType memberType, Corporate corporate) {
             this.firstName = firstName;
             this.surname = surname;
-            this.memberNo = memberNo;
             this.sex = sex;
             this.dob = dob;
             this.memberType = memberType;
+            this.corporate = corporate;
         }
 
-        public MemberBuilder principal(Principal principal){
+        public MemberBuilder memberNo(String memberNo){
+            this.memberNo = memberNo;
+            return this;
+        }
+
+        public MemberBuilder principal(Member principal){
             this.principal = principal;
             return  this;
         }
@@ -110,7 +129,7 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
         return dob;
     }
 
-    public Principal getPrincipal() {
+    public Member getPrincipal() {
         return principal;
     }
 
@@ -122,6 +141,22 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
         return memberAnniversaries;
     }
 
+    public List<Member> getDependants() {
+        return dependants;
+    }
+
+    public Corporate getCorporate() {
+        return corporate;
+    }
+
+    public List<MemberCategory> getMemberCategories() {
+        return memberCategories;
+    }
+
+    /*public List<Assessment> getAssessments(){
+                return assessments;
+            }
+            */
     @Override
     public Long getId() {
         return idMember;
@@ -133,12 +168,20 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
                  .add("memberNo",memberNo)
                  .add("firstName",firstName)
                  .add("surname",surname)
-                 .add("otherNames",otherNames)
+                 .add("otherNames",otherNames == null ? "" : otherNames)
                  .add("sex",sex.toString())
                  .add("dob", dob == null ? "" : DATE_FORMATTER_yyyyMMdd.format(dob))
-                 .add("memberType", memberType.toString());
+                 .add("memberType", memberType.toString())
+                 .add("fullName", firstName.concat(" ").concat(surname).concat(" ").concat(otherNames==null?"":otherNames));
         if(principal!=null) {
+            /*builder.add("idPrincipal",principal.getId())
+                    .add("")*/
             principal.addJson(builder);
         }
+
+        if(corporate!=null){
+            corporate.addJson(builder);
+        }
+
     }
 }

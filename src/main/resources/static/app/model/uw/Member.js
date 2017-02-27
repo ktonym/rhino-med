@@ -3,38 +3,30 @@ Ext.define('Rhino.model.uw.Member', {
     idProperty: 'idMember',
     
     fields: [
-        { name: 'idMember', type: 'integer', useNull: true },
+        { name: 'idMember', type: 'int', useNull: true },
         { name: 'memberNo', type: 'string' },
         { name: 'firstName', type: 'string' },
         { name: 'surname', type: 'string' },
         { name: 'otherNames', type: 'string' },
         { name: 'sex', type: 'gender' },
+        { name: 'dob', type: 'date', dateFormat: 'Ymd' },
+        { name: 'fullName', type: 'string', persist: false },
         { name: 'memberType', type: 'member-type'},
-        { name: 'idPrincipal', type: 'integer' },
-        { name: 'principal', type: 'string', persist: false,
-            convert: function(v,rec){
-                var data = rec.data;
-                if(data.principal && data.principal.fullName){
-                    return data.principal.fullName;
-                }
-                return data.idPrincipal;
-            }
-        }
-
+        { name: 'idCorporate', type: 'int', reference: 'Corporate' },
+        { name: 'principal', reference: 'Member'}
     ],
 
-    hasOne: [
+    hasMany: [
         {
-            model: 'Principal',
-            name: 'principal',
-            foreignKey: 'idPrincipal',
-            associationKey: 'principal'
+            model: 'Member',
+            name: 'dependants',
+            associationKey: 'dependants'
         }
     ],
-
+    
     validators: {
-        firstName: 'presence',
-        surname: 'presence'
+        firstName: [ { type: 'presence', message: 'This field is mandatory'}],
+        surname: [ { type: 'presence', message: 'This field is mandatory'}]
     }
 
 });

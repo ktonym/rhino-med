@@ -91,7 +91,7 @@ Ext.define('Rhino.view.uw.intermediary.IntermediaryList',{
         {
             width: 150,
             dataIndex: "joinDate",
-            format: "d-m-Y",
+            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
             text: "Join Date"
         }
 

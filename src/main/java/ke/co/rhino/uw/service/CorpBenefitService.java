@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 27/05/2016.
@@ -48,14 +49,14 @@ public class CorpBenefitService implements ICorpBenefitService {
     private boolean sharing;
 
     @Override
-    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpBenefit> create(Long benefitCode,
                                       BigDecimal upperLimit,
                                       MemberType memberType,
                                       BenefitType benefitType,
                                       boolean sharing, boolean needPreAuth,
                                       Integer waitingPeriod,
-                                      Long idParentBenefit,
+                                      Optional<Long> idParentBenefitOpt,
                                       Long idCategory, String actionUsername) {
 
         if(benefitCode==null||benefitCode<1){
@@ -89,10 +90,20 @@ public class CorpBenefitService implements ICorpBenefitService {
 
         CorpBenefit.CorpBenefitBuilder corpBenefitBuilder = new CorpBenefit.CorpBenefitBuilder(benefitRef,upperLimit,memberType,benefitType,category);
 
-        if(idParentBenefit!=null){
+        if(idParentBenefitOpt.isPresent()){
+            Long idParentBenefit = idParentBenefitOpt.get();
             CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentBenefit);
             if(parentBenefit==null){
                 return ResultFactory.getFailResult("No parent benefit with code ["+idParentBenefit+"] was found. Kindly supply a valid benefit.");
+            }
+            if(parentBenefit.getBenefitType()!=benefitType){
+                return ResultFactory.getFailResult("Benefit type must match parent benefit type. Cannot save benefit.");
+            }
+            if((parentBenefit.isSharing()&&!sharing)||(!parentBenefit.isSharing()&&sharing)){
+                return ResultFactory.getFailResult("Sharing must be similar between parent and child benefits. Cannot save benefit.");
+            }
+            if(parentBenefit.isRequiresPreAuth()&&!needPreAuth){
+                return ResultFactory.getFailResult("The parent benefit requires pre-authorization, so should all its child benefits. Cannot save benefit.");
             }
             corpBenefitBuilder.parentBenefit(parentBenefit);
         }
@@ -110,7 +121,7 @@ public class CorpBenefitService implements ICorpBenefitService {
     }
 
     @Override
-    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public Result<List<CorpBenefit>> create(List<Map<String, Object>> mapList,
                                             String actionUsername) {
 
@@ -125,7 +136,7 @@ public class CorpBenefitService implements ICorpBenefitService {
             boolean sharing = (Boolean) map.get("sharing");
             boolean needPreAuth = (Boolean) map.get("needPreAuth");
             Integer waitingPeriod = (Integer) map.get("waitingPeriod");
-            Long idParentBenefit = (Long) map.get("idParentBenefit");
+            Optional<Long> idParentBenefitOpt = (Optional<Long>) map.get("idParentBenefit");
             Long idCategory = (Long) map.get("idCategory");
         }
 
@@ -136,14 +147,14 @@ public class CorpBenefitService implements ICorpBenefitService {
     }
 
     @Override
-    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public Result<CorpBenefit> update(Long idCorpBenefit,
                                       Long benefitCode,
                                       BigDecimal upperLimit,
                                       MemberType memberType,
                                       BenefitType benefitType,
                                       boolean sharing, boolean needPreAuth,
-                                      Integer waitingPeriod, Long idParentBenefit,
+                                      Integer waitingPeriod, Optional<Long> idParentBenefitOpt,
                                       Long idCategory, String actionUsername) {
 
         if(idCorpBenefit==null||idCorpBenefit<0){
@@ -174,9 +185,12 @@ public class CorpBenefitService implements ICorpBenefitService {
         }
 
         if(testBenefit.getBenefitRef()!=benefitRef){
-            //check that no child entity: corpMemberBenefit, fundInvoice or premiumInvoice
-            //have been defined for this corporate benefit
-            //otherwise, drill down and check if there are any bills, preAuths(LOUs)
+            /**
+             * check that no child entity: corpMemberBenefit, fundInvoice or premiumInvoice
+             * has been defined for this corporate benefit
+             * otherwise, drill down and check if there are any bills, preAuths(LOUs)
+             */
+
             if(premiumInvoiceRepo.countByBenefit(testBenefit)>0||fundInvoiceRepo.countByBenefit(testBenefit)>0){
                 return ResultFactory.getFailResult("Cannot modify this corporate benefit since it has already been invoiced.");
             }
@@ -187,10 +201,17 @@ public class CorpBenefitService implements ICorpBenefitService {
 
         CorpBenefit.CorpBenefitBuilder builder = new CorpBenefit.CorpBenefitBuilder(benefitRef,upperLimit,memberType,benefitType,cat);
 
-        if(idParentBenefit!=null&&idParentBenefit>0){
-            CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentBenefit);
-            if(parentBenefit!=null){
-                builder.parentBenefit(parentBenefit);
+        if(idParentBenefitOpt.isPresent()){
+            Long idParentBenefit = idParentBenefitOpt.get();
+            if(idParentBenefit>0){
+                CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentBenefit);
+                if(parentBenefit!=null){
+                    //Need to check that benefit limit is equal to or less than parent benefit limit
+                    if(parentBenefit.getUpperLimit().compareTo(upperLimit)<0){
+                        return ResultFactory.getFailResult("Benefit limit must not be greater than parent benefit limit.");
+                    }
+                    builder.parentBenefit(parentBenefit);
+                }
             }
         }
 
@@ -216,7 +237,7 @@ public class CorpBenefitService implements ICorpBenefitService {
     }
 
     @Override
-    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpBenefit> update(List<Map<String, Object>> mapList, String actionUsername) {
 
         //TODO update for multiple records: List
@@ -246,12 +267,12 @@ public class CorpBenefitService implements ICorpBenefitService {
     public Result<Page<CorpBenefit>> findByCorpAnniv(Long idCorpAnniv, int pageNum, int size, String actionUsername) {
 
         if(idCorpAnniv==null||idCorpAnniv<1){
-            return ResultFactory.getFailResult("Invalid corporate anniversary id provided. Kindly revise.");
+            return ResultFactory.getFailResult("Invalid policy terms id provided. Kindly revise.");
         }
 
         CorpAnniv corpAnniv = corpAnnivRepo.findOne(idCorpAnniv);
         if(corpAnniv==null){
-            return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found.");
+            return ResultFactory.getFailResult("No policy term with ID ["+idCorpAnniv+"] was found.");
         }
 
         PageRequest request = new PageRequest(pageNum-1,size);

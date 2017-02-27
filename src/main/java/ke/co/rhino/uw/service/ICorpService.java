@@ -1,6 +1,7 @@
 package ke.co.rhino.uw.service;
 
 import ke.co.rhino.uw.entity.Corporate;
+import ke.co.rhino.uw.entity.PlanType;
 import ke.co.rhino.uw.vo.Result;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * Created by akipkoech on 02/02/2016.
@@ -53,7 +53,7 @@ public interface ICorpService {
             String email,
             String postalAddress,
             LocalDate joined,
-            LocalDateTime lastUpdate,
+            LocalDateTime lastUpdate, PlanType planType,
             String actionUsername);
 
     @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS','ROLE_UW_SUPERVISORS')")
@@ -68,15 +68,18 @@ public interface ICorpService {
     Result<Corporate> find(Long idCorporate, String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
-    Result<Page<Corporate>> findAll(int pageNum, int size,String actionUsername);
+    Result<Page<Corporate>> findAll(int page, int size,String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
-    Result<List<Corporate>> findModifiedAfter(LocalDateTime time, String actionUsername);
+    Result<Page<Corporate>> findModifiedAfter(LocalDateTime time, int page, int size, String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
-    Result<List<Corporate>> findAddedAfter(LocalDate time, String actionUsername);
+    Result<Page<Corporate>> findAddedAfter(LocalDate time, int page, int size, String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
-    Result<List<Corporate>> findAddedBefore(LocalDate time, String actionUsername);
+    Result<Page<Corporate>> findAddedBefore(LocalDate time, int page, int size, String actionUsername);
+
+    @PreAuthorize("isAuthenticated()")
+    Result<Page<Corporate>> findByPlanType(PlanType planType, int page, int size, String actionUsername);
 
 }

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Created by akipkoech on 03/02/2016.
@@ -72,6 +73,33 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
         }
 
         /**
+         * Need to check that expiry does not equal renewal date
+         */
+        if(expiry.toEpochDay()==renewalDate.toEpochDay()){
+            return ResultFactory.getFailResult("Policy expiry and renewal dates cannot be the same.");
+        }
+
+        /**
+         * Inception and expiry are not equal
+         */
+        if(inception.toEpochDay()==expiry.toEpochDay()){
+            return ResultFactory.getFailResult("Policy inception and expiry cannot be the same.");
+        }
+
+        /**
+         * Need to confirm new anniv does not overlap with previous anniversary
+         */
+
+        List<CorpAnniv> annivList = corpAnnivRepo.findByCorporate(corporate);
+        // no lambdas??
+        for (CorpAnniv ann: annivList) {
+            LocalDate exp = ann.getExpiry();
+            if(exp.isAfter(inception)||exp.toEpochDay()==inception.toEpochDay()){
+                return ResultFactory.getFailResult("The dates supplied overlap with those of policy term["+ann.getAnniv()+"]");
+            }
+        }
+
+        /**
          * Before adding a new anniversary, need to ascertain it doesn't exist.
          */
         CorpAnniv testCorpAnniv = corpAnnivRepo.findByCorporateAndAnniv(corporateRepo.findOne(idCorporate),anniv);
@@ -82,9 +110,9 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
 
         CorpAnniv corpAnniv = new CorpAnniv();
         //corpAnniv.setAnniv(anniv);
-        Integer generatedAnniv = generateAnniv(corporate);
+        Integer generatedAnniv = lastAnniv(corporate)+1;
         if(anniv != generatedAnniv){
-            return ResultFactory.getFailResult("Supplied anniversary does not match the internally generated value.");
+            return ResultFactory.getFailResult("Supplied anniversary["+anniv+"] does not match the internally generated value["+generatedAnniv+"].");
         }
         corpAnniv.setAnniv(generatedAnniv);
         corpAnniv.setCorporate(corporateRepo.findOne(idCorporate));
@@ -93,6 +121,7 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
         corpAnniv.setExpiry(expiry);
         corpAnniv.setRenewalDate(expiry.plusDays(1));
         corpAnniv.setIntermediary(intermediaryRepo.findOne(idIntermediary));
+
 
         corpAnnivRepo.save(corpAnniv);
 
@@ -219,10 +248,16 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
     }
 
 
-    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    private Integer generateAnniv(Corporate corporate){
-        Integer anniv = corpAnnivRepo.getMax(corporate);
-        return anniv == null ? 1 : anniv++;
+    //@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    private Integer lastAnniv(Corporate corporate){
+        List<CorpAnniv> annivList = corpAnnivRepo.findByCorporate(corporate);
+        OptionalInt optionalInt = annivList.stream()
+                .mapToInt(CorpAnniv::getAnniv)
+                .max();
+        return optionalInt.orElse(0);
     }
 
+    private Boolean isOverlapping(LocalDate end1, LocalDate start2){
+        return end1.isAfter(start2);
+    }
 }

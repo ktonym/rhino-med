@@ -17,6 +17,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 15/07/2016.
@@ -42,12 +43,12 @@ public class CorpMemberBenefitHandler extends AbstractHandler {
         Long idMember = ((JsonNumber) jsonObj.get("idMember")).longValue();
         Long idCorpAnniv = ((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
         Long idCorpBenefit = ((JsonNumber) jsonObj.get("idCorpBenefit")).longValue();
-        Long idParentCorpBenefit = ((JsonNumber) jsonObj.get("idParentCorpBenefit")).longValue();
+        Optional<Long> idParentCorpBenefitOpt = Optional.of(((JsonNumber) jsonObj.get("idParentCorpBenefit")).longValue());
         BenefitStatus status = BenefitStatus.valueOf(jsonObj.getString("status"));
         String wefStr = jsonObj.getString("wef");
         LocalDate wef = LocalDate.parse(wefStr,DATE_FORMAT_yyyyMMdd);
 
-        Result<CorpMemberBenefit> ar = service.create(idMember,idCorpAnniv,idCorpBenefit,idParentCorpBenefit,status,wef,getUser());
+        Result<CorpMemberBenefit> ar = service.create(idMember,idCorpAnniv,idCorpBenefit,idParentCorpBenefitOpt,status,wef,getUser());
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {

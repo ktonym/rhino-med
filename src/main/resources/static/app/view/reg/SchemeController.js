@@ -19,13 +19,15 @@ Ext.define('Rhino.view.reg.SchemeController',{
             store = vm.getStore('schemes'),
             vw = me.getView(),
             form = vw.getForm(),
-            rec = form.getRecord();
+            rec = form.getRecord(),
+            isNewRec = rec.phantom;
 
-        if(rec.phantom){
+        /*if(rec.phantom){
             // store.add(rec);
             //rec.commit();
             console.log('Saving phantom record..');
-        }
+            isNewRec = true;
+        }*/
 
         rec.save({
             failure: function (record, operation) {
@@ -33,10 +35,15 @@ Ext.define('Rhino.view.reg.SchemeController',{
             },
             success: function (record, operation) {
                 Rhino.util.Util.showToast('Scheme successfully saved.');
-                if(record.store === 'undefined'){
+                // if(record.store === undefined){
+                //     store.add(record);
+                // }
+                if (isNewRec){
+                    debugger;
                     store.add(record);
+                    Ext.Msg.alert('New record','Detected a new record');
                 }
-                debugger;
+
                 me.closeWindow();
             },
             callback: function (record, operation, success) {

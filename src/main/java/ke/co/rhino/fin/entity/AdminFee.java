@@ -1,15 +1,9 @@
 package ke.co.rhino.fin.entity;
 
-import ke.co.rhino.uw.entity.AbstractEntity;
-import ke.co.rhino.uw.entity.EntityItem;
 
 import javax.json.JsonObjectBuilder;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by akipkoech on 13/06/2016.
@@ -18,6 +12,7 @@ import java.util.List;
 public class AdminFee extends AbstractEntity implements EntityItem<Long>{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idAdminFee;
     @ManyToOne
     private FundInvoice fundInvoice;

@@ -28,7 +28,7 @@ public class CorpAnniv extends AbstractEntity implements EntityItem<Long> {
     @JoinColumn(name="corp_id")
     private Corporate corporate;
     @ManyToOne //(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idIntermediary",referencedColumnName = "idIntermediary",nullable = true)
+    //@JoinColumn(name = "idIntermediary",referencedColumnName = "idIntermediary",nullable = true)
     private Intermediary intermediary;
     @OneToMany(mappedBy = "corpAnniv")
     private List<MemberAnniversary> memberAnniversaries;
@@ -199,10 +199,10 @@ public class CorpAnniv extends AbstractEntity implements EntityItem<Long> {
                 .add("renewalDate", renewalDate == null ? "" : DATE_FORMATTER_yyyyMMdd.format(renewalDate))
                 .add("isOpen", isOpen())
                 .add("lastUpdate", lastUpdate == null ? "" : DATE_FORMATTER_yyyyMMddHHmm.format(lastUpdate));
-        if(this.getCorporate()!=null){
+        if(corporate!=null){
             corporate.addJson(builder);
         }
-        if(this.getIntermediary()!= null){
+        if(intermediary!= null){
             intermediary.addJson(builder);
         }
     }

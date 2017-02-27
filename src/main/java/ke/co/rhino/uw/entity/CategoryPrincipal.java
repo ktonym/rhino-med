@@ -7,7 +7,6 @@ import java.time.LocalDate;
 /**
  * Created by ktonym on 1/2/15.
  */
-//TODO research how CategoryPrincipalId class can be constructed, and consumed by getIt() method
 @Entity @IdClass(CategoryPrincipalId.class)
 public class CategoryPrincipal extends AbstractEntity implements EntityItem<CategoryPrincipalId>{
 

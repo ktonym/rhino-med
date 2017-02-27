@@ -1,14 +1,11 @@
 package ke.co.rhino.fin.entity;
 
-import ke.co.rhino.uw.entity.AbstractEntity;
 import ke.co.rhino.uw.entity.CorpBenefit;
-import ke.co.rhino.uw.entity.EntityItem;
 import ke.co.rhino.uw.entity.LocalDatePersistenceConverter;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -30,7 +27,6 @@ public class PremiumInvoice extends AbstractEntity implements EntityItem<Long> {
     @OneToOne
     private CorpBenefit benefit;
     private Integer stampDuty;
-    static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
     @OneToOne(mappedBy = "parentInvoice")
     private PremiumInvoice reversalInvoice;
     @OneToOne

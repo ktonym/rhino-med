@@ -5,7 +5,7 @@ Ext.define('Rhino.view.reg.SchemeMembers',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.scheme-members',
     reference: 'schemeMembers',
-    requires: ['Rhino.view.reg.MemberModel','Rhino.view.reg.PrincipalForm'],
+    requires: ['Rhino.view.reg.MemberModel','Rhino.view.reg.MemberForm'],
     // headerBorders: false,
     cls: 'email-inbox-panel shadow-panel',
     rowLines: true,
@@ -16,40 +16,45 @@ Ext.define('Rhino.view.reg.SchemeMembers',{
 
     bind: {
         title: 'Scheme: {current.scheme.name}',
-        store: '{corpPrincipals}',
-        selection: '{current.principal}'
+        store: '{members}',
+        selection: '{current.member}'
     },
 
     listeners: {
         beforerender : function () {
             var me = this,
                 vm = me.getViewModel(),
-                // idt = vm.get('current.scheme.id');
-            // vm.getStore('corpPrincipals').loadByCorporate(idt);
-                store = vm.getStore('corpPrincipals');
+                corpId = vm.get('current.scheme.id'),
+                store = vm.getStore('members');
+            store.loadByCorporate(corpId);
+            console.info('Showing contents of store..');
             console.log(store);
-            // debugger;
         }
-    },
-    defaults: {
-        xtype: 'textfield'
     },
     columns: [
         {
-            dataIndex: 'familyNo',
-            text: 'Family No',
+            dataIndex: 'memberNo',
+            text: 'Member No',
             flex: 1
         },
         {
             dataIndex: 'fullName',
             text: 'Name',
-            flex: 3
+            flex: 2
         },
         {
-            xtype: 'datecolumn',
+            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
             dataIndex: 'dob',
             text: 'Date of Birth',
             flex: 1
+        },
+        {
+            text: 'Principal',
+            sortable: true,
+            flex: 2,
+            renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+                return record.getPrincipal().get('fullName');
+            }
         }
     ],
     tbar: [
@@ -64,14 +69,14 @@ Ext.define('Rhino.view.reg.SchemeMembers',{
             iconCls: 'x-fa fa-plus',
             text: 'Add',
             listeners: {
-                click: 'onAddPrincipal'
+                click: 'onAddMember'
             }
         },
         {
             iconCls: 'x-fa fa-edit',
             text: 'Edit',
             listeners: {
-                click: 'onEditPrincipal'
+                click: 'onEditMember'
             },
             bind: {
                 disabled: '{!schemeMembers.selection}'

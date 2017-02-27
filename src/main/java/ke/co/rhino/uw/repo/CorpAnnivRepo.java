@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by akipkoech on 27/01/2016.
@@ -20,4 +21,7 @@ public interface CorpAnnivRepo extends JpaRepository<CorpAnniv, Long> {
     @Query("SELECT max(a.anniv) FROM CorpAnniv a WHERE a.corporate=:corporate")
     Integer getMax(@Param("corporate") Corporate corporate);
 
+    //Stream<CorpAnniv> findByCorporate(Corporate corporate);
+
+    long countByCorporate(Corporate corporate);
 }

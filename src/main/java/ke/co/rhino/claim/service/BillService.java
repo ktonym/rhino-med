@@ -56,7 +56,7 @@ public class BillService extends AbstractService implements IBillService{
     private MemberRepo memberRepo;
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Bill> create(String invoiceNo,
                                LocalDate invoiceDate,
                                BigDecimal invoiceAmt,
@@ -142,7 +142,7 @@ public class BillService extends AbstractService implements IBillService{
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Bill> update(Long idBill,
                                String invoiceNo,
                                String claimNo,
@@ -220,7 +220,7 @@ public class BillService extends AbstractService implements IBillService{
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Bill> remove(Long idBill, String actionUsername) {
 
         if(idBill==null||idBill<1){
@@ -278,7 +278,7 @@ public class BillService extends AbstractService implements IBillService{
             // look up all family members that qualify for this benefit, then sum up the individual utilization
             // for each shared benefit, loop through the child benefits and check for isSharing. It's possible
             // to have a parent benefit shared by a family but a child benefit not shared..
-            Principal principal = corpMemberBenefit.getMemberAnniv().getMember().getPrincipal();
+            Member principal = corpMemberBenefit.getMemberAnniv().getMember().getPrincipal();
             CorpBenefit corpBenefit = corpMemberBenefit.getBenefit();
             List<MemberAnniversary> memberAnniversaryList = memberAnniversaryRepo.findByMember_PrincipalAndCorpAnniv(principal, corpMemberBenefit.getMemberAnniv().getCorpAnniv());
 //            List<CorpMemberBenefit> familyBenefits = memberAnniversaryList.stream()
@@ -286,21 +286,24 @@ public class BillService extends AbstractService implements IBillService{
             for (MemberAnniversary ma: memberAnniversaryList){
                 List<CorpMemberBenefit> familyBenefits = ma.getBenefits();
                 //List<CorpMemberBenefit> filtered = new ArrayList<>();
-                familyBenefits.parallelStream().filter(cmb -> cmb.getBenefit().equals(corpBenefit)).forEach(cmb -> {
-                    workingList.add(cmb);
-                    if (cmb.getChildMemberBenefits().size() > 0) {
-                        for (CorpMemberBenefit childCMB : cmb.getChildMemberBenefits()) {
-                            workingList.add(childCMB);
-                            if (childCMB.getChildMemberBenefits().size() > 0) {
-                                workingList.addAll(childCMB.getChildMemberBenefits().parallelStream().collect(Collectors.toList()));
+                familyBenefits.parallelStream()
+                        .filter(cmb -> cmb.getBenefit().equals(corpBenefit)).forEach(cmb -> {
+                            workingList.add(cmb);
+                            if (cmb.getChildMemberBenefits().size() > 0) {
+                                for (CorpMemberBenefit childCMB : cmb.getChildMemberBenefits()) {
+                                    workingList.add(childCMB);
+                                    if (childCMB.getChildMemberBenefits().size() > 0) {
+                                        workingList.addAll(childCMB.getChildMemberBenefits().parallelStream().collect(Collectors.toList()));
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+                        });
 
                 //work on the new filtered list of benefits that are now the desired, multi-level, shared corpMemberBenefits
 
             }
+
+
         } else {
             // sum up the bills incurred by the member(alone), including child benefits
             // No need to check for isSharing property for child benefits any longer..
@@ -332,7 +335,7 @@ public class BillService extends AbstractService implements IBillService{
 
     }
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     private void suspendBenefit(CorpMemberBenefit corpMemberBenefit){
         // check for shared-status
         // --if true, filter as done above
@@ -340,7 +343,7 @@ public class BillService extends AbstractService implements IBillService{
         List<CorpMemberBenefit> workingList = new ArrayList<>();
         CorpBenefit benefit = corpMemberBenefit.getBenefit();
         if(benefit.isSharing()){
-            Principal principal = corpMemberBenefit.getMemberAnniv().getMember().getPrincipal();
+            Member principal = corpMemberBenefit.getMemberAnniv().getMember().getPrincipal();
             List<MemberAnniversary> memberAnniversaryList = memberAnniversaryRepo.findByMember_PrincipalAndCorpAnniv(principal, corpMemberBenefit.getMemberAnniv().getCorpAnniv());
 
             for (MemberAnniversary ma: memberAnniversaryList){
@@ -376,7 +379,7 @@ public class BillService extends AbstractService implements IBillService{
 
     }
 
-    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     private void exceededLimitInvoice(CorpMemberBenefit cmb,BigDecimal amount){
         ExceededLimitInvoice xlInvoice = new ExceededLimitInvoice.ExceededLimitInvoiceBuilder(cmb,amount,LocalDate.now()).build();
         exceededLimitInvoiceRepo.save(xlInvoice);

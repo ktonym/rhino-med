@@ -2,8 +2,11 @@ package ke.co.rhino.uw.service;
 
 import ke.co.rhino.base.service.AbstractService;
 import ke.co.rhino.uw.entity.Corporate;
+import ke.co.rhino.uw.entity.PlanType;
 import ke.co.rhino.uw.repo.ContactPersonRepo;
+import ke.co.rhino.uw.repo.CorpAnnivRepo;
 import ke.co.rhino.uw.repo.CorporateRepo;
+import ke.co.rhino.uw.repo.MemberRepo;
 import ke.co.rhino.uw.vo.Result;
 import ke.co.rhino.uw.vo.ResultFactory;
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * Created by akipkoech on 27/01/2016.
@@ -32,38 +35,41 @@ public class CorpService extends AbstractService implements ICorpService{
 
     @Autowired
     private CorporateRepo corpRepo;
-
     @Autowired
     private ContactPersonRepo contactPersonRepo;
+    @Autowired
+    private CorpAnnivRepo corpAnnivRepo;
+    @Autowired
+    private MemberRepo memberRepo;
 
     final protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Result<Page<Corporate>> findAll(int pageNum, int size,String actionUsername){
+    public Result<Page<Corporate>> findAll(int page, int size,String actionUsername){
 
-        PageRequest request = new PageRequest(pageNum-1,size, Sort.Direction.ASC,"name");
+        PageRequest request = new PageRequest(page-1,size, Sort.Direction.ASC,"name");
         Page<Corporate> corpPage = corpRepo.findAll(request);
 
         return ResultFactory.getSuccessResult(corpPage);
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Corporate> create(String name,String abbreviation, String pin,String tel,String email,
-                                    String postalAddress,LocalDate joined,LocalDateTime lastUpdate,
+                                    String postalAddress,LocalDate joined,LocalDateTime lastUpdate, PlanType planType,
                                     String actionUsername){
 
         if(corpRepo.findByNameEqualsIgnoreCase(name)!=null){
-            return ResultFactory.getFailResult("A corporate with a similar name exists.");
+            return ResultFactory.getFailResult("A plan with a similar name exists.");
         }
 
         if(corpRepo.findByAbbrevEqualsIgnoreCase(abbreviation)!=null){
-            return ResultFactory.getFailResult("A corporate with a similar abbreviation exists.");
+            return ResultFactory.getFailResult("A plan with a similar abbreviation exists.");
         }
 
         if(corpRepo.findByPinEqualsIgnoreCase(pin)!=null){
-            return ResultFactory.getFailResult("A corporate with a similar PIN exists.");
+            return ResultFactory.getFailResult("A plan with a similar PIN exists.");
         }
 
         Corporate corp = new Corporate.CorporateBuilder(name,abbreviation)
@@ -71,7 +77,7 @@ public class CorpService extends AbstractService implements ICorpService{
                 .joined(joined)
                 .pin(pin)
                 .tel(tel)
-                .postalAddress(postalAddress)
+                .postalAddress(postalAddress).planType(planType)
                 .lastUpdate(lastUpdate==null?LocalDateTime.now():lastUpdate)
                 .build();
         corpRepo.save(corp);
@@ -125,25 +131,28 @@ public class CorpService extends AbstractService implements ICorpService{
     public Result<Corporate> remove(Long idCorporate, String actionUsername) {
 
         if(idCorporate == null){
-            return ResultFactory.getFailResult("Unable to remove Corporate. Null idCorporate!");
+            return ResultFactory.getFailResult("Unable to remove plan. Null idCorporate!");
         }
 
         Corporate corporate = corpRepo.findOne(idCorporate);
 
         if( corporate == null){
-            return ResultFactory.getFailResult("Unable to load Corporate with idCorporate=" + idCorporate + " for removal");
+            return ResultFactory.getFailResult("Unable to load plan with idCorporate=" + idCorporate + " for removal");
         } else {
 
-            if((corporate.getAnnivs()==null || corporate.getAnnivs().isEmpty()) &&
-                    (corporate.getContactPersons()==null || corporate.getContactPersons().isEmpty()) &&
+            long memCnt = memberRepo.countByCorporate(corporate);
+            long annivCnt = corpAnnivRepo.countByCorporate(corporate);
+            long contactPaxCnt = contactPersonRepo.countByCorporate(corporate);
+
+            if((annivCnt==0) && (contactPaxCnt==0) && (memCnt==0) &&
                     (corporate.getRates()==null || corporate.getRates().isEmpty())){
                 corpRepo.delete(corporate);
-                String msg = "Corporate " + corporate.getName()
+                String msg = "Plan " + corporate.getName()
                         + " was deleted by " + actionUsername;
                 logger.info(msg);
                 return ResultFactory.getSuccessResult(msg);
             } else {
-                return ResultFactory.getFailResult("Corporate has child record(s) and could not be deleted");
+                return ResultFactory.getFailResult("Plan has child record(s) and could not be deleted");
             }
 
         }
@@ -163,32 +172,32 @@ public class CorpService extends AbstractService implements ICorpService{
         Corporate corpByPIN = corpRepo.findByPinEqualsIgnoreCase(pin);
 
         if(corporate == null){
-            return ResultFactory.getFailResult("Unable to find scheme with ID = " + idCorporate);
+            return ResultFactory.getFailResult("Unable to find plan with ID = " + idCorporate);
         }
 
         if (corpByName != null ) {
             if (!corpByName.equals(corporate)) {
-                return ResultFactory.getFailResult("A corporate with a similar name exists. Edit failed.");
+                return ResultFactory.getFailResult("A plan with a similar name exists. Edit failed.");
             }
 
         }
 
         if (corpByPIN != null ) {
             if (!corpByPIN.equals(corporate)) {
-                return ResultFactory.getFailResult("A corporate with a similar PIN exists. Edit failed.");
+                return ResultFactory.getFailResult("A plan with a similar PIN exists. Edit failed.");
             }
 
         }
 
         if (corpByAbbrev != null) {
             if (!corpByAbbrev.equals(corporate)) {
-                return ResultFactory.getFailResult("A corporate with a similar abbreviation exists. Edit failed.");
+                return ResultFactory.getFailResult("A plan with a similar abbreviation exists. Edit failed.");
             }
         }
 
         if (corpByEmail != null ) {
             if (!corpByEmail.equals(corporate)) {
-                return ResultFactory.getFailResult("A corporate with a similar email address exists. Edit failed.");
+                return ResultFactory.getFailResult("A plan with a similar email address exists. Edit failed.");
             }
         }
         Corporate corp = new Corporate.CorporateBuilder(name,abbreviation)
@@ -203,20 +212,30 @@ public class CorpService extends AbstractService implements ICorpService{
     }
 
     @Override
-    public Result<List<Corporate>> findModifiedAfter(LocalDateTime time, String actionUsername) {
-        List<Corporate> corporateList = corpRepo.findByLastUpdateAfter(time);
+    public Result<Page<Corporate>> findModifiedAfter(LocalDateTime time, int page, int size, String actionUsername) {
+        PageRequest request = new PageRequest(page-1,size);
+        Page<Corporate> corporateList = corpRepo.findByLastUpdateAfter(time,request);
         return ResultFactory.getSuccessResult(corporateList);
     }
 
     @Override
-    public Result<List<Corporate>> findAddedAfter(LocalDate time, String actionUsername) {
-        List<Corporate> corporateList = corpRepo.findByJoinedAfter(time);
+    public Result<Page<Corporate>> findAddedAfter(LocalDate time, int page, int size, String actionUsername) {
+        PageRequest request = new PageRequest(page-1,size);
+        Page<Corporate> corporateList = corpRepo.findByJoinedAfter(time,request);
         return ResultFactory.getSuccessResult(corporateList);
     }
 
     @Override
-    public Result<List<Corporate>> findAddedBefore(LocalDate time, String actionUsername) {
-        List<Corporate> corporateList = corpRepo.findByJoinedBefore(time);
+    public Result<Page<Corporate>> findAddedBefore(LocalDate time, int page, int size, String actionUsername) {
+        PageRequest request = new PageRequest(page-1,size);
+        Page<Corporate> corporateList = corpRepo.findByJoinedBefore(time,request);
         return ResultFactory.getSuccessResult(corporateList);
+    }
+
+    @Override
+    public Result<Page<Corporate>> findByPlanType(PlanType planType, int page, int size, String actionUsername) {
+        PageRequest request = new PageRequest(page-1,size);
+        Page<Corporate> corporates = corpRepo.findByPlanType(planType,request);
+        return ResultFactory.getSuccessResult(corporates);
     }
 }

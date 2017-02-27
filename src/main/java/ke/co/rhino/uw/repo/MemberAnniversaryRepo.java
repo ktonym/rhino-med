@@ -25,7 +25,7 @@ public interface MemberAnniversaryRepo extends JpaRepository<MemberAnniversary, 
 
     Page<MemberAnniversary> findByCorpAnniv(CorpAnniv corpAnniv,Pageable pageable);
 
-    List<MemberAnniversary> findByMember_Principal(Principal principal);
+    List<MemberAnniversary> findByMember_Principal(Member principal);
 
-    List<MemberAnniversary> findByMember_PrincipalAndCorpAnniv(Principal principal,CorpAnniv corpAnniv);
+    List<MemberAnniversary> findByMember_PrincipalAndCorpAnniv(Member principal,CorpAnniv corpAnniv);
 }

@@ -103,10 +103,10 @@ public class CorpAnnivHandler extends AbstractHandler {
                                     .add("corporate", corpBuilder)
                                     .add("idCorpAnniv", anniv.getId())
                                     .add("anniv", anniv.getAnniv())
-                                    .add("inception", anniv.getInception().format(DATE_FORMAT_yyyyMMdd))
-                                    .add("expiry", anniv.getExpiry().format(DATE_FORMAT_yyyyMMdd))
-                                    .add("renewalDate", anniv.getRenewalDate().format(DATE_FORMAT_yyyyMMdd))
-                                    .add("lastUpdate", anniv.getLastUpdate().format(DATE_FORMAT_yyyyMMddHHmm))
+                                    .add("inception", anniv.getInception() == null ? "" : anniv.getInception().format(DATE_FORMAT_yyyyMMdd))
+                                    .add("expiry", anniv.getExpiry() == null ? "" :anniv.getExpiry().format(DATE_FORMAT_yyyyMMdd))
+                                    .add("renewalDate", anniv.getRenewalDate() == null ? "" :anniv.getRenewalDate().format(DATE_FORMAT_yyyyMMdd))
+                                    .add("lastUpdate", anniv.getLastUpdate() == null ? "" : anniv.getLastUpdate().format(DATE_FORMAT_yyyyMMddHHmm))
                     );
                 }
 
@@ -131,7 +131,8 @@ public class CorpAnnivHandler extends AbstractHandler {
         String renewalDateVal = jsonObj.getString("renewalDate");
 
         Long idCorporate = ((JsonNumber) jsonObj.get("idCorporate")).longValue();
-        Long idIntermediary = ((JsonNumber) jsonObj.get("idIntermediary")).longValue();
+        Long idIntermediary = ((JsonNumber) jsonObj.get("intermediaryId")).longValue();
+        Boolean isOpen = jsonObj.getBoolean("isOpen");
 
         Result<CorpAnniv> ar = corpAnnivService.create(
                 idCorporate,
@@ -162,7 +163,7 @@ public class CorpAnnivHandler extends AbstractHandler {
         String expiryVal = jsonObj.getString("expiry");
         String renewalDateVal = jsonObj.getString("renewalDate");
 
-        Long idCorporate = ((JsonNumber) jsonObj.get("idCorporate")).longValue();
+        Long idCorporate = ((JsonNumber) jsonObj.get("corporate.idCorporate")).longValue();
         Long idCorpAnniv = ((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
         Long idIntermediary = ((JsonNumber) jsonObj.get("idIntermediary")).longValue();
 

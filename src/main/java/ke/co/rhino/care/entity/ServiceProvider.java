@@ -1,15 +1,14 @@
 package ke.co.rhino.care.entity;
 
+import ke.co.rhino.claim.entity.Treatment;
 import ke.co.rhino.fin.entity.BankDetail;
 import ke.co.rhino.uw.entity.AbstractEntity;
 import ke.co.rhino.uw.entity.CoPay;
 import ke.co.rhino.uw.entity.EntityItem;
-import ke.co.rhino.uw.entity.JsonItem;
-import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by akipkoech on 14/03/2016.
@@ -29,6 +28,8 @@ public class ServiceProvider extends AbstractEntity implements EntityItem<Long> 
     private BankDetail bankDetail;
     @OneToOne(mappedBy = "serviceProvider")//redefinition in a micro service edition
     private CoPay coPay;
+    @OneToMany(mappedBy = "serviceProvider")
+    private List<Treatment> treatments;
 
     public ServiceProvider() {
     }

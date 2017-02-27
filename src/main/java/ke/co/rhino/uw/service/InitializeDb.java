@@ -35,7 +35,7 @@ public class InitializeDb {
     private ServiceProviderRepo spRepo;
 
     @Autowired
-    private PrincipalRepo principalRepo;
+    private MemberRepo memberRepo;
 
     //    @Autowired
 //    private UserRepo userRepo;
@@ -380,18 +380,21 @@ public class InitializeDb {
                 .email("info@kbc.com")
                 .postalAddress("P.O. Box 30456 Nairobi")
                 .joined(LocalDate.now())
+                .planType(PlanType.CORPORATE)
                 .tel("020589634").build();
 
         Corporate c2 = new Corporate.CorporateBuilder("Kenya Wildlife", "KWS")
                 .email("info@kws.com")
                 .postalAddress("P.O. Box 34446 Nairobi")
                 .joined(LocalDate.now())
+                .planType(PlanType.CORPORATE)
                 .tel("0278894").build();
 
         Corporate c3 = new Corporate.CorporateBuilder("Uganda Wildlife", "UWS")
                 .email("info@uws.com")
                 .postalAddress("P.O. Box 34446 Kampala")
                 .joined(LocalDate.now())
+                .planType(PlanType.CORPORATE)
                 .tel("0233333394").build();
 
         corpRepo.save(c1);
@@ -444,6 +447,13 @@ public class InitializeDb {
         corpAnnivRepo.save(ca1);
         corpAnnivRepo.save(ca2);
         corpAnnivRepo.save(ca3);
+
+        Corporate corp3 = corpRepo.findOne(Long.valueOf(3));
+
+        Member mm = new Member.MemberBuilder("Dayana","Mampasi",Sex.FEMALE,LocalDate.of(1990,4,2),MemberType.PRINCIPAL,corp3)
+                .memberNo("TES/0001/00")
+                .build();
+        memberRepo.save(mm);
 
 //        Principal p1 = new Principal();
 //        p1.setCorporate(corpRepo.findOne(1L));

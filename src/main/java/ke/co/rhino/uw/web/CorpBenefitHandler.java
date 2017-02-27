@@ -18,6 +18,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 12/07/2016.
@@ -46,11 +47,11 @@ public class CorpBenefitHandler extends AbstractHandler{
         boolean sharing = jsonObj.getString("sharing").equalsIgnoreCase("Y");
         boolean needPreAuth = jsonObj.getString("needPreAuth").equalsIgnoreCase("Y");
         Integer waitingPeriod = jsonObj.getInt("waitingPeriod");
-        Long idParentBenefit = ((JsonNumber) jsonObj.get("idParentBenefit")).longValue();
+        Optional<Long> idParentBenefitOpt = Optional.of(((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
         Long idCategory = ((JsonNumber) jsonObj.get("idCategory")).longValue();
 
 
-        Result<CorpBenefit> ar = corpBenefitService.create(benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefit, idCategory, getUser());
+        Result<CorpBenefit> ar = corpBenefitService.create(benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefitOpt, idCategory, getUser());
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -76,11 +77,11 @@ public class CorpBenefitHandler extends AbstractHandler{
         boolean sharing = jsonObj.getString("sharing").equalsIgnoreCase("Y");
         boolean needPreAuth = jsonObj.getString("needPreAuth").equalsIgnoreCase("Y");
         Integer waitingPeriod = jsonObj.getInt("waitingPeriod");
-        Long idParentBenefit = ((JsonNumber) jsonObj.get("idParentBenefit")).longValue();
+        Optional<Long> idParentBenefitOpt = Optional.of(((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
         Long idCategory = ((JsonNumber) jsonObj.get("idCategory")).longValue();
 
 
-        Result<CorpBenefit> ar = corpBenefitService.update(idCorpBenefit, benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefit, idCategory, getUser());
+        Result<CorpBenefit> ar = corpBenefitService.update(idCorpBenefit, benefitCode, upperLimit, memberType, benefitType, sharing, needPreAuth, waitingPeriod, idParentBenefitOpt, idCategory, getUser());
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
