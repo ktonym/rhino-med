@@ -1,10 +1,7 @@
 package ke.co.rhino.uw.service;
 
 import ke.co.rhino.uw.entity.*;
-import ke.co.rhino.uw.repo.CorpAnnivRepo;
-import ke.co.rhino.uw.repo.CorporateRepo;
-import ke.co.rhino.uw.repo.MemberRepo;
-import ke.co.rhino.uw.repo.PrincipalRepo;
+import ke.co.rhino.uw.repo.*;
 import ke.co.rhino.uw.vo.Result;
 import ke.co.rhino.uw.vo.ResultFactory;
 import org.slf4j.Logger;
@@ -261,7 +258,7 @@ public class MemberService implements IMemberService {
             return ResultFactory.getFailResult("Date of birth cannot be in the future. Member creation failed.");
         }
 
-        Member member = new Member.MemberBuilder(firstName,surname,sex,dob,memberType,corporate)
+        Member member = new Member.MemberBuilder(firstName,surname,sex,dob,memberType,corporate).idMember(idMember)
                 .otherNames(otherNames).memberNo(memberNo).build();
 
         memberRepo.save(member);
@@ -396,6 +393,35 @@ public class MemberService implements IMemberService {
         List<Member> principals = memberRepo.findPrincipals(corporateOpt.get());
 
         return ResultFactory.getSuccessResult(principals);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<Page<Member>> findByUncovered(int page, int size,Long idCorporate, Long idCorpAnniv, String actionUsername) {
+
+        if(idCorpAnniv==null || idCorpAnniv<1){
+            return ResultFactory.getFailResult("Invalid policy term provided.");
+        }
+
+        CorpAnniv corpAnniv = corpAnnivRepo.findOne(idCorpAnniv);
+
+        if(corpAnniv==null){
+            return ResultFactory.getFailResult("No policy term with ID ["+idCorpAnniv+"] was found.");
+        }
+
+        Corporate corp = corporateRepo.findOne(idCorporate);
+        if(corp==null){
+            return ResultFactory.getFailResult("No scheme with ID ["+idCorporate+"] was found.");
+        }
+        PageRequest request = new PageRequest(page-1,size);
+
+
+        //MemberSpecification spec = new MemberSpecification(new SearchCriteria("memberAnniversaries","in",""));
+
+
+        Page<Member> memberPage = memberRepo.findUncoveredInPolicy(corpAnniv,corp,request);
+
+        return ResultFactory.getSuccessResult(memberPage);
     }
 
     private String generateMemberNo(Member principal){

@@ -6,29 +6,27 @@ Ext.define('Rhino.view.reg.SchemeAnnivList',{
     alias: 'widget.scheme-anniv-list',
     reference: 'schemeAnnivList',
     // headerBorders: false,
+    //requires: ['Rhino.view.reg.SchemeAnnivModel'],
     rowLines: true,
 
     viewModel: {
-        type: 'scheme'
+        type: 'reg'
     },
 
     bind: {
         title: 'Scheme: {current.scheme.name}',
-        store: '{anniversaries}',
+        store: '{terms}',
         selection: '{current.anniv}'
     },
 
     listeners: {
         beforerender : function () {
             var me = this,
-                vm = me.getViewModel(),
+                vm = me.getViewModel(),idt;
+            debugger;
                 idt = vm.get('current.scheme.id');
-            console.log(vm.getStore('anniversaries').loadByCorporate(idt));
+            vm.getStore('terms').loadByCorporate(idt);
         }
-    },
-
-    defaults: {
-        xtype: 'datecolumn'
     },
 
     tbar: [
@@ -58,7 +56,7 @@ Ext.define('Rhino.view.reg.SchemeAnnivList',{
             }
         },
         {
-            iconCls: 'x-fa  fa-object-group',
+            iconCls: 'x-fa fa-cubes',
             text: 'Categories',
             listeners: {
                 click: 'onCatDetailsClick'
@@ -68,10 +66,10 @@ Ext.define('Rhino.view.reg.SchemeAnnivList',{
             }
         },
         {
-            iconCls: 'x-fa  fa-group',
+            iconCls: 'x-fa fa-group',
             text: 'Members',
             listeners: {
-                click: 'onMemberDetailsClick'
+                click: 'onPolicyMembersClick'
             },
             bind: {
                 disabled: '{!schemeAnnivList.selection}'
@@ -79,34 +77,33 @@ Ext.define('Rhino.view.reg.SchemeAnnivList',{
         }
     ],
 
+    defaults: {
+        xtype: 'datecolumn'
+    },
+
     columns: [
-        /*{
-            xtype: 'numbercolumn',
-            dataIndex: 'idCorporate',
-            text: 'IdCorporate'
-        },*/
         {
             dataIndex: 'anniv',
-            text: 'Anniversary',
+            text: 'Term',
             width: 50
         },
         {
             dataIndex: 'inception',
             text: 'Inception',
-            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
-            flex: 1
+            flex: 1,
+            renderer: Ext.util.Format.dateRenderer('d/m/Y')
         },
         {
             dataIndex: 'expiry',
             text: 'Expiry',
-            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
-            flex: 1
+            flex: 1,
+            renderer: Ext.util.Format.dateRenderer('d/m/Y')
         },
         {
             dataIndex: 'renewalDate',
             text: 'Renewal',
-            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
-            flex: 1
+            flex: 1,
+            renderer: Ext.util.Format.dateRenderer('d/m/Y')
         }
     ]
 

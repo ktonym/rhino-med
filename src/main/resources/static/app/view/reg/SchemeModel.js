@@ -5,7 +5,8 @@ Ext.define('Rhino.view.reg.SchemeModel',{
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.scheme',
     requires: ['Rhino.model.uw.Corporate','Rhino.model.uw.Intermediary',
-        'Rhino.model.uw.Category','Rhino.model.uw.CorpBenefit'],
+        /*'Rhino.model.uw.Category','Rhino.model.uw.CorpBenefit',*/
+        'Rhino.store.Category','Rhino.store.CategoryBenefit'],
     data: {},
     formulas: {
         currentScheme: {
@@ -26,6 +27,16 @@ Ext.define('Rhino.view.reg.SchemeModel',{
             get: function (anniv) {
                 this.set('current.anniv', anniv);
                 return anniv;
+            }
+        },
+        currentCategory: {
+            bind: {
+                bindTo: '{categoryList.selection}',
+                deep: true
+            },
+            get: function (category) {
+                this.set('current.category',category);
+                return category;
             }
         }
     },
@@ -50,18 +61,10 @@ Ext.define('Rhino.view.reg.SchemeModel',{
             autoLoad: true
         },
         categories: {
-            model: 'Rhino.model.uw.Category',
-            autoLoad: false,
-            loadByCorpAnniv: function (idCorpAnniv) {
-                this.load({
-                    params: {
-                        idCorpAnniv: idCorpAnniv
-                    }
-                });
-            }
+            type: 'category'
         },
-        corpBenefits: {
-            model: 'Rhino.model.uw.CorpBenefit',
+        categoryBenefits: {
+            /*model: 'Rhino.model.uw.CorpBenefit',
             autoLoad: false,
             loadByCategory: function (idCategory) {
                 this.load({
@@ -69,13 +72,14 @@ Ext.define('Rhino.view.reg.SchemeModel',{
                         idCategory: idCategory
                     }
                 });
-            }
-        },
+            }*/
+            type: 'category-benefit'
+        }/*,
         planTypes: {
             model: 'Rhino.model.TextCombo',
             data: [
                 ['CORPORATE'],['INDIVIDUAL'],['SME']
             ]
-        }
+        }*/
     }
 });

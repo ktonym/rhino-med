@@ -34,11 +34,11 @@ public class PreAuth extends AbstractEntity implements EntityItem<Long> {
     @JoinColumn(name = "provider_id",nullable = false)
     private ServiceProvider provider;
     @ManyToOne
-    @JoinColumns({
+    /*@JoinColumns({
             @JoinColumn(name = "idMember",referencedColumnName = "idMember",nullable = false),
             @JoinColumn(name = "idCorpAnniv",referencedColumnName = "idCorpAnniv",nullable = false),
             @JoinColumn(name = "idCorpBenefit",referencedColumnName = "idCorpBenefit", nullable = false)
-    })
+    })*/
     private CorpMemberBenefit corpMemberBenefit;
     @OneToMany(mappedBy="preAuth")
     private List<PreAuthBill> preAuthBills;

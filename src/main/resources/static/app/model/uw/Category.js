@@ -5,13 +5,14 @@ Ext.define('Rhino.model.uw.Category', {
     
     fields: [
         { name: 'idCategory', type: 'int', useNull: true },
-        { name: 'cat',          type: 'string' },
+        { name: 'cat', type: 'string' },
         { name: 'description', type: 'string' },
-        { name: 'idCorpAnniv', type: 'int', reference: 'CorpAnniv' }
+        { name: 'idCorpAnniv', type: 'int'}//, reference: 'CorpAnniv' }
     ],
     
     validators: {
-        cat: 'presence'
+        cat: 'presence',
+        idCorpAnniv: 'presence'
     }
 
 });

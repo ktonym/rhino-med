@@ -4,11 +4,11 @@
 Ext.define('Rhino.view.reg.AnnivForm',{
     extend: 'Ext.form.Panel',
     alias: 'widget.anniv-form',
-    requires: ['Rhino.view.reg.AnnivController','Rhino.view.reg.SchemeModel'],
+    requires: ['Rhino.view.reg.AnnivController'/*,'Rhino.view.reg.SchemeModel'*/],
     controller: 'anniv',
-    viewModel: {
-        type : 'scheme'
-    },
+    /*viewModel: {
+        type : 'scheme-anniv'
+    },*/
     cls: 'form-compose',
     layout: {
         type: 'vbox',

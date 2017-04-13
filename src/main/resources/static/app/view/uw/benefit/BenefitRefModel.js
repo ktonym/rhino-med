@@ -5,7 +5,7 @@ Ext.define('Rhino.view.uw.benefit.BenefitRefModel',{
     stores: {
         benefitRefs: {
             model: 'Rhino.model.uw.BenefitRef',
-            pageSize: 10,
+            //pageSize: 10,
             autoLoad: true,
             session: true
         }

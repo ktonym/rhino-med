@@ -1,5 +1,4 @@
 Ext.define('Rhino.model.uw.Corporate',{
-    //TODO refactor this class to extend Rhino.model.uw.Base and comment out identifier
     extend: 'Rhino.model.uw.Base',
     entityName: 'Corporate',
     //idProperty: 'idCorporate',
@@ -8,13 +7,12 @@ Ext.define('Rhino.model.uw.Corporate',{
         { name: 'id', type: 'int', mapping: 'idCorporate', useNull: true },
         { name: 'name', type: 'string' },
         { name: 'abbreviation', type: 'string' },
-        { name: 'pin', type: 'pin'},
+        { name: 'pin', type: 'pin' },
         { name: 'email', type: 'auto' },
         { name: 'tel', type: 'string' },
         { name: 'postalAddress', type: 'auto' },
         { name: 'planType', type: 'plan' },
-        { name: 'joined', type: 'date', dateFormat: 'Ymd'}
-
+        { name: 'joined', type: 'date', dateFormat: 'Ymd' }
     ],
     
     validators: {
@@ -26,9 +24,7 @@ Ext.define('Rhino.model.uw.Corporate',{
             { type: 'presence', message: 'This field is mandatory' },
             { type: 'length', min: 3, max: 3 }
         ],
-        //pin: [ { type: 'presence', message: 'This field is mandatory'},
-        //    { type: 'format', matcher: /^(A|P)\d{9}\S{1}$/, message: 'PIN must be in the format A123456789A' }
-        //],
+        pin: [ { type: 'presence', message: 'This field is mandatory'} ],
         email: [
             { type: 'presence', message: 'This field is mandatory' },
             { type: 'email' }
@@ -40,6 +36,4 @@ Ext.define('Rhino.model.uw.Corporate',{
         joined: 'presence',
         planType: 'presence'
     }
-    
-
 });

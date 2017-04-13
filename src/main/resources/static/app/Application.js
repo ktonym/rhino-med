@@ -7,7 +7,7 @@ Ext.define('Rhino.Application', {
     extend: 'Ext.app.Application',
     name: 'Rhino',
     stores: [
-        'Rhino.store.NavigationTree'
+        'Rhino.store.NavigationTree'//,'Rhino.store.Schemes','Rhino.store.CorpAnniv','Rhino.store.Intermediary'
     ],
     views: [
         'Rhino.view.login.Login',

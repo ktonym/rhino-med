@@ -182,8 +182,8 @@ public class CorpBenefit extends AbstractEntity implements EntityItem<Long> {
                 .add("upperLimit",upperLimit)
                 .add("memberType",memberType.toString())
                 .add("benefitType",benefitType.toString())
-                .add("sharing", sharing ? "Y" : "N")
-                .add("requiresPreAuth",requiresPreAuth?"Y":"N")
+                .add("sharing", sharing)
+                .add("requiresPreAuth",requiresPreAuth)
                 .add("waitingPeriod", waitingPeriod);
         if(!isMainBenefit()) {
             parentBenefit.addJson(builder);

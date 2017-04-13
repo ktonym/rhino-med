@@ -40,7 +40,7 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
     final protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<MemberAnniversary> create(Long idMember,
                                             Long idCorpAnniv,
                                             LocalDate inception,
@@ -55,27 +55,27 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
         Member member = memberRepo.findOne(idMember);
 
         if(corpAnniv==null){
-            return ResultFactory.getFailResult("No corporate anniversary with ID["+idCorpAnniv+"] was found. Creation failed.");
+            return ResultFactory.getFailResult("No corporate policy with ID["+idCorpAnniv+"] was found. Creation failed.");
         }
 
         if(member==null){
             return ResultFactory.getFailResult("No member with ID["+idMember+"] was found. Creation failed.");
         }
 
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
+        //MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
 
-        MemberAnniversary testMemberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary testMemberAnniv = memberAnniversaryRepo.findOne(idCorpAnniv);
 
         if(testMemberAnniv!=null){
-            return ResultFactory.getFailResult("The member anniversary you are trying to create already exists in the system.");
+            return ResultFactory.getFailResult("The member policy you are trying to create already exists in the system.");
         }
 
         if(inception==null){
             inception = corpAnniv.getInception();
         } else if(inception.isBefore(corpAnniv.getInception())) {
-            return ResultFactory.getFailResult("Member's cover cannot begin before the scheme's anniversary inception date. Creation failed.");
+            return ResultFactory.getFailResult("Member's cover cannot begin before the scheme's policy inception date. Creation failed.");
         } else if(inception.isAfter(corpAnniv.getExpiry())){
-            return ResultFactory.getFailResult("Member's cover cannot start after the scheme's expiry date. Creation failed.");
+            return ResultFactory.getFailResult("Member's cover cannot start after the scheme's policy expiry date. Creation failed.");
         }
 
         if(expiry==null){
@@ -99,12 +99,18 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<MemberAnniversary> update(Long idMember,
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public Result<MemberAnniversary> update(
+                                            Long idMemberAnniv,
+                                            Long idMember,
                                             Long idCorpAnniv,
                                             LocalDate inception,
                                             LocalDate expiry,
                                             String actionUsername) {
+
+        if(idMemberAnniv==null||idMemberAnniv<1){
+            return ResultFactory.getFailResult("Invalid member policy ID. Update failed.");
+        }
 
         if(idCorpAnniv==null||idCorpAnniv<1||idMember==null||idMember<1){
             return ResultFactory.getFailResult("Member ID and Corp ID must be valid. Update failed.");
@@ -121,9 +127,9 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
             return ResultFactory.getFailResult("No member with ID["+idMember+"] was found. Update failed.");
         }
 
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
+        //MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
 
-        MemberAnniversary testMemberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary testMemberAnniv = memberAnniversaryRepo.findOne(idMemberAnniv);
 
         if(testMemberAnniv==null){
             return ResultFactory.getFailResult("The member anniversary supplied does not exist. Update failed.");
@@ -158,16 +164,15 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<MemberAnniversary> remove(Long idMember,
-                                            Long idCorpAnniv,
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Result<MemberAnniversary> remove(Long idMemberAnniv,
                                             String actionUsername) {
 
-        if(idCorpAnniv==null||idCorpAnniv<1||idMember==null||idMember<1){
-            return ResultFactory.getFailResult("Member ID and Corp ID must be valid. Removal failed.");
+        if(idMemberAnniv==null||idMemberAnniv<1){
+            return ResultFactory.getFailResult("Member's Policy ID must be valid. Removal failed.");
         }
 
-        CorpAnniv corpAnniv = corpAnnivRepo.findOne(idCorpAnniv);
+       /* CorpAnniv corpAnniv = corpAnnivRepo.findOne(idCorpAnniv);
         Member member = memberRepo.findOne(idMember);
 
         if(corpAnniv==null){
@@ -178,23 +183,23 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
             return ResultFactory.getFailResult("No member with ID["+idMember+"] was found. Removal failed.");
         }
 
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
+        MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);*/
 
-        MemberAnniversary memberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary memberAnniv = memberAnniversaryRepo.findOne(idMemberAnniv);
 
         if(memberAnniv==null){
-            return ResultFactory.getFailResult("Specified member anniversary does not exist. Removal failed.");
+            return ResultFactory.getFailResult("Specified member policy does not exist. Removal failed.");
         }
 
         if(!memberAnniv.getBenefits().isEmpty()){
-            return ResultFactory.getFailResult("The member anniversary has benefits defined. Removal failed.");
+            return ResultFactory.getFailResult("The member policy has benefits defined. Removal failed.");
         }
 
         if(!memberAnniv.getMemberSuspensions().isEmpty()){
-            return ResultFactory.getFailResult("The member anniversary has suspensions defined. Removal failed.");
+            return ResultFactory.getFailResult("The member policy has suspensions defined. Removal failed.");
         }
 
-        memberAnniversaryRepo.delete(memberAnnivId);
+        memberAnniversaryRepo.delete(idMemberAnniv);
 
         String msg = "Member anniversary deleted by " + actionUsername;
         logger.info(msg);
@@ -213,7 +218,7 @@ public class MemberAnniversaryService implements IMemberAnniversaryService {
         CorpAnniv corpAnniv = corpAnnivRepo.findOne(idCorpAnniv);
 
         if(corpAnniv==null){
-            return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found.");
+            return ResultFactory.getFailResult("No corporate policy with ID ["+idCorpAnniv+"] was found.");
         }
 
         PageRequest request = new PageRequest(pageNum-1,size);

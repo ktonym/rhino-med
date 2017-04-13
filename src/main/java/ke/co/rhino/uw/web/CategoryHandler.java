@@ -37,7 +37,7 @@ public class CategoryHandler extends AbstractHandler{
 
         JsonObject jsonObj = parseJsonObject(jsonData);
         Long idCorpAnniv = ((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
-        char cat = jsonObj.getString("cat").charAt(0);
+        String cat = jsonObj.getString("cat");
         String description = jsonObj.getString("description");
         Result<Category> ar = categoryService.create(idCorpAnniv,cat,description);
         if(ar.isSuccess()){
@@ -56,7 +56,7 @@ public class CategoryHandler extends AbstractHandler{
         JsonObject jsonObj = parseJsonObject(jsonData);
         Long idCat = ((JsonNumber) jsonObj.get("idCategory")).longValue();
         Long idCorpAnniv = ((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
-        char cat = jsonObj.getString("cat").charAt(0);
+        String cat = jsonObj.getString("cat");
         String description = jsonObj.getString("description");
 
         Result<Category> ar = categoryService.update(idCat,idCorpAnniv,cat,description);

@@ -4,6 +4,7 @@ import ke.co.rhino.uw.entity.BenefitRef;
 import ke.co.rhino.uw.entity.Corporate;
 import ke.co.rhino.uw.entity.PremiumRate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by akipkoech on 12/9/14.
  */
-public interface PremiumRateRepo extends JpaRepository<PremiumRate,Integer> {
+public interface PremiumRateRepo extends JpaRepository<PremiumRate,Integer>,JpaSpecificationExecutor<PremiumRate> {
 
 //    PremiumRate findByCorporateAndFamilySizeAndBenefitRefAndUpperLimit(Corporate corporate,
 //                                                                       String famSize,

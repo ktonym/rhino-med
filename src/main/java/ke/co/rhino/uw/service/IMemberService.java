@@ -70,4 +70,7 @@ public interface IMemberService {
 
     @PreAuthorize("isAuthenticated()")
     Result<List<Member>> findPrincipals(Long idCorporate, String actionUsername);
+
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS','ROLE_CLM_ANALYSTS','ROLE_CARE_MANAGER')")
+    Result<Page<Member>> findByUncovered(int page, int size, Long idCorporate,Long idCorpAnniv, String actionUsername);
 }

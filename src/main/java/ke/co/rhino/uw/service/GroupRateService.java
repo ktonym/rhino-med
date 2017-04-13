@@ -39,7 +39,7 @@ public class GroupRateService implements IGroupRateService {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<GroupRate> create(Long idCorporate,
                                     Long benefitCode,
                                     String famSize,
@@ -91,12 +91,12 @@ public class GroupRateService implements IGroupRateService {
         return ResultFactory.getSuccessResult(groupRate);
     }
 
-    @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Page<GroupRate>> create(List<Map<String, Object>> mapList, String actionUsername) {
         return null;
     }
 
-    @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<GroupRate> update(Long idPremiumRate,
                                     Long idCorporate,
                                     Long benefitCode,
@@ -107,15 +107,15 @@ public class GroupRateService implements IGroupRateService {
         return null;
     }
 
-    @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED)
+    @Override@Transactional(readOnly = false,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<GroupRate> remove(Long idPremiumRate, String actionUsername) {
         return null;
     }
 
     @Override@Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-    public Result<Page<GroupRate>> findAll(Integer pageNumber, Integer size,String actionUsername) {
+    public Result<Page<GroupRate>> findAll(int page, int size,String actionUsername) {
 
-        PageRequest request = new PageRequest(pageNumber-1,size);
+        PageRequest request = new PageRequest(page-1,size);
 
         Page<GroupRate> result = groupRateRepo.findAll(request);
 
@@ -124,7 +124,7 @@ public class GroupRateService implements IGroupRateService {
 
     @Override@Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     public Result<Page<GroupRate>> findByCorporate(Long idCorporate,
-                                                   Integer pageNumber, Integer size,
+                                                   int page, int size,
                                                    String actionUsername) {
 
         if(idCorporate==null||idCorporate<1){
@@ -137,7 +137,7 @@ public class GroupRateService implements IGroupRateService {
             return ResultFactory.getFailResult("No corporate with ID ["+idCorporate+"] was found.");
         }
 
-        PageRequest request = new PageRequest(pageNumber-1,size);
+        PageRequest request = new PageRequest(page-1,size);
 
         Page<GroupRate> result = groupRateRepo.findByCorporate(corporate,request);
 

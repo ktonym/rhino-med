@@ -26,6 +26,17 @@ Ext.define('Rhino.store.Members',{
             }
         });
     },
+    loadByUncovered: function (corpId,idCorpAnniv) {
+        var me = this,
+            proxy = me.getProxy();
+        proxy.setUrl('/uw/member/findByUncovered');
+        me.load({
+            params: {
+                idCorporate: corpId,
+                idCorpAnniv: idCorpAnniv
+            }
+        });
+    },
     loadByPrincipal: function (idPrincipal) {
         this.load({
             params: {

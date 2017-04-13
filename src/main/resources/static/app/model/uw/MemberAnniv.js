@@ -4,13 +4,15 @@
 Ext.define('Rhino.model.uw.MemberAnniv',{
     extend: 'Rhino.model.uw.Base',
     entityName: 'MemberAnniv',
+    idProperty: 'idMemberAnniv',
     /*idProperty: function () {
        return    
     },*/
     fields: [
+        { name: 'idMemberAnniv', type: 'int', useNull: true},
         { name: 'idMember', type: 'int', reference: 'Member'},
-        { name: 'idCorpAnniv', type: 'int', reference: 'Anniv'},
-        { name: 'inception', type: 'date', dateFormat: 'Ymd'},
-        { name: 'expiry', type: 'date', dateFormat: 'Ymd'}
+        { name: 'idCorpAnniv', type: 'int', reference: 'CorpAnniv'},
+        { name: 'memberInception', type: 'date', dateFormat: 'Ymd'},
+        { name: 'memberExpiry', type: 'date', dateFormat: 'Ymd'}
     ]
 });

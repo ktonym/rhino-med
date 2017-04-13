@@ -44,9 +44,9 @@ public class CategoryService extends AbstractService implements ICategoryService
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Category> create(Long idCorpAnniv,
-                                  char cat,
+                                  String cat,
                                   String description) {
 
         Category category;
@@ -60,25 +60,28 @@ public class CategoryService extends AbstractService implements ICategoryService
         Category categoryByCatAndAnniv = categoryRepo.findByCatAndCorpAnniv(cat, corpAnniv);
 
         if(categoryByCatAndAnniv != null){
-            return ResultFactory.getFailResult("The category supplied is already in use. Please select another category.");
+            return ResultFactory.getFailResult("The category supplied is already defined. Please use another category.");
         }
 
         Category.CategoryBuilder catBuilder = new Category.CategoryBuilder(cat,corpAnniv);
 
-        if(description.trim().length()==0){
-            category = catBuilder.build();
-        } else {
-            category = catBuilder.description(description).build();
+        if(description.trim().length()>0){
+            catBuilder.description(description);
         }
 
+        category = catBuilder.build();
+
         categoryRepo.save(category);
+        logger.info("Category after saving..");
+        logger.info("CAT: ".concat(category.getCat()).concat(" Desc: "+category.getDescription()).concat(" Id: "+category.getId().toString()));
+        logger.info("Corpanniv ID: "+corpAnniv.getId().toString().concat(" Anniv: "+corpAnniv.getAnniv().toString()));
         return ResultFactory.getSuccessResult(category);
 
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Category> update(Long idCategory, Long idCorpAnniv, char cat, String description) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public Result<Category> update(Long idCategory, Long idCorpAnniv, String cat, String description) {
 
         if(idCategory==null || idCategory < 1L){
             return ResultFactory.getFailResult("Invalid category ID supplied. Update failed.");
@@ -114,7 +117,7 @@ public class CategoryService extends AbstractService implements ICategoryService
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public Result<Category> remove(Long idCategory, String actionUsername) {
 
         Category category = categoryRepo.findOne(idCategory);
@@ -178,6 +181,14 @@ public class CategoryService extends AbstractService implements ICategoryService
         }
 
         List<Category> categories = categoryRepo.findByCorpAnniv(anniv);
+
+        logger.info("IdCorpAnniv is: ".concat(idCorpAnniv.toString()));
+
+        categories.stream()
+                .forEach(category -> {
+                    System.out.println("idCategory: "+category.getId().toString());
+                    System.out.println("cat: "+category.getCat());
+                });
 
         if(categories.isEmpty()){
             return ResultFactory.getFailResult("The supplied corporate anniversary has no categories defined.");

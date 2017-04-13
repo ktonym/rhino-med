@@ -14,19 +14,53 @@ Ext.define('Rhino.view.main.MainController', {
         controller : {
             '#' : {
                 unmatchedroute : 'onRouteChange'
+            },
+            '*' : {
+                setcurrentview: 'setCurrentView'
             }
         }
     },
     
     routes: {
-        ':node': 'onRouteChange'
+        ':node': 'onRouteChange',
         /*{
-            before: 'checkSession',
-            action: 'onRouteChange',
+         before: 'checkSession',
+         action: 'onRouteChange',
+         conditions:{
+         ':node': '([%a-zA-Z0-9\\.\\-\\_\\s,]+)'
+         }
+         }*/
+        'registration/schemes':{
+
+        },
+        'registration/schemes/new':{
+
+        },
+        'registration/schemes/:id/edit':{
+            //before: 'checkSession',
+            action: 'onEditSchemeRoute',
             conditions:{
-                ':node': '([%a-zA-Z0-9\\.\\-\\_\\s,]+)'
+                ':id': '([0-9]+)'
             }
-        }*/
+        },
+        'registration/schemes/:id/terms':{
+
+        },
+        'registration/schemes/:id/members':{
+
+        },
+        'registration/schemes/:id/members/new':{
+
+        },
+        'registration/schemes/:id/members/:memberId/edit':{
+
+        },
+        'registration/schemes/:id/terms/:termId/members':{
+
+        },
+        'registration/schemes/:id/terms/new':{
+
+        }
     },
     
     setCurrentView: function(hashTag) {
@@ -179,6 +213,10 @@ Ext.define('Rhino.view.main.MainController', {
     
     onCareRouteChange: function(){
         this.setCurrentView('care');
+    },
+
+    onEditSchemeRoute: function () {
+
     },
     
     onLogout: function(){

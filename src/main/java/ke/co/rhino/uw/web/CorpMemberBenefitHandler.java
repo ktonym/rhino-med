@@ -112,12 +112,11 @@ public class CorpMemberBenefitHandler extends AbstractHandler {
     public String delete(@RequestParam(value = "data") String jsonData, HttpServletRequest request){
 
         JsonObject jsonObj = parseJsonObject(jsonData);
-
-        Long idMember = ((JsonNumber) jsonObj.get("idMember")).longValue();
+        Long idCorpMemberBenefit = ((JsonNumber) jsonObj.get("idCorpMemberBenefit")).longValue();
+        /*Long idMember = ((JsonNumber) jsonObj.get("idMember")).longValue();
         Long idCorpAnniv = ((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
-        Long idCorpBenefit = ((JsonNumber) jsonObj.get("idCorpBenefit")).longValue();
-
-        Result<CorpMemberBenefit> ar = service.delete(idMember,idCorpAnniv,idCorpBenefit,getUser());
+        Long idCorpBenefit = ((JsonNumber) jsonObj.get("idCorpBenefit")).longValue();*/
+        Result<CorpMemberBenefit> ar = service.delete(idCorpMemberBenefit,getUser());
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());

@@ -6,7 +6,7 @@ Ext.define('Rhino.view.reg.SchemeForm',{
     alias: 'widget.scheme-form',
     controller: 'scheme',
     requires: [
-        'Rhino.view.reg.SchemeController','Rhino.view.reg.SchemeModel' //,'Ext.button.Button','Ext.form.field.Text'
+        'Rhino.view.reg.SchemeController'//,'Rhino.view.reg.SchemeModel' //,'Ext.button.Button','Ext.form.field.Text'
     ],
     cls: 'form-compose',
     layout: {

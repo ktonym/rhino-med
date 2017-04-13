@@ -21,15 +21,18 @@ public interface IMemberAnniversaryService {
                                      String actionUsername);
 
     @PreAuthorize("hasRole('ROLE_underwriters')")
-    Result<MemberAnniversary> update(Long idMember,
+    Result<MemberAnniversary> update(
+                                     Long idMemberAnniv,
+                                     Long idMember,
                                      Long idCorpAnniv,
                                      LocalDate inception,
                                      LocalDate expiry,
                                      String actionUsername);
 
     @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS')")
-    Result<MemberAnniversary> remove(Long idMember,
-                                     Long idCorpAnniv,
+    Result<MemberAnniversary> remove(Long idMemberAnniv,
+                                     /*Long idMember,
+                                     Long idCorpAnniv,*/
                                      String actionUsername);
 
     @PreAuthorize("isAuthenticated()")

@@ -15,13 +15,13 @@ public interface ICategoryService {
 
     @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     public Result<Category> create(Long idCorpAnniv,
-                                   char cat,
+                                   String cat,
                                    String description);
 
     @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     public Result<Category> update(Long idCategory,
                                    Long idCorpAnniv,
-                                   char cat,
+                                   String cat,
                                    String description);
 
     @PreAuthorize("hasRole('ROLE_UW_MANAGERS')")

@@ -89,7 +89,7 @@ Ext.define('Rhino.view.reg.MemberController',{
             vm = me.getViewModel(),
             rec = vm.get('current.member'),
             //vw = me.getView(),
-            store = vm.getStore('members'),
+            //store = vm.getStore('members'),
             //form = vw.getForm(),
             //rec = form.getRecord(),
             result;
@@ -97,24 +97,19 @@ Ext.define('Rhino.view.reg.MemberController',{
         rec.save({
             callback: function (record, operation, success) {
                 result = Rhino.util.Util.decodeJSON(operation.responseText);
-                /*console.info('Showing result..');
-                console.log(result);
-                console.log(vw);
-                debugger;*/
                 if (success) {
                     Rhino.util.Util.showToast('Member successfully saved.');
                     if (record.store === undefined) {
-                        vm.getStore('members').add(record);
+                        me.fireEvent('memberadded',record);
+                    } else {
+                        me.fireEvent('memberupdated',record);
                     }
-                    console.info('Looking at the record properties...');
-                    console.log(record);
-                    debugger;
-                    //this.fireEvent('memberadded',record);
+
 
                     me.closeWindow();
                 } else {
-                    console.log('result object');
-                    console.log(result);
+                    // console.log('result object');
+                    // console.log(result);
                     Rhino.util.Util.showErrorMsg(result.msg);
                 }
             }

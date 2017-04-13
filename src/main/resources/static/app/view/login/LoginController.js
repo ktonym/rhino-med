@@ -32,16 +32,6 @@ Ext.define('Rhino.view.login.LoginController', {
 
     onLoginClick: function(button,e,opt){
         var me = this;
-        console.log('clicked login!!');
-        //this.getView().destroy();
-        //var win = Ext.create({
-        //    xtype: 'app-main'
-        //});
-        //win.show();
-        //console.log(result.data);
-        //Ext.create('Rhino.view.main.Main').show();
-        //me.doLogin;
-        console.log(me.lookupReference('form'));
         if(me.lookupReference('form').isValid()){
             me.doLogin;
         }
@@ -77,15 +67,11 @@ Ext.define('Rhino.view.login.LoginController', {
         var result = Rhino.util.Util.decodeJSON(conn.responseText);
         this.getView().unmask();
         //console.log('Looking at the responseText');
-        console.log(result);
+        //console.log(result);
         if (result.success) {
             //console.log('About to destroy this view and create app-main');
             sessionStorage.setItem("RhinoLoggedIn",true);
             this.getView().destroy();
-            //var win = Ext.create({
-            //    xtype: 'app-main'
-            //});
-            //win.show();
             console.log(result.data);
             Ext.create('Rhino.view.main.Main').show();
             //TODO set global values of username,authorities here..

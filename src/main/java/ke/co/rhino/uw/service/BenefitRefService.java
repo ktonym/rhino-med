@@ -28,7 +28,7 @@ public class BenefitRefService implements IBenefitRefService {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Override@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<BenefitRef> create(String benefitName,
                                      String description,
                                      String actionUsername) {
@@ -59,7 +59,7 @@ public class BenefitRefService implements IBenefitRefService {
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<BenefitRef> update(Long benefitCode,
                                     String benefitName,
                                     String description,
@@ -100,7 +100,7 @@ public class BenefitRefService implements IBenefitRefService {
 
     }
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public Result<String> remove(Long benefitCode, String actionUsername) {
 

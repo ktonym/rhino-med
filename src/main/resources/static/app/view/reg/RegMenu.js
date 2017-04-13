@@ -5,13 +5,18 @@ Ext.define('Rhino.view.reg.RegMenu',{
     extend: 'Ext.menu.Menu',
     alias: 'widget.regmenu',
     title: 'Registration',
-    //iconCls: 'x-fa fa-book',
+    iconCls: 'x-fa fa-wpforms',
     floating: false,
     items: [
         {
             routeId: 'scheme-list',
             text: 'Schemes',
             iconCls: 'x-fa fa-building'
+        },
+        {
+            routeId: 'reg-reports',
+            text: 'Reports',
+            iconCls: 'x-fa fa-bar-chart'
         }
     ]
 });

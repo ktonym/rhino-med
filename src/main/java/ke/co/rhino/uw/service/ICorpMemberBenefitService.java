@@ -29,7 +29,8 @@ public interface ICorpMemberBenefitService {
                                             String actionUsername);
 
     @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
-    Result<CorpMemberBenefit> update(Long idMember,
+    Result<CorpMemberBenefit> update(Long idCorpMemberBenefit,
+                                     Long idMember,
                                      Long idCorpAnniv,
                                      Long idCorpBenefit,
                                      Optional<Long> idParentCorpBenefitOpt,
@@ -38,9 +39,10 @@ public interface ICorpMemberBenefitService {
                                      String actionUsername);
 
     @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
-    Result<CorpMemberBenefit> delete(Long idMember,
+    Result<CorpMemberBenefit> delete(/*Long idMember,
                                      Long idCorpAnniv,
-                                     Long idCorpBenefit,
+                                     Long idCorpBenefit,*/
+                                     Long idCorpMemberBenefit,
                                      String actionUsername);
 
 }

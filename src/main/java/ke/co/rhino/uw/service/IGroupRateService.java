@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface IGroupRateService {
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<GroupRate> create(Long idCorporate,
                              Long benefitCode,
                              String famSize,
@@ -22,11 +22,11 @@ public interface IGroupRateService {
                              BigDecimal premium,
                              String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<Page<GroupRate>> create(List<Map<String,Object>> mapList,
                                    String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_underwriters')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UNDERWRITERS')")
     Result<GroupRate> update(Long idPremiumRate,
                              Long idCorporate,
                              Long benefitCode,
@@ -35,16 +35,15 @@ public interface IGroupRateService {
                              BigDecimal premium,
                              String actionUsername);
 
-    @PreAuthorize("hasAnyRole('ROLE_uw_managers','ROLE_uw_supervisor')")
+    @PreAuthorize("hasAnyRole('ROLE_UW_MANAGERS','ROLE_UW_SUPERVISORS')")
     Result<GroupRate> remove(Long idPremiumRate, String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
-    Result<Page<GroupRate>> findAll(Integer pageNumber, Integer size,String actionUsername);
+    Result<Page<GroupRate>> findAll(int page, int size,String actionUsername);
 
     @PreAuthorize("isAuthenticated()")
     Result<Page<GroupRate>> findByCorporate(Long idCorporate,
-                                            Integer pageNumber,
-                                            Integer pageSize,
+                                            int page, int size,
                                             String actionUsername);
 
 }

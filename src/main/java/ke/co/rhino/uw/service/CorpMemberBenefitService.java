@@ -47,7 +47,7 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     private PremiumInvoiceItemRepo premiumInvoiceItemRepo;
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpMemberBenefit> create(Long idMember,
                                             Long idCorpAnniv,
                                             Long idCorpBenefit,
@@ -76,9 +76,9 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         if(idCorpAnniv==null){
             return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found. Member benefit creation failed.");
         }
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,anniv);
+        //MemberAnnivId memberAnnivId = new MemberAnnivId(member,anniv);
 
-        MemberAnniversary memberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary memberAnniv = memberAnniversaryRepo.findByCorpAnnivAndMember(anniv,member);
         if(memberAnniv==null){
             return ResultFactory.getFailResult("Please define a cover period (anniversary) for the member first.");
         }
@@ -87,29 +87,30 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
             return ResultFactory.getFailResult("No corporate benefit with ID ["+idCorpBenefit+"] was found. Member benefit creation failed.");
         }
 
-        CorpMemberBenefitId benefitId = new CorpMemberBenefitId(corpBenefit,memberAnniv);
+        //CorpMemberBenefitId benefitId = new CorpMemberBenefitId(corpBenefit,memberAnniv);
 
-        CorpMemberBenefit testBenefit = repo.findOne(benefitId);
+        /*CorpMemberBenefit testBenefit = repo.findOne(benefitId);
         if(testBenefit!=null){
             return ResultFactory.getFailResult("A member benefit has already been defined with the parameters supplied.");
-        }
+        }*/
 
         CorpMemberBenefit.CorpMemberBenefitBuilder benefitBuilder = new CorpMemberBenefit.CorpMemberBenefitBuilder(memberAnniv,corpBenefit)
                 .status(status);
 
-        if(idParentCorpBenefitOpt.isPresent()){
+        //TODO Fix this big problem
+        /*if(idParentCorpBenefitOpt.isPresent()){
             Long idParentCorpBenefit = idParentCorpBenefitOpt.get();
             CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentCorpBenefit);
             // checking whether the parent member benefit being assigned has a corpBenefit that is a parent corpBenefit of this
             // member benefit
             if(corpBenefit.getParentBenefit().equals(parentBenefit)) {
-                CorpMemberBenefitId parentBenefitId = new CorpMemberBenefitId(parentBenefit, memberAnniv);
+                //CorpMemberBenefitId parentBenefitId = new CorpMemberBenefitId(parentBenefit, memberAnniv);
                 CorpMemberBenefit parent = repo.findOne(parentBenefitId);
                 benefitBuilder.parentMemberBenefit(parent);
             } else {
                 return ResultFactory.getFailResult("The parent benefit you're assigning to this benefit does not match the parent-child benefit setup at the scheme level. Kindly check and revise.");
             }
-        }
+        }*/
 
         if(wef==null){
             wef = LocalDate.now();
@@ -160,8 +161,9 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<CorpMemberBenefit> update(Long idMember,
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Result<CorpMemberBenefit> update(Long idCorpMemberBenefit,
+                                            Long idMember,
                                             Long idCorpAnniv,
                                             Long idCorpBenefit,
                                             Optional<Long> idParentCorpBenefitOpt,
@@ -189,9 +191,9 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         if(idCorpAnniv==null){
             return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found. Member benefit update failed.");
         }
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,anniv);
+        //MemberAnnivId memberAnnivId = new MemberAnnivId(member,anniv);
 
-        MemberAnniversary memberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary memberAnniv = memberAnniversaryRepo.findByCorpAnnivAndMember(anniv,member);
         if(memberAnniv==null){
             return ResultFactory.getFailResult("Please define a cover period (anniversary) for the member first.");
         }
@@ -200,9 +202,9 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
             return ResultFactory.getFailResult("No corporate benefit with ID ["+idCorpBenefit+"] was found. Member benefit update failed.");
         }
 
-        CorpMemberBenefitId benefitId = new CorpMemberBenefitId(corpBenefit,memberAnniv);
+        //CorpMemberBenefitId benefitId = new CorpMemberBenefitId(corpBenefit,memberAnniv);
 
-        CorpMemberBenefit testBenefit = repo.findOne(benefitId);
+        CorpMemberBenefit testBenefit = repo.findOne(idCorpMemberBenefit);
 
         if(testBenefit==null){
             return ResultFactory.getFailResult("No member benefit with the supplied parameters was found.");
@@ -211,7 +213,8 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         CorpMemberBenefit.CorpMemberBenefitBuilder builder = new CorpMemberBenefit.CorpMemberBenefitBuilder(memberAnniv,corpBenefit);
         builder.status(status).wef(wef);
 
-        if(idParentCorpBenefitOpt.isPresent()){
+        //TODO fix corpBenefit -> childCorpBenefit : corpMemberBenefit -> childCorpMemberBenefit design
+        /*if(idParentCorpBenefitOpt.isPresent()){
             Long idParentCorpBenefit = idParentCorpBenefitOpt.get();
             CorpBenefit parentBenefit = corpBenefitRepo.findOne(idParentCorpBenefit);
             // checking whether the parent member benefit being assigned has a corpBenefit that is a parent corpBenefit of this
@@ -223,7 +226,7 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
             } else {
                 return ResultFactory.getFailResult("The parent benefit you're assigning to this benefit does not match the parent-child benefit setup at the scheme level. Kindly check and revise.");
             }
-        }
+        }*/
 
         CorpMemberBenefit benefit = builder.build();
 
@@ -231,13 +234,14 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<CorpMemberBenefit> delete(Long idMember,
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Result<CorpMemberBenefit> delete(Long idCorpMemberBenefit,
+                                            /*Long idMember,
                                             Long idCorpAnniv,
-                                            Long idCorpBenefit,
+                                            Long idCorpBenefit,*/
                                             String actionUsername) {
 
-        if(idMember==null||idMember<1){
+        /*if(idMember==null||idMember<1){
             return ResultFactory.getFailResult("Invalid member ID supplied. Member benefit deletion failed.");
         }
 
@@ -257,20 +261,20 @@ public class CorpMemberBenefitService extends AbstractService implements ICorpMe
         if(idCorpAnniv==null){
             return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found. Member benefit deletion failed.");
         }
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,anniv);
+        //MemberAnnivId memberAnnivId = new MemberAnnivId(member,anniv);
 
-        MemberAnniversary memberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary memberAnniv = memberAnniversaryRepo.findByCorpAnnivAndMember(anniv,member);
         if(memberAnniv==null){
             return ResultFactory.getFailResult("Please define a cover period (anniversary) for the member first.");
         }
         CorpBenefit corpBenefit = corpBenefitRepo.findOne(idCorpBenefit);
         if(corpBenefit==null){
             return ResultFactory.getFailResult("No corporate benefit with ID ["+idCorpBenefit+"] was found. Member benefit deletion failed.");
-        }
+        }*/
 
-        CorpMemberBenefitId benefitId = new CorpMemberBenefitId(corpBenefit,memberAnniv);
+        //CorpMemberBenefitId benefitId = new CorpMemberBenefitId(corpBenefit,memberAnniv);
 
-        CorpMemberBenefit benefit = repo.findOne(benefitId);
+        CorpMemberBenefit benefit = repo.findOne(idCorpMemberBenefit);
 
         if(benefit==null){
             return ResultFactory.getFailResult("No member benefit with parameters supplied exists. Cannot delete.");

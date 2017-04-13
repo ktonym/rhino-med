@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * Created by akipkoech on 24/11/2015.
  */
-public interface MemberAnniversaryRepo extends JpaRepository<MemberAnniversary, MemberAnnivId> {
+public interface MemberAnniversaryRepo extends JpaRepository<MemberAnniversary, Long> {
 
     MemberAnniversary findByCorpAnnivAndMember(CorpAnniv corpAnniv, Member member);
 

@@ -35,7 +35,7 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
     protected CategoryRepo categoryRepo;
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpAnniv> create(Long idCorporate,
                                    //Long idCorpAnniv,
                                    Long idIntermediary,
@@ -128,7 +128,7 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
         return ResultFactory.getSuccessResult(corpAnniv);
     }
 
-    @Override@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Override@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpAnniv> update(Long idCorporate,
                                     Long idCorpAnniv,
                                     Long idIntermediary,
@@ -203,7 +203,7 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpAnniv> remove(Long idCorpAnniv, String actionUsername) {
 
         if(idCorpAnniv == null ){
@@ -243,7 +243,26 @@ public class CorpAnnivService extends AbstractService implements ICorpAnnivServi
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<List<CorpAnniv>> findByCorporate(Long idCorporate, String actionUsername) {
-        List<CorpAnniv> corpAnnivList = corpAnnivRepo.findByCorporate(corporateRepo.findOne(idCorporate));
+
+        if(idCorporate==null||idCorporate<0L){
+            return ResultFactory.getFailResult("Null corporate ID supplied.");
+        }
+
+        Corporate corp = corporateRepo.findOne(idCorporate);
+
+        if(corp==null){
+            return ResultFactory.getFailResult("The corporate ID ["+idCorporate+"] supplied is not valid.");
+        }
+
+        List<CorpAnniv> corpAnnivList = corpAnnivRepo.findByCorporate(corp);
+
+        logger.info("Peeking at all corp annivs...");
+
+        corpAnnivList.stream()
+                .forEach(ca -> {
+                    System.out.println("ID: "+ca.getId().toString().concat("\tAnniv: "+ca.getAnniv().toString()));
+                });
+
         return ResultFactory.getSuccessResult(corpAnnivList);
     }
 

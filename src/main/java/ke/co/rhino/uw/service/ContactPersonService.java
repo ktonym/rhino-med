@@ -25,7 +25,7 @@ public class ContactPersonService extends AbstractService implements IContactPer
     @Autowired
     protected CorporateRepo corporateRepo;
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public Result<ContactPerson> store(Long idContactPerson,
                                      Long idCorporate,
@@ -89,7 +89,7 @@ public class ContactPersonService extends AbstractService implements IContactPer
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<ContactPerson> remove(Long idContactPerson, String actionUsername) {
 
 //        if(!isValidUser(actionUsername)){

@@ -44,10 +44,25 @@ public class CorpBenefitHandler extends AbstractHandler{
         BigDecimal upperLimit = ((JsonNumber) jsonObj.get("upperLimit")).bigDecimalValue();
         MemberType memberType = MemberType.valueOf(jsonObj.getString("memberType"));
         BenefitType benefitType = BenefitType.valueOf(jsonObj.getString("benefitType"));
-        boolean sharing = jsonObj.getString("sharing").equalsIgnoreCase("Y");
-        boolean needPreAuth = jsonObj.getString("needPreAuth").equalsIgnoreCase("Y");
+        //boolean sharing = jsonObj.getString("sharing").equalsIgnoreCase("Y");
+        //boolean needPreAuth = jsonObj.getString("needPreAuth").equalsIgnoreCase("Y");
+        boolean sharing = jsonObj.getBoolean("sharing");
+        boolean needPreAuth = jsonObj.getBoolean("requiresPreAuth");
         Integer waitingPeriod = jsonObj.getInt("waitingPeriod");
-        Optional<Long> idParentBenefitOpt = Optional.of(((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
+        Optional<Long> idParentBenefitOpt ;//= Optional.of(((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
+
+        /*try {
+            idParentBenefitOpt = Optional.of( ((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
+        } catch (NullPointerException npe){
+            idParentBenefitOpt = Optional.empty();
+        }*/
+        if(jsonObj.get("idParentBenefit")==null){
+            idParentBenefitOpt = Optional.empty();
+        } else {
+            //Optional<JsonObject> principalOpt = Optional.of( parseJsonObject(jsonObj.get("principal").toString()));
+            idParentBenefitOpt = Optional.of( ((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
+        }
+
         Long idCategory = ((JsonNumber) jsonObj.get("idCategory")).longValue();
 
 
@@ -74,8 +89,8 @@ public class CorpBenefitHandler extends AbstractHandler{
         BigDecimal upperLimit = ((JsonNumber) jsonObj.get("upperLimit")).bigDecimalValue();
         MemberType memberType = MemberType.valueOf(jsonObj.getString("memberType"));
         BenefitType benefitType = BenefitType.valueOf(jsonObj.getString("benefitType"));
-        boolean sharing = jsonObj.getString("sharing").equalsIgnoreCase("Y");
-        boolean needPreAuth = jsonObj.getString("needPreAuth").equalsIgnoreCase("Y");
+        boolean sharing = jsonObj.getBoolean("sharing");
+        boolean needPreAuth = jsonObj.getBoolean("requiresPreAuth");
         Integer waitingPeriod = jsonObj.getInt("waitingPeriod");
         Optional<Long> idParentBenefitOpt = Optional.of(((JsonNumber) jsonObj.get("idParentBenefit")).longValue());
         Long idCategory = ((JsonNumber) jsonObj.get("idCategory")).longValue();

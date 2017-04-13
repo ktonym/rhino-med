@@ -37,11 +37,12 @@ public class Bill extends AbstractEntity implements EntityItem<Long> {
     @Column(nullable = false)
     private LocalDate enteredDate;
     @ManyToOne
-    @JoinColumns({
+    /*@JoinColumns({
             @JoinColumn(name = "idMember",referencedColumnName = "idMember",nullable = false),
             @JoinColumn(name = "idCorpAnniv",referencedColumnName = "idCorpAnniv",nullable = false),
             @JoinColumn(name = "idCorpBenefit",referencedColumnName = "idCorpBenefit", nullable = false)
-    })
+    })*/
+    @JoinColumn(name = "idCorpMemberBenefit", referencedColumnName = "idCorpMemberBenefit", nullable = false)
     private CorpMemberBenefit corpMemberBenefit;
     @ManyToOne
     @JoinColumn(name = "provider_id",nullable = false)

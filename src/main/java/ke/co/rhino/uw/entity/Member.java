@@ -32,6 +32,8 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
     private List<Member> dependants;
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
+    /*@Enumerated(EnumType.STRING)
+    private MemberStatus memberStatus;*/
     @OneToMany(mappedBy = "member")
     private List<MemberAnniversary> memberAnniversaries;
     /*@OneToMany(mappedBy = "member")
@@ -57,6 +59,8 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
         this.principal = memberBuilder.principal;
         this.memberType = memberBuilder.memberType;
         this.corporate = memberBuilder.corporate;
+        this.idMember = memberBuilder.idMember;
+        //this.memberStatus = memberBuilder.memberStatus;
     }
 
     public static class MemberBuilder{
@@ -64,20 +68,23 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
         private final String surname;
         private String otherNames;
         private String memberNo;
+        private Long idMember;
         private final Sex sex;
         private final LocalDate dob;
         private Member principal;
         private final MemberType memberType;
         private final Corporate corporate;
+        //private final MemberStatus memberStatus;
 
         public MemberBuilder(String firstName, String surname,Sex sex,
-                             LocalDate dob, MemberType memberType, Corporate corporate) {
+                             LocalDate dob, MemberType memberType, Corporate corporate/*,MemberStatus memberStatus*/) {
             this.firstName = firstName;
             this.surname = surname;
             this.sex = sex;
             this.dob = dob;
             this.memberType = memberType;
             this.corporate = corporate;
+            //this.memberStatus = memberStatus;
         }
 
         public MemberBuilder memberNo(String memberNo){
@@ -92,6 +99,11 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
 
         public MemberBuilder otherNames(String otherNames){
             this.otherNames = otherNames;
+            return this;
+        }
+
+        public MemberBuilder idMember(Long idMember){
+            this.idMember = idMember;
             return this;
         }
 
@@ -149,6 +161,10 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
         return corporate;
     }
 
+    /*public MemberStatus getMemberStatus(){
+        return memberStatus;
+    }*/
+
     public List<MemberCategory> getMemberCategories() {
         return memberCategories;
     }
@@ -172,6 +188,7 @@ public class Member extends AbstractEntity implements EntityItem<Long> {
                  .add("sex",sex.toString())
                  .add("dob", dob == null ? "" : DATE_FORMATTER_yyyyMMdd.format(dob))
                  .add("memberType", memberType.toString())
+                 //.add("memberStatus", memberStatus.toString())
                  .add("fullName", firstName.concat(" ").concat(surname).concat(" ").concat(otherNames==null?"":otherNames));
         if(principal!=null) {
             /*builder.add("idPrincipal",principal.getId())

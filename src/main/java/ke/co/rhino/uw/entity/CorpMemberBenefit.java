@@ -12,15 +12,17 @@ import java.util.List;
 /**
  * Created by akipkoech on 12/8/14.
  */
-@Entity @IdClass(CorpMemberBenefitId.class)
-public class CorpMemberBenefit extends AbstractEntity {
+@Entity //@IdClass(CorpMemberBenefitId.class)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"idMember","idCorpAnniv","idCorpBenefit"}))
+public class CorpMemberBenefit extends AbstractEntity implements EntityItem<Long> {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long idCorpMemberBenefit;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumns({@JoinColumn(name = "idMember", referencedColumnName = "idMember", updatable = false, insertable = false),
             @JoinColumn(name = "idCorpAnniv", referencedColumnName = "idCorpAnniv", updatable = false, insertable = false)})
     private MemberAnniversary memberAnniv;
-    @Id
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idCorpBenefit", referencedColumnName = "idCorpBenefit")
     private CorpBenefit benefit;
@@ -54,10 +56,17 @@ public class CorpMemberBenefit extends AbstractEntity {
         this.benefit = corpMemberBenefitBuilder.benefit;
         this.memberAnniv = corpMemberBenefitBuilder.memberAnniv;
         this.parentMemberBenefit = corpMemberBenefitBuilder.parentMemberBenefit;
+        this.idCorpMemberBenefit = corpMemberBenefitBuilder.idCorpMemberBenefit;
+    }
+
+    @Override
+    public Long getId() {
+        return idCorpMemberBenefit;
     }
 
 
     public static class CorpMemberBenefitBuilder{
+        private Long idCorpMemberBenefit;
         private final MemberAnniversary memberAnniv;
         private final CorpBenefit benefit;
         private BenefitStatus status;
@@ -133,10 +142,10 @@ public class CorpMemberBenefit extends AbstractEntity {
     @Override
     public void addJson(JsonObjectBuilder builder) {
 
-        builder.add("status",status.toString())
+        builder.add("idCorpMemberBenefit",idCorpMemberBenefit)
+                .add("status",status.toString())
                 .add("wef", wef == null ? "" : DATE_FORMATTER_yyyyMMdd.format(wef));
         memberAnniv.addJson(builder);
         benefit.addJson(builder);
-
     }
 }

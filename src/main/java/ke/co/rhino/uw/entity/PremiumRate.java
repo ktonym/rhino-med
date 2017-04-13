@@ -3,6 +3,7 @@ package ke.co.rhino.uw.entity;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by akipkoech on 12/9/14.
@@ -15,21 +16,27 @@ public class PremiumRate extends AbstractEntity implements EntityItem<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idPremiumRate;
+    protected Long idPremiumRate;
     @Column(name = "PREMIUM_TYPE",insertable = false,updatable = false)
-    private PremiumType premiumType;
+    protected PremiumType premiumType;
     @Column(name = "LIMIT")
-    private BigDecimal upperLimit;
+    protected BigDecimal upperLimit;
     @Column(name = "PREMIUM")
-    private BigDecimal premium;
+    protected BigDecimal premium;
     @Column(name = "FAM_SIZE")
-    private String familySize;
-    @ManyToOne(cascade = CascadeType.ALL)
+    protected String familySize;
+    /*@Column(name = "MIN_AGE",nullable = true)
+    private Integer minAge;
+    @Column(name = "MAX_AGE",nullable = true)
+    private Integer maxAge;*/
+    @ManyToOne//(cascade = CascadeType.ALL)
     @JoinColumn(name = "BENEFIT_CODE",nullable = false)
-    private BenefitRef benefitRef;
+    protected BenefitRef benefitRef;
 //    @ManyToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "idCorporate",nullable = false)
 //    private Corporate corporate;
+    @OneToMany(mappedBy = "premiumRate")
+    protected List<QuotationItem> quotationItems;
 
     public PremiumRate() {
     }
@@ -82,7 +89,15 @@ public class PremiumRate extends AbstractEntity implements EntityItem<Long> {
         this.familySize = familySize;
     }
 
-//    public Corporate getCorporate() {
+    public List<QuotationItem> getQuotationItems() {
+        return quotationItems;
+    }
+
+    public void setQuotationItems(List<QuotationItem> quotationItems) {
+        this.quotationItems = quotationItems;
+    }
+
+    //    public Corporate getCorporate() {
 //        return corporate;
 //    }
 //

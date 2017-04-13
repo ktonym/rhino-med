@@ -108,12 +108,19 @@ public class CorpBenefitService implements ICorpBenefitService {
             corpBenefitBuilder.parentBenefit(parentBenefit);
         }
 
+        if(waitingPeriod!=null&&waitingPeriod>0){
+            corpBenefitBuilder.waitingPeriod(waitingPeriod);
+        } else {
+            corpBenefitBuilder.waitingPeriod(0);
+        }
+
         if(sharing){
             corpBenefitBuilder.sharing(true);
         }
         if(needPreAuth){
             corpBenefitBuilder.requiresPreAuth(true);
         }
+
 
         CorpBenefit corpBenefit = corpBenefitBuilder.build();
         corpBenefitRepo.save(corpBenefit);
@@ -217,6 +224,8 @@ public class CorpBenefitService implements ICorpBenefitService {
 
         if(waitingPeriod!=null&&waitingPeriod>0){
             builder.waitingPeriod(waitingPeriod);
+        } else {
+            builder.waitingPeriod(0);
         }
 
         if(sharing){

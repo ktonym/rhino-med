@@ -15,7 +15,17 @@ Ext.define('Rhino.model.uw.CorpBenefit', {
         { name: 'sharing', type: 'boolean' },
         { name: 'requiresPreAuth', type: 'boolean' },
         { name: 'waitingPeriod', type: 'int' },
-        { name: 'idParentCorpBenefit', type: 'int', reference: 'CorpBenefit'}
+        { name: 'idParentCorpBenefit', type: 'int', reference: 'CorpBenefit' },
+        { name: 'benefitName', type: 'string', persist: false }
+        /*{ name: 'benefitName', type: 'string', persist: false,
+            convert:function(v, rec){
+                var data = rec.data; //rec.getData()?
+                if (data.benefitRef && data.benefitRef.benefitName){
+                    return data.benefitRef.benefitName;
+                }
+                return data.benefitCode;
+            }
+        }*/
     ]
 });
 

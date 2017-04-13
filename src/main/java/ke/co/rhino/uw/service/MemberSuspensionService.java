@@ -73,9 +73,9 @@ public class MemberSuspensionService implements IMemberSuspensionService {
             return ResultFactory.getFailResult("No corporate anniversary with ID ["+idCorpAnniv+"] was found. Cannot suspend.");
         }
 
-        MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
+        //MemberAnnivId memberAnnivId = new MemberAnnivId(member,corpAnniv);
 
-        MemberAnniversary memberAnniv = memberAnniversaryRepo.findOne(memberAnnivId);
+        MemberAnniversary memberAnniv = memberAnniversaryRepo.findByCorpAnnivAndMember(corpAnniv,member);
 
         if(memberAnniv==null){
             return ResultFactory.getFailResult("The member anniversary does not exist.");

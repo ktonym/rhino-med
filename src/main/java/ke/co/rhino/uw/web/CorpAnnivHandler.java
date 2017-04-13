@@ -41,7 +41,25 @@ public class CorpAnnivHandler extends AbstractHandler {
     @Autowired
     private ICorpService corpService;
 
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = {"application/json"})
+
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public String findall(@RequestParam(value = "idCorporate", required = true) String idCorpStr,
+                          HttpServletRequest request){
+
+        Long idCorporate = Long.parseLong(idCorpStr);
+
+        Result<List<CorpAnniv>> ar = corpAnnivService.findByCorporate(idCorporate, getUser());
+
+        if(ar.isSuccess()) {
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+    @RequestMapping(value = "/findAllOld", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
     public String findAllAnnivs(
 

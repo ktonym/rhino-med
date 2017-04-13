@@ -34,7 +34,7 @@ public class CorpAnnivSuspService extends AbstractService implements ICorpAnnivS
 
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpAnnivSuspension> store(Integer idCorpAnnivSusp,
                                              Long idCorpAnniv,
                                              LocalDate start,
@@ -121,7 +121,7 @@ public class CorpAnnivSuspService extends AbstractService implements ICorpAnnivS
     }
 
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CorpAnnivSuspension> remove(Integer idCorpAnnivSusp, String actionUsername) {
         return null;
     }

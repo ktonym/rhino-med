@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * Created by akipkoech on 03/05/2016.
  */
-public interface CorpMemberBenefitRepo extends JpaRepository<CorpMemberBenefit, CorpMemberBenefitId> {
+public interface CorpMemberBenefitRepo extends JpaRepository<CorpMemberBenefit, Long> {
 
     Page<CorpMemberBenefit> findByMemberAnniv(MemberAnniversary memberAnniversary, Pageable pageable);
 

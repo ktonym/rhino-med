@@ -40,9 +40,9 @@ public class MemberAnnivHandler extends AbstractHandler{
 
         Long idMember = ((JsonNumber) jsonObj.get("idMember")).longValue();
         Long idCorpAnniv =((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
-        String inceptionStr = jsonObj.getString("inception");
+        String inceptionStr = jsonObj.getString("memberInception");
         LocalDate inception = LocalDate.parse(inceptionStr, DATE_FORMAT_yyyyMMdd);
-        String expiryStr = jsonObj.getString("expiry");
+        String expiryStr = jsonObj.getString("memberExpiry");
         LocalDate expiry = LocalDate.parse(expiryStr, DATE_FORMAT_yyyyMMdd);
 
         Result<MemberAnniversary> ar = memberAnniversaryService.create(idMember, idCorpAnniv, inception, expiry, getUser());
@@ -63,6 +63,7 @@ public class MemberAnnivHandler extends AbstractHandler{
     {
         JsonObject jsonObj = parseJsonObject(jsonData);
 
+        Long idMemberAnniv = ((JsonNumber) jsonObj.get("idMemberAnniv")).longValue();
         Long idMember = ((JsonNumber) jsonObj.get("idMember")).longValue();
         Long idCorpAnniv =((JsonNumber) jsonObj.get("idCorpAnniv")).longValue();
         String inceptionStr = jsonObj.getString("inception");
@@ -70,7 +71,7 @@ public class MemberAnnivHandler extends AbstractHandler{
         String expiryStr = jsonObj.getString("expiry");
         LocalDate expiry = LocalDate.parse(expiryStr, DATE_FORMAT_yyyyMMdd);
 
-        Result<MemberAnniversary> ar = memberAnniversaryService.update(idMember, idCorpAnniv, inception, expiry, getUser());
+        Result<MemberAnniversary> ar = memberAnniversaryService.update(idMemberAnniv,idMember, idCorpAnniv, inception, expiry, getUser());
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());

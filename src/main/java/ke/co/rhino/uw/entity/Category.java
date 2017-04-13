@@ -12,7 +12,7 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCategory;
     @Column(nullable = false, name = "CAT")
-    private char cat;
+    private String cat;
 	private String description;
 	@OneToMany(mappedBy = "category")
 	private List<CorpBenefit> corpBenefits;
@@ -34,12 +34,12 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
 
     public static class CategoryBuilder{
 
-        private final char cat;
+        private final String cat;
         private String description;
         private final CorpAnniv corpAnniv;
         private Long idCategory;
 
-        public CategoryBuilder(char cat, CorpAnniv corpAnniv) {
+        public CategoryBuilder(String cat, CorpAnniv corpAnniv) {
             this.cat = cat;
             this.corpAnniv = corpAnniv;
         }
@@ -68,7 +68,7 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
         return memberCategories;
     }
 
-    public char getCat() {
+    public String getCat() {
         return cat;
     }
 

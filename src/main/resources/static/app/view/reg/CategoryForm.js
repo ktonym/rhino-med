@@ -5,12 +5,11 @@ Ext.define('Rhino.view.reg.CategoryForm',{
     extend: 'Ext.form.Panel',
     alias: 'widget.category-form',
     reference: 'categoryForm',
-    requires: ['Rhino.view.reg.MemberModel'],//
-   /* controller: 'member',
+    requires: ['Rhino.view.reg.CategoryController'/*,'Rhino.view.reg.CategoryModel'*/],//
     viewModel: {
-        type: 'member'
-    },*/
-    
+        type: 'reg'
+    },
+    controller: 'category',
     cls: 'form-compose',
     layout: {
         type: 'vbox',
@@ -23,6 +22,15 @@ Ext.define('Rhino.view.reg.CategoryForm',{
         labelWidth: 120,
         labelSeparator: ''
         //,xtype: 'textfield'
+    },
+    beforerender : function () {
+        var me = this,
+            vm = me.getViewModel(),
+            idt = vm.get('current.scheme.id'),
+            annivStore = vm.getStore('terms');
+        console.info('Showing anniversaries store..');
+        console.log(annivStore);
+        debugger;
     },
     items: [
         {
@@ -37,11 +45,13 @@ Ext.define('Rhino.view.reg.CategoryForm',{
         },
         {
             xtype: 'textfield',
+            fieldLabel: 'Category',
             name: 'cat',
             bind: '{current.category.cat}'
         },
         {
             xtype: 'textarea',
+            fieldLabel: 'Description',
             name: 'description',
             bind: '{current.category.description}'
         }

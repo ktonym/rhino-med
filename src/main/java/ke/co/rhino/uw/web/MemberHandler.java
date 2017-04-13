@@ -49,18 +49,19 @@ public class MemberHandler extends AbstractHandler{
         String dobVal = jsonObj.getString("dob");
         LocalDate dob = LocalDate.parse(dobVal, DATE_FORMAT_yyyyMMdd);
         Optional<Long> idPrincipalOpt;
-        try {
+        /*try {
             //Optional<JsonObject> principalOpt = Optional.of( parseJsonObject(jsonObj.get("principal").toString()));
             idPrincipalOpt = Optional.of( ((JsonNumber) jsonObj.get("principal.idPrincipal")).longValue());
         } catch (NullPointerException npe){
             idPrincipalOpt = Optional.empty();
-        }
-        /*if(jsonObj.get("principal").getValueType()==null){
-            idPrincipalOpt = Optional.of(null);
-        } else {
-            Optional<JsonObject> principalOpt = Optional.of( parseJsonObject(jsonObj.get("principal").toString()));
-            idPrincipalOpt = Optional.of( ((JsonNumber) principalOpt.get().get("idPrincipal")).longValue());
         }*/
+
+        if(jsonObj.get("principal")==null){
+            idPrincipalOpt = Optional.empty();
+        } else {
+            //Optional<JsonObject> principalOpt = Optional.of( parseJsonObject(jsonObj.get("principal").toString()));
+            idPrincipalOpt = Optional.of( ((JsonNumber) jsonObj.get("principal.idPrincipal")).longValue());
+        }
 
         Long idCorporate = ((JsonNumber) jsonObj.get("idCorporate")).longValue();
 
@@ -208,7 +209,7 @@ public class MemberHandler extends AbstractHandler{
                                 .add("sex", dependant.getSex().toString())
                                 .add("firstName", dependant.getFirstName())
                                 .add("surname", dependant.getSurname())
-                                .add("otherNames", dependant.getSurname()==null?"":dependant.getSurname())
+                                .add("otherNames", dependant.getOtherNames()==null?"":dependant.getOtherNames())
                                 .add("memberType", dependant.getMemberType().toString())
                                 .add("dob", dependant.getDob()==null?"":DATE_FORMAT_yyyyMMdd.format(dependant.getDob()))
                                 .add("fullName",
@@ -230,7 +231,7 @@ public class MemberHandler extends AbstractHandler{
                             .add("sex", principal.getSex().toString())
                             .add("firstName", principal.getFirstName())
                             .add("surname", principal.getSurname())
-                            .add("otherNames", principal.getSurname()==null?"":principal.getSurname())
+                            .add("otherNames", principal.getOtherNames()==null?"":principal.getOtherNames())
                             .add("memberType", principal.getMemberType().toString())
                             .add("dob", principal.getDob()==null?"":DATE_FORMAT_yyyyMMdd.format(principal.getDob()))
                             .add("fullName",
@@ -249,6 +250,25 @@ public class MemberHandler extends AbstractHandler{
             return getJsonErrorMsg(ar.getMsg());
         }
 
+    }
+
+    @RequestMapping(value = "/findByUncovered", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public String findUncovered(@RequestParam(value = "idCorporate") String corpIdStr,
+                                @RequestParam(value = "idCorpAnniv", required = true) String idCorpAnnivStr,
+                                HttpServletRequest request){
+        Long idCorporate = Long.valueOf(corpIdStr);
+        Long idCorpAnniv = Long.valueOf(idCorpAnnivStr);
+
+        int pageNo = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        Integer size = request.getParameter("limit") == null ? 5 : Integer.valueOf(request.getParameter("limit"));
+
+        Result<Page<Member>> ar = memberService.findByUncovered(pageNo,size,idCorporate,idCorpAnniv,getUser());
+        if(ar.isSuccess()) {
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
     }
 
 }

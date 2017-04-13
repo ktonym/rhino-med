@@ -30,9 +30,10 @@ public class PremiumInvoiceItem extends AbstractEntity implements EntityItem<Lon
     @JoinColumn(name = "idPremiumInvoice")
     private PremiumInvoice premiumInvoice;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumns({@JoinColumn(name="idMember", referencedColumnName = "idMember", nullable = false),
+    /*@JoinColumns({@JoinColumn(name="idMember", referencedColumnName = "idMember", nullable = false),
                   @JoinColumn(name = "idCorpAnniv", referencedColumnName = "idCorpAnniv", nullable = false),
-                  @JoinColumn(name = "idCorpBenefit",referencedColumnName = "idCorpBenefit", nullable = false)})
+                  @JoinColumn(name = "idCorpBenefit",referencedColumnName = "idCorpBenefit", nullable = false)})*/
+    @JoinColumn(name = "idCorpMemberBenefit", referencedColumnName = "idCorpMemberBenefit", nullable = false)
     private CorpMemberBenefit corpMemberBenefit;
     private BigDecimal amount;
 

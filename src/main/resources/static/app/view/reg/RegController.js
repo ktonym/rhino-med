@@ -9,7 +9,19 @@ Ext.define('Rhino.view.reg.RegController',{
 
     init: function(){
         this.setCurrentView('scheme-list');
-        // console.log('RegController loaded...');
+        //this.getViewModel().getStore('categories').on('add', this.afterAddCategory,this);
+
+        this.listen({
+            controller: {
+                '*' : {
+                    memberadded: 'afterMemberAdded',
+                    memberupdated: 'afterMemberUpdated',
+                    categoryadded: 'afterCategoryAdded',
+                    catbenefitadded: 'afterCatBenefitAdded'
+                }
+            }
+        });
+
     },
 
     onMenuClick: function(menu, item){
@@ -123,9 +135,9 @@ Ext.define('Rhino.view.reg.RegController',{
             }
         });
     },
-    onMemberDetailsClick: function () {
-        this.setCurrentView('panel',{
-            openWindow: true,
+    onPolicyMembersClick: function () {
+        this.setCurrentView('policy-member-list',{
+            openWindow: false,
             windowCfg: {
                 header: false,
                 closable: true
@@ -219,19 +231,127 @@ Ext.define('Rhino.view.reg.RegController',{
         });
     },
 
-    listen: {
-        controller: {
-            '*' : {
-                memberadded: function (rec) {
-                    Ext.Msg.alert('Member added', 'Fire event!!!');
-                    // var memberlist = this.getView().lookupReference('schemeMembers'),
-                    //     store = memberlist.getStore();
-                    // if(rec.store===undefined){
-                    //     store.add(rec);
-                    //     //vm.get('members').add(rec);
-                    // }
+    afterMemberAdded: function (rec) {
+       /* console.info('Managing the new record!');
+        debugger;*/
+        var memberlist = this.getView().lookupReference('schemeMembers'),
+            store = memberlist.getStore();
+        store.add(rec);
+    },
+
+    afterMemberUpdated: function (rec) {
+         var memberlist = this.getView().lookupReference('schemeMembers'),
+             store = memberlist.getStore();
+         console.info('Managing an updated record!!');
+         debugger;
+         store.update(rec);
+    },
+
+    onAddCategory: function () {
+        var me = this,
+            contPan = me.getView().down('#contentPanel'),
+            grid = contPan.down('category-list'),win,
+            vm = me.getViewModel(),
+            corp = vm.get('current.scheme'),
+            annivId = vm.get('current.anniv.idCorpAnniv'),
+            rec = Ext.create('Rhino.model.uw.Category',{
+                idCorpAnniv: annivId
+            });
+        vm.set('current.category',rec);
+
+        this.setCurrentView('category-form',{
+            openWindow: true,
+            windowCfg: {
+                header : false,
+                maxHeight: 260,
+                maxWidth: 500
+            },
+            targetCfg: {
+                bind: {
+                    title: 'Add Category to <b>{current.scheme.name}</b> ({current.anniv.anniv})'
+                },
+                iconCls: 'x-fa fa-plus',
+                listeners: {
+                    memberadded: 'onMemberAdded'
                 }
             }
-        }
+        });
+
+    },
+
+    onEditCategory: function () {
+        this.setCurrentView('category-form',{
+            openWindow: true,
+            windowCfg: {
+                header : false,
+                maxHeight: 260,
+                maxWidth: 500
+            },
+            targetCfg: {
+                bind: {
+                    title: 'Edit: <b>{current.category.cat}</b>'
+                }
+            }
+        });
+    },
+
+    afterCategoryAdded: function (rec) {
+        Ext.Msg.alert('Category Added!','A new category was added');
+        var catList = this.getView().lookupReference('categoryList'),
+            store = catList.getStore();
+        store.add(rec);
+    },
+
+    onSearchToAddMember: function () {
+
+    },
+
+    onAddCategoryBenefit: function () {
+         var me = this,
+             vm = me.getViewModel(),
+             //store = vm.getStore('categoryBenefits'),
+             idc = vm.get('current.category.idCategory'),
+             catBen = Ext.create('Rhino.model.uw.CorpBenefit',{
+                 idCategory: idc
+             });
+        vm.set('current.category-benefit',catBen);
+        this.setCurrentView('category-benefit-form',{
+            openWindow: true,
+            windowCfg: {
+                header : false,
+                maxHeight: 450,
+                maxWidth: 500
+            },
+            targetCfg: {
+                bind: {
+                    title: 'Add Benefit to <b>{current.category.cat}</b>'
+                }
+            }
+        });
+    },
+    afterCatBenefitAdded: function (rec) {
+        var catBenList = this.getView().lookupReference('categoryBenefitList'),
+            store = catBenList.getStore();
+        store.add(rec);
+    },
+    onMemberPolicyAdd: function () {
+        var me = this,
+            vm = me.getViewModel(),
+            vw = me.getView(),
+            corpAnniv = vm.get('current.anniv'),
+            win, schemeId,annivId,store;
+        this.setCurrentView('policy-member-grid',{
+            openWindow: true,
+            windowCfg: {
+                header : false,
+                maxHeight: 450,
+                maxWidth: 500
+            },
+            targetCfg: {
+                bind: {
+                    title: 'Add Member to <b>{current.anniv.anniv}</b>'
+                }
+            }
+        });
     }
 });

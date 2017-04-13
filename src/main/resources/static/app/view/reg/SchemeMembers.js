@@ -84,9 +84,9 @@ Ext.define('Rhino.view.reg.SchemeMembers',{
         },
         {
             iconCls: 'x-fa fa-umbrella',
-            text: 'Anniversaries',
+            text: 'Policies',
             listeners: {
-                click: 'onAnnivsClick'
+                click: 'onMemberAnnivsClick'
             },
             bind: {
                 disabled: '{!schemeMembers.selection}'

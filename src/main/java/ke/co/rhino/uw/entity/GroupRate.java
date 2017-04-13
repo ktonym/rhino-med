@@ -13,7 +13,7 @@ import javax.persistence.*;
 @DiscriminatorValue("GROUP")
 public class GroupRate extends PremiumRate {
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne//(cascade = CascadeType.ALL)
     @JoinColumn(name = "CORP_ID", nullable = false)
     private Corporate corporate;
 

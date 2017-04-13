@@ -3,7 +3,7 @@ package ke.co.rhino.uw.repo;
 import ke.co.rhino.uw.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * Created by akipkoech on 12/8/14.
  */
-public interface MemberRepo extends PagingAndSortingRepository<Member,Long> {
+public interface MemberRepo extends PagingAndSortingRepository<Member,Long>, JpaSpecificationExecutor<Member> {
 
     // List<Member>  findByPrincipal_CategoryPrincipal_Category_Anniv_Corporate(Corporate corporate);
 
@@ -77,4 +77,12 @@ public interface MemberRepo extends PagingAndSortingRepository<Member,Long> {
     @Query("SELECT m FROM Member m WHERE m.principal IS NULL AND m.corporate = :corp")
     List<Member> findPrincipals(@Param("corp") Corporate corporate);
 
+
+    //All Members not in a given anniversary
+    //TODO include m.memberStatus is ACTIVE
+    @Query("SELECT m FROM Member m WHERE  m.corporate = :corporate AND m.memberAnniversaries " +
+            "           NOT IN (SELECT ma FROM MemberAnniversary ma WHERE ma.corpAnniv = :corpanniv)")
+    //@Query("SELECT m FROM Member m WHERE  m.corporate = :corporate")
+    Page<Member> findUncoveredInPolicy(@Param("corpanniv") CorpAnniv corpAnniv,
+                                       @Param("corporate") Corporate corporate, Pageable pageable);
 }

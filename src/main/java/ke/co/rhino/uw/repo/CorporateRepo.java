@@ -1,5 +1,6 @@
 package ke.co.rhino.uw.repo;
 
+import ke.co.rhino.uw.entity.CorpAnniv;
 import ke.co.rhino.uw.entity.Corporate;
 import ke.co.rhino.uw.entity.PlanType;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,10 @@ public interface CorporateRepo extends PagingAndSortingRepository<Corporate, Lon
     Optional<Corporate> getOne(Long idCorporate);
 
     Page<Corporate> findByPlanType(PlanType planType, Pageable pageable);
+
+    @Query("SELECT c FROM Corporate c WHERE c.annivs " +
+            "IN (SELECT ca FROM CorpAnniv ca WHERE ca = :corpAnniv) ")
+    Corporate findByCorpAnniv(@Param("corpAnniv")CorpAnniv corpAnniv);
 
 }
 

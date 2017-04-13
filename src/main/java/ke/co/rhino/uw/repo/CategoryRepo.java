@@ -13,5 +13,5 @@ public interface CategoryRepo extends JpaRepository<Category,Long> {
     //List<Category> findByAnniv_Corporate(Corporate corporate);
     List<Category> findByCorpAnniv(CorpAnniv corpAnniv);
     long countByCorpAnniv(CorpAnniv corpAnniv);
-    Category findByCatAndCorpAnniv(char cat, CorpAnniv corpAnniv);
+    Category findByCatAndCorpAnniv(String cat, CorpAnniv corpAnniv);
 }

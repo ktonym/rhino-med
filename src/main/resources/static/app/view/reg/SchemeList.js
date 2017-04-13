@@ -6,9 +6,9 @@ Ext.define('Rhino.view.reg.SchemeList',{
     alias: 'widget.scheme-list',
     reference: 'schemeList',
     cls: 'email-inbox-panel shadow-panel',
-    viewModel: {
+    /*viewModel: {
         type: 'scheme'
-    },
+    },*/
     bind: {
         store: '{schemes}',
         selection: '{current.scheme}'
@@ -42,7 +42,7 @@ Ext.define('Rhino.view.reg.SchemeList',{
             }
         },
         {
-            iconCls: 'x-fa  fa-group',
+            iconCls: 'x-fa fa-group',
             text: 'Members',
             listeners: {
                 click: 'onSchemeMembersClick'

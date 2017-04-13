@@ -7,9 +7,11 @@ Ext.define('Rhino.view.reg.Registration',{
     itemId: 'registration',
     reference: 'registration',
     requires: ['Rhino.view.reg.RegMenu','Rhino.view.reg.RegModel','Rhino.view.reg.RegController',
-                'Rhino.view.reg.SchemeList','Rhino.view.reg.SchemeAnnivList','Rhino.view.reg.SchemeMembers'
+                'Rhino.view.reg.SchemeList','Rhino.view.reg.SchemeAnnivList','Rhino.view.reg.SchemeMembers',
+                'Rhino.view.reg.CatDetails','Rhino.store.CorpAnniv','Rhino.view.reg.PolicyMemberGrid'
     ],
     controller: 'registration',
+    viewModel: 'reg',
     /**
      * not sure this config fixes anything...
      */

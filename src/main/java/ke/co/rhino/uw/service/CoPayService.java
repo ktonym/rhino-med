@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ public class CoPayService implements ICoPayService {
     private CorporateRepo corporateRepo;
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CoPay> create(Long idServiceProvider,
                                 Long idRegulation,
                                 BigDecimal coPayAmount,
@@ -80,6 +82,7 @@ public class CoPayService implements ICoPayService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CoPay> update(Long idCoPay,
                                 Long idServiceProvider,
                                 Long idRegulation,
@@ -126,6 +129,7 @@ public class CoPayService implements ICoPayService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<CoPay> delete(Long idCoPay, String actionUsername) {
 
         if(idCoPay==null||idCoPay<1){
@@ -147,6 +151,7 @@ public class CoPayService implements ICoPayService {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<CoPay>> findAll(int page,int size) {
 
         PageRequest request = new PageRequest(page,size);
@@ -157,6 +162,7 @@ public class CoPayService implements ICoPayService {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<CoPay>> findByCorporate(Long idCorporate,int page,int size) {
 
         if(idCorporate==null||idCorporate<1){

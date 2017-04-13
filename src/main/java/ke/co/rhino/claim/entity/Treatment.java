@@ -23,11 +23,12 @@ public class Treatment extends AbstractEntity implements EntityItem<Long> {
     @ManyToOne
     private ServiceProvider serviceProvider;
     @ManyToOne
-    @JoinColumns({
+    /*@JoinColumns({
             @JoinColumn(name = "idMember",referencedColumnName = "idMember",nullable = false),
             @JoinColumn(name = "idCorpAnniv",referencedColumnName = "idCorpAnniv",nullable = false),
             @JoinColumn(name = "idCorpBenefit",referencedColumnName = "idCorpBenefit", nullable = false)
-    })
+    })*/
+    @JoinColumn(name = "idCorpMemberBenefit", referencedColumnName = "idCorpMemberBenefit", nullable = false)
     private CorpMemberBenefit corpMemberBenefit;
     @ManyToOne
     private Assessment assessment;

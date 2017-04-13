@@ -35,6 +35,9 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
     @Enumerated(EnumType.STRING)
     private PlanType planType;
 
+    @OneToMany(mappedBy = "corporate")
+    private List<Quotation> quotations;
+
     public Corporate() {
     }
 
@@ -187,5 +190,9 @@ public class Corporate extends AbstractEntity implements EntityItem<Long> {
 
     public PlanType getPlanType() {
         return planType;
+    }
+
+    public List<Quotation> getQuotations() {
+        return quotations;
     }
 }
